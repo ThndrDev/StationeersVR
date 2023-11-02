@@ -1,0 +1,13 @@
+ManifestFileVersion: 0
+CRC: 312146616
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: xrmanager
+      Dependencies: {}
+    Info_1:
+      Name: steamvr_shaders
+      Dependencies: {}
+    Info_2:
+      Name: steamvr_player_prefabs
+      Dependencies: {}

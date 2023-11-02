@@ -1,0 +1,21 @@
+ManifestFileVersion: 0
+CRC: 2515495162
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: bc2730d2a34c64799fbec64191f2cd45
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 1848cfd019ebe6ef89967c6f90f2a3d4
+HashAppended: 0
+ClassTypes:
+- Class: 48
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/SteamVR/Resources/SteamVR_SphericalProjection.shader
+- Assets/SteamVR/Resources/SteamVR_Fade.shader
+- Assets/SteamVR/Resources/SteamVR_AlphaOut.shader
+- Assets/SteamVR/Resources/SteamVR_ClearAll.shader
+- Assets/SteamVR/Resources/SteamVR_ColorOut.shader
+Dependencies: []

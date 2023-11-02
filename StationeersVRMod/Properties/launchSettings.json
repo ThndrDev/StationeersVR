@@ -1,0 +1,12 @@
+{
+  "profiles": {
+    "StationeersVR": {
+      "commandName": "Project"
+    },
+    "Stationeers-Debug": {
+      "commandName": "Executable",
+      "executablePath": "G:\\SteamLibrary\\steamapps\\common\\StationeersVR\\rocketstation.exe",
+      "nativeDebugging": true
+    }
+  }
+}
