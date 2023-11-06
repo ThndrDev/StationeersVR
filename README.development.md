@@ -1,7 +1,7 @@
 # Setting up a development environment
 
 ## Software you will need
-* Stationeers (obviously) with the VR Mod Installed. (It's recommend making a copy of the game folder to be used for development)
+* Stationeers (obviously) with the VR Mod Installed. (It's recommended to make a copy of the game folder to be used for development)
 * [Microsoft Visual Studio 2022](https://visualstudio.microsoft.com/vs/)
    - Make sure to choose Universal Platform and Unity Game Development at the install, in the workload options.
 * [.NET 6 SDK](https://dotnet.microsoft.com/pt-br/download)
@@ -20,15 +20,13 @@
     1. In the Visual Studio Solution Explorer, browse to `StationeersVR\StationeersVR`.
     2. Right-click `StationeersVR.csproj`, and Open With -> Source Code (Text) Editor. 
     3. Go to Edit -> Search and overwrite to update the reference paths to your Steam library folder containing Stationeers.:
-    ``` From:
-     G:\SteamLibrary\steamapps\common\StationeersVR\
-    ```
-    ``` To:
-     <your stationeers folder location>
+    ``` 
+     From: G:\SteamLibrary\steamapps\common\StationeersVR\
+     To: <your stationeers folder location>
     ```   
     5. Save the file and close Visual Studio.
 
-2. Publicitize the needed DLLs for the project.
+2. Publicitize the needed DLLs for the project:
    1. You need to use an [Assembly Publicizer](https://github.com/CabbageCrow/AssemblyPublicizer) for this. Download and unpack it.
    2. Go to the Stationeers Folder, drag the following files and drop into AssemblyPublicizer.exe
       1. Assembly-CSharp.dll
