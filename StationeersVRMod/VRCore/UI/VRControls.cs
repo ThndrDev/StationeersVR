@@ -3,11 +3,13 @@ using UnityEngine;
 using Valve.VR;
 using StationeersVR.Utilities;
 using System.Linq;
+using UnityEngine.EventSystems;
 
 namespace StationeersVR.VRCore.UI
 {
     class VRControls : MonoBehaviour
     {
+        private bool vrcontrols_initialized = false;
         // Time in seconds that Recenter pose must be held to recenter
         private static readonly float RECENTER_POSE_TIME = 3f;
         // Local Position relative to HMD that will trigger the Recenter action
@@ -29,21 +31,21 @@ namespace StationeersVR.VRCore.UI
         private float buildQuickActionTimer;
 */
 
-        private HashSet<string> ignoredZInputs = new HashSet<string>();
-        private HashSet<string> quickActionEnabled = new HashSet<string>(); // never ignore these
+        private HashSet<KeyCode> ignoredKeys = new HashSet<KeyCode>();
+        private HashSet<KeyCode> quickActionEnabled = new HashSet<KeyCode>(); // never ignore these
         private SteamVR_ActionSet mainActionSet = SteamVR_Actions.Stationeers;
         private SteamVR_ActionSet laserActionSet = SteamVR_Actions.LaserPointers;
 
         // Since some controllers have most actions on trackpads (Vive Wands),
         // SteamVR as of 22/09/2021 will still disable all the actions bound to 
         // a lower priority action set even if they are of a completely different type
-        // This means that we have to duplicate actions in some actionsets so zInputToBooleanAction
+        // This means that we have to duplicate actions in some actionsets so keyToBooleanAction
         // should map to an array that is the conjunction of the same action in different actionsets
-        private Dictionary<string, SteamVR_Action_Boolean[]> zInputToBooleanAction = new Dictionary<string, SteamVR_Action_Boolean[]>();
+        private Dictionary<KeyCode, SteamVR_Action_Boolean[]> keyToBooleanAction = new Dictionary<KeyCode, SteamVR_Action_Boolean[]>();
 
         private SteamVR_Action_Vector2 walk;
         private SteamVR_Action_Vector2 pitchAndYaw;
-        private SteamVR_Action_Vector2 buildPitchAndYaw; //for the same logic as zInputToBooleanAction, this is needed for controllers that have multiple actionsets using the trackpad
+        private SteamVR_Action_Vector2 buildPitchAndYaw; //for the same logic as keyToBooleanAction, this is needed for controllers that have multiple actionsets using the trackpad
         private float combinedPitchAndYawX => buildPitchAndYaw.active ? buildPitchAndYaw.axis.x : pitchAndYaw.axis.x;
 
         private SteamVR_Action_Vector2 contextScroll;
@@ -84,9 +86,7 @@ namespace StationeersVR.VRCore.UI
         private static VRControls _instance;
         void Awake()
         {
-            init();
-            recenteringPoseDuration = 0f;
-            _instance = this;
+
         }
 
         void Update()
@@ -232,72 +232,72 @@ namespace StationeersVR.VRCore.UI
             }
         }
 
-        public bool GetButtonDown(string zinput)
+        public bool GetButtonDown(KeyCode key)
         {
-            if (!mainActionSet.IsActive() || ignoredZInputs.Contains(zinput))
+            if (!mainActionSet.IsActive() || ignoredKeys.Contains(key))
             {
                 return false;
             }
 /*          //Here we add in what situations the character should be blocked from jumping or other actions
-            if (zinput == "Jump" && (shouldEnableRemove() || shouldDisableJumpRemove()))
+            if (key == "Jump" && (shouldEnableRemove() || shouldDisableJumpRemove()))
             {
                 return false;
             }
-            if (zinput == "Remove" && (!shouldEnableRemove() || shouldDisableJumpRemove()))
+            if (key == "Remove" && (!shouldEnableRemove() || shouldDisableJumpRemove()))
             {
                 return false;
             }
-            if (zinput == "Jump" && shouldDisableJumpEvade())
+            if (key == "Jump" && shouldDisableJumpEvade())
             {
                 return false;
             }
 */
             SteamVR_Action_Boolean[] action;
-            zInputToBooleanAction.TryGetValue(zinput, out action);
+            keyToBooleanAction.TryGetValue(key, out action);
             if (action == null)
             {
-                if (!quickActionEnabled.Contains(zinput))
+                if (!quickActionEnabled.Contains(key))
                 {
-                    ModLog.Warning("Unmapped ZInput Key:" + zinput);
-                    ignoredZInputs.Add(zinput); // Don't check for this input again
+                    ModLog.Warning("Unmapped Key:" + key);
+                    ignoredKeys.Add(key); // Don't check for this input again
                 }
                 return false;
             }
             return action.Any(x => x.GetStateDown(SteamVR_Input_Sources.Any));
         }
 
-        public bool GetButton(string zinput)
+        public bool GetButton(KeyCode key)
         {
-            if (!mainActionSet.IsActive() || ignoredZInputs.Contains(zinput))
+            if (!mainActionSet.IsActive() || ignoredKeys.Contains(key))
             {
                 return false;
             }
 /*
-            if (zinput == "Jump" && (shouldEnableRemove() || shouldDisableJumpRemove()))
+            if (key == "Jump" && (shouldEnableRemove() || shouldDisableJumpRemove()))
             {
                 return false;
             }
-            if (zinput == "Remove" && (!shouldEnableRemove() || shouldDisableJumpRemove()))
+            if (key == "Remove" && (!shouldEnableRemove() || shouldDisableJumpRemove()))
             {
                 return false;
             }
-            if (zinput == "Jump" && shouldDisableJumpEvade())
+            if (key == "Jump" && shouldDisableJumpEvade())
             {
                 return false;
             }
-            if (zinput == "JoyAltPlace")
+            if (key == "JoyAltPlace")
             {
                 return CheckAltButton();
             }
 */
             SteamVR_Action_Boolean[] action;
-            zInputToBooleanAction.TryGetValue(zinput, out action);
+            keyToBooleanAction.TryGetValue(key, out action);
             if (action == null)
             {
-                if (!quickActionEnabled.Contains(zinput))
+                if (!quickActionEnabled.Contains(key))
                 {
-                    ModLog.Warning("Unmapped ZInput Key:" + zinput);
-                    ignoredZInputs.Add(zinput); // Don't check for this input again
+                    ModLog.Warning("Unmapped key Key:" + key);
+                    ignoredKeys.Add(key); // Don't check for this input again
                 }
                 return false;
             }
@@ -311,34 +311,34 @@ namespace StationeersVR.VRCore.UI
                 || (SteamVR_Actions.valheim_Grab.GetState(SteamVR_Input_Sources.RightHand));
         }
 */
-        public bool GetButtonUp(string zinput)
+        public bool GetButtonUp(KeyCode key)
         {
-            if (!mainActionSet.IsActive() || ignoredZInputs.Contains(zinput))
+            if (!mainActionSet.IsActive() || ignoredKeys.Contains(key))
             {
                 return false;
             }
 /*
-            if (zinput == "Jump" && (shouldEnableRemove() || shouldDisableJumpRemove()))
+            if (key == "Jump" && (shouldEnableRemove() || shouldDisableJumpRemove()))
             {
                 return false;
             }
-            if (zinput == "Remove" && (!shouldEnableRemove() || shouldDisableJumpRemove()))
+            if (key == "Remove" && (!shouldEnableRemove() || shouldDisableJumpRemove()))
             {
                 return false;
             }
-            if (zinput == "Jump" && shouldDisableJumpEvade())
+            if (key == "Jump" && shouldDisableJumpEvade())
             {
                 return false;
             }
 */
             SteamVR_Action_Boolean[] action;
-            zInputToBooleanAction.TryGetValue(zinput, out action);
+            keyToBooleanAction.TryGetValue(key, out action);
             if (action == null)
             {
-                if (!quickActionEnabled.Contains(zinput))
+                if (!quickActionEnabled.Contains(key))
                 {
-                    ModLog.Warning("Unmapped ZInput Key:" + zinput);
-                    ignoredZInputs.Add(zinput); // Don't check for this input again
+                    ModLog.Warning("Unmapped key Key:" + key);
+                    ignoredKeys.Add(key); // Don't check for this input again
                 }
                 return false;
             }
@@ -360,7 +360,7 @@ namespace StationeersVR.VRCore.UI
             {
                 return 0.0f;
             }
-            return -walk.axis.y;
+            return walk.axis.y;
         }
 
         public float GetJoyRightStickX()
@@ -579,88 +579,56 @@ namespace StationeersVR.VRCore.UI
             return SteamVR_Actions.valheim_UseLeft.state;
         }
 */
-        private void init()
+        public void init()
         {
-            zInputToBooleanAction.Add("JoyMenu", new[] { SteamVR_Actions.stationeers_ToggleMenu });
-            zInputToBooleanAction.Add("Inventory", new[] { SteamVR_Actions.stationeers_ToggleInventory });
-            zInputToBooleanAction.Add("Jump", new [] { SteamVR_Actions.stationeers_Jump, SteamVR_Actions.laserPointers_Jump });
-            zInputToBooleanAction.Add("UseRight", new[] { SteamVR_Actions.stationeers_UseRight });
+            if (!vrcontrols_initialized)
+            {
+                keyToBooleanAction.Add(KeyMap.Cancel, new[] { SteamVR_Actions.stationeers_ToggleMenu });
+                keyToBooleanAction.Add(KeyMap.SuitSlot, new[] { SteamVR_Actions.stationeers_ToggleInventory });
+                keyToBooleanAction.Add(KeyMap.Ascend, new[] { SteamVR_Actions.stationeers_Jump, SteamVR_Actions.laserPointers_Jump });
 
-            // These placement commands re-use some of the normal game inputs
-            zInputToBooleanAction.Add("BuildMenu", new[] { SteamVR_Actions.laserPointers_RightClick });
-            zInputToBooleanAction.Add("JoyPlace", new[] { SteamVR_Actions.laserPointers_LeftClick });
-            zInputToBooleanAction.Add("Remove", new[] { SteamVR_Actions.stationeers_Jump, SteamVR_Actions.laserPointers_Jump });
+                // Print all the added keys/Action
+                foreach (var entry in keyToBooleanAction)
+                {
+                    KeyCode keyvalue = entry.Key;
+                    SteamVR_Action_Boolean[] actions = entry.Value;
+                    string actionsDescriptions = actions != null ? string.Join(", ", actions.Select(a => a.ToString())) : "null";
 
-            contextScroll = SteamVR_Actions.stationeers_ContextScroll;
+                    ModLog.Debug($"KeyCode: {keyvalue} -> Actions: [{actionsDescriptions}]");
+                }
 
-            walk = SteamVR_Actions.stationeers_Walk;
-            pitchAndYaw = SteamVR_Actions.stationeers_PitchAndYaw;
-            buildPitchAndYaw = SteamVR_Actions.laserPointers_PitchAndYaw;
-            poseL = SteamVR_Actions.stationeers_PoseL;
-            poseR = SteamVR_Actions.stationeers_PoseR;
-            initIgnoredZInputs();
-            initQuickActionOnly();
+                //keyToBooleanAction.Add("HelmetSlot", new[] { SteamVR_Actions.stationeers_UseRight });
+
+                // These placement commands re-use some of the normal game inputs
+                //keyToBooleanAction.Add("BuildMenu", new[] { SteamVR_Actions.laserPointers_RightClick });
+                //keyToBooleanAction.Add("JoyPlace", new[] { SteamVR_Actions.laserPointers_LeftClick });
+                //keyToBooleanAction.Add("Remove", new[] { SteamVR_Actions.stationeers_Jump, SteamVR_Actions.laserPointers_Jump });
+
+                contextScroll = SteamVR_Actions.stationeers_ContextScroll;
+
+                walk = SteamVR_Actions.stationeers_Walk;
+                pitchAndYaw = SteamVR_Actions.stationeers_PitchAndYaw;
+                buildPitchAndYaw = SteamVR_Actions.laserPointers_PitchAndYaw;
+                poseL = SteamVR_Actions.stationeers_PoseL;
+                poseR = SteamVR_Actions.stationeers_PoseR;
+                initignoredKeys();
+                //initQuickActionOnly();
+                recenteringPoseDuration = 0f;
+                _instance = this;
+                vrcontrols_initialized = true;
+            }
         }
 
-        private void initQuickActionOnly()
-        {
-            quickActionEnabled.Add("Map");
-        }
+        //private void initQuickActionOnly()
+        //{
+        //    quickActionEnabled.Add(KeyMap.PrecisionPlace);
+        //}
 
-        private void initIgnoredZInputs()
+        private void initignoredKeys()
         {
-            ignoredZInputs.Add("JoyButtonY");
-            ignoredZInputs.Add("JoyButtonX");
-            ignoredZInputs.Add("JoyButtonA");
-            ignoredZInputs.Add("JoyButtonB");
-            ignoredZInputs.Add("JoyButtonX");
-            ignoredZInputs.Add("JoyLStickLeft");
-            ignoredZInputs.Add("JoyHide");
-            ignoredZInputs.Add("JoyUse");
-            ignoredZInputs.Add("JoyRemove");
-            ignoredZInputs.Add("ToggleWalk");
-            ignoredZInputs.Add("JoySit");
-            ignoredZInputs.Add("JoyGPower");
-            ignoredZInputs.Add("JoyJump");
-            ignoredZInputs.Add("Attack");
-            ignoredZInputs.Add("SecondAttack");
-            ignoredZInputs.Add("Crouch");
-            ignoredZInputs.Add("Run");
-            ignoredZInputs.Add("Crouch");
-            ignoredZInputs.Add("AutoRun");
-            ignoredZInputs.Add("Forward");
-            ignoredZInputs.Add("Backward");
-            ignoredZInputs.Add("Left");
-            ignoredZInputs.Add("Right");
-            ignoredZInputs.Add("Block");
-            ignoredZInputs.Add("Hide");
-            ignoredZInputs.Add("GPower");
-            ignoredZInputs.Add("JoyAttack");
-            ignoredZInputs.Add("JoyBlock");
-            ignoredZInputs.Add("JoyRotate");
-            ignoredZInputs.Add("JoySecondAttack");
-            ignoredZInputs.Add("JoyCrouch");
-            ignoredZInputs.Add("JoyRun");
-            ignoredZInputs.Add("JoyLStickDown");
-            ignoredZInputs.Add("JoyDPadDown");
-            ignoredZInputs.Add("JoyDPadLeft");
-            ignoredZInputs.Add("JoyDPadRight");
-            ignoredZInputs.Add("JoyMap");
-            ignoredZInputs.Add("JoyLStickUp");
-            ignoredZInputs.Add("JoyTabLeft");
-            ignoredZInputs.Add("JoyTabRight");
-            ignoredZInputs.Add("JoyLStickRight");
-            ignoredZInputs.Add("JoyRTrigger");
-            ignoredZInputs.Add("JoyLTrigger");
-            ignoredZInputs.Add("JoyDPadUp");
-            ignoredZInputs.Add("BuildNext");
-            ignoredZInputs.Add("BuildPrev");
-            ignoredZInputs.Add("AltPlace");
-            ignoredZInputs.Add("AutoPickup");
-            ignoredZInputs.Add("ChatUp");
-            ignoredZInputs.Add("ChatDown");
-            ignoredZInputs.Add("ScrollChatUp");
-            ignoredZInputs.Add("ScrollChatDown");
+            // Example:
+            //ignoredKeys.Add(KeyMap.PrecisionPlace);
+            
         }
 
     }

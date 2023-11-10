@@ -19,10 +19,9 @@
 2. Update the CommonDir to point to your Stationeers install:
     1. In the Visual Studio Solution Explorer, browse to `StationeersVR\StationeersVR`.
     2. Right-click `StationeersVR.csproj`, and Open With -> Source Code (Text) Editor. 
-    3. Go to Edit -> Search and overwrite to update the reference paths to your Steam library folder containing Stationeers.:
+    3. Search for <GameDir> and update the path to your Steam library folder containing Stationeers:
     ``` 
-     From: G:\SteamLibrary\steamapps\common\StationeersVR\
-     To: <your stationeers folder location>
+    <GameDir>G:\SteamLibrary\steamapps\common\StationeersVR</GameDir>
     ```   
     5. Save the file and close Visual Studio.
 
@@ -32,9 +31,7 @@
       1. Assembly-CSharp.dll
       2. SteamVR.dll
       3. Unity.XR.Management.dll
-   3. The software will create a folder inside "rocketstation_Data\Managed" called "publicized_assemblies" with the 3 publicized DLLs.
-   4. Rename the folder "publicized_assemblies" to "lib".
-   4. Cut the "lib" folder and paste it inside the Mod project folder in "\StationeersVR\StationeersVRMod\". Should be in the folder you've checked the source out above.
+   3. The software will create a folder inside "rocketstation_Data\Managed" called "publicized_assemblies" with the 3 publicized DLLs. Leave them there.
 
 3. Open Visual Studio and in the Solution Explorer, go to Dependencies -> Assemblies and make sure you don't have any broken dependencies.
 
@@ -51,7 +48,7 @@
 
 ## Build the mod
 1. Open Visual Studio, and choose "Open a project or solution"
-2. Navigate to the the mod source folder, then `\StationeersVR\StationeersVRMod\StationeersVR.sln`.
+2. Navigate to the mod source folder, then `\StationeersVR\StationeersVRMod\StationeersVR.sln`.
 3. Make sure the release settings in the toolbar show: "Debug" and "Any CPU".
 4. Click Build -> Build Solution.
     * The mod will be built and installed to your Stationeers directory. Check for the presence of `BepInEx\plugins\StationeersVR.dll`

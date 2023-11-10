@@ -13,7 +13,7 @@
       https://nuget.samboy.dev/v3/index.json
     </RestoreAdditionalProjectSources>
     <RootNamespace>StationeersVR</RootNamespace>
-    <CommonDir>G:\SteamLibrary\steamapps\common</CommonDir>
+    <GameDir>G:\SteamLibrary\steamapps\common\StationeersVR</GameDir>
     <UnityDir>E:\UnityHub\2021.2.13f1\Editor\</UnityDir>
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
@@ -37,59 +37,56 @@
     </Reference>
     <Reference Include="RG.ImGui, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>G:\SteamLibrary\steamapps\common\StationeersVR\rocketstation_Data\Managed\RG.ImGui.dll</HintPath>
+      <HintPath>$(GameDir)\rocketstation_Data\Managed\RG.ImGui.dll</HintPath>
     </Reference>
     <Reference Include="RG.ImGui.Unity, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>G:\SteamLibrary\steamapps\common\StationeersVR\rocketstation_Data\Managed\RG.ImGui.Unity.dll</HintPath>
+      <HintPath>$(GameDir)\rocketstation_Data\Managed\RG.ImGui.Unity.dll</HintPath>
     </Reference>
     <Reference Include="RW.RocketNet, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>G:\SteamLibrary\steamapps\common\StationeersVR\rocketstation_Data\Managed\RW.RocketNet.dll</HintPath>
+      <HintPath>$(GameDir)\rocketstation_Data\Managed\RW.RocketNet.dll</HintPath>
     </Reference>
     <Reference Include="SteamVR_Actions, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>G:\SteamLibrary\steamapps\common\StationeersVR\rocketstation_Data\Managed\SteamVR_Actions.dll</HintPath>
+      <HintPath>$(GameDir)\rocketstation_Data\Managed\SteamVR_Actions.dll</HintPath>
     </Reference>
     <Reference Include="SteamVR">
       <HintPath>lib\SteamVR_publicized.dll</HintPath>
     </Reference>
     <Reference Include="UniTask.TextMeshPro">
-      <HintPath>G:\SteamLibrary\steamapps\common\StationeersVR\rocketstation_Data\Managed\UniTask.TextMeshPro.dll</HintPath>
+      <HintPath>$(GameDir)\rocketstation_Data\Managed\UniTask.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="Unity.XR.Management">
       <HintPath>lib\Unity.XR.Management_publicized.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.XR.Oculus">
-      <HintPath>G:\SteamLibrary\steamapps\common\StationeersVR\rocketstation_Data\Managed\Unity.XR.Oculus.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.XR.OpenVR, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>G:\SteamLibrary\steamapps\common\StationeersVR\rocketstation_Data\Managed\Unity.XR.OpenVR.dll</HintPath>
+      <HintPath>$(GameDir)\rocketstation_Data\Managed\Unity.XR.OpenVR.dll</HintPath>
     </Reference>
     <Reference Include="Unity.XR.OpenXR, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>G:\SteamLibrary\steamapps\common\StationeersVR\rocketstation_Data\Managed\Unity.XR.OpenXR.dll</HintPath>
+      <HintPath>$(GameDir)\rocketstation_Data\Managed\Unity.XR.OpenXR.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AssetBundleModule">
-      <HintPath>G:\SteamLibrary\steamapps\common\StationeersVR\rocketstation_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
+      <HintPath>$(GameDir)\rocketstation_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.SpatialTracking">
-      <HintPath>G:\SteamLibrary\steamapps\common\StationeersVR\rocketstation_Data\Managed\UnityEngine.SpatialTracking.dll</HintPath>
+      <HintPath>$(GameDir)\rocketstation_Data\Managed\UnityEngine.SpatialTracking.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>G:\SteamLibrary\steamapps\common\StationeersVR\rocketstation_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <HintPath>$(GameDir)\rocketstation_Data\Managed\UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.VRModule">
-      <HintPath>G:\SteamLibrary\steamapps\common\StationeersVR\rocketstation_Data\Managed\UnityEngine.VRModule.dll</HintPath>
+      <HintPath>$(GameDir)\rocketstation_Data\Managed\UnityEngine.VRModule.dll</HintPath>
     </Reference>
     <Reference Include="Valve.Newtonsoft.Json">
-      <HintPath>lib\Valve.Newtonsoft.Json.dll</HintPath>
+      <HintPath>$(GameDir)\rocketstation_Data\Managed\Valve.Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Exec Command="xcopy /Y /F &quot;$(ProjectDir)bin\Debug\netstandard2.1\StationeersVR.dll&quot; &quot;G:\SteamLibrary\steamapps\common\StationeersVR\BepInEx\plugins\StationeersVR&quot;" />
-		<Exec Command="xcopy /Y /F &quot;$(ProjectDir)bin\Debug\netstandard2.1\StationeersVR.pdb&quot; &quot;G:\SteamLibrary\steamapps\common\StationeersVR\BepInEx\plugins\StationeersVR&quot;" />
+		<Exec Command="xcopy /Y /F &quot;$(ProjectDir)bin\Debug\netstandard2.1\StationeersVR.dll&quot; &quot;$(GameDir)\BepInEx\plugins\StationeersVR&quot;" />
+		<Exec Command="xcopy /Y /F &quot;$(ProjectDir)bin\Debug\netstandard2.1\StationeersVR.pdb&quot; &quot;$(GameDir)\BepInEx\plugins\StationeersVR&quot;" />
 	</Target>
 </Project>

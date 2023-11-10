@@ -120,7 +120,7 @@ namespace StationeersVR.VRCore
             get {
                 // TODO: Need to find all clickable menu or interfaces opened and add it here. 
                 InventoryManager inventoryManagerInstance = InventoryManager.Instance;
-                ModLog.Debug("IsClickableGuiOpen: ConsoleWindow.IsOpen: " + ConsoleWindow.IsOpen + " InGameMenuOpen: " +  inventoryManagerInstance.InGameMenuOpen);
+                //ModLog.Debug("IsClickableGuiOpen: ConsoleWindow.IsOpen: " + ConsoleWindow.IsOpen + " InGameMenuOpen: " +  inventoryManagerInstance.InGameMenuOpen);
                 return ConsoleWindow.IsOpen || inventoryManagerInstance.InGameMenuOpen;
 
                     /* Examples from Valheim:
@@ -725,7 +725,7 @@ namespace StationeersVR.VRCore
         // Some logic from GameCamera class
         private bool canAdjustCameraDistance()
         {
-            ModLog.Debug("canAdjustCameraDistance: IsClickableGuiOpen: " + IsClickableGuiOpen + " getPlayerCharacter().ChatPanel.isActiveAndEnabled: " + getPlayerCharacter().ChatPanel.isActiveAndEnabled + " attachedToPlayer: " + attachedToPlayer);
+            //ModLog.Debug("canAdjustCameraDistance: IsClickableGuiOpen: " + IsClickableGuiOpen + " getPlayerCharacter().ChatPanel.isActiveAndEnabled: " + getPlayerCharacter().ChatPanel.isActiveAndEnabled + " attachedToPlayer: " + attachedToPlayer);
             return !IsClickableGuiOpen && 
                    !getPlayerCharacter().ChatPanel.isActiveAndEnabled &&
                    attachedToPlayer;
@@ -773,7 +773,7 @@ namespace StationeersVR.VRCore
             }
             _instance.transform.SetParent(playerCharacter.transform, false);
             attachedToPlayer = true;
-            ModLog.Debug("Player character and SteamVR instance found! Attaching to player.");
+            //ModLog.Debug("Player character and SteamVR instance found! Attaching to player.");
 
             maybeInitHeadPosition(playerCharacter);
             float firstPersonAdjust = inFirstPerson ? FIRST_PERSON_HEIGHT_OFFSET : 0.0f;
