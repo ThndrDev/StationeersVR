@@ -30,70 +30,81 @@ namespace StationeersVR
     [UsedImplicitly]
     class KeyManager_GetButtonDown_Patch
     {
-        static bool Prefix(KeyCode key, ref bool __result)
+        static void Postfix(KeyCode key, ref bool __result)
         {
             if (VRControls.mainControlsActive)
             {
                 __result = (key == KeyMap.ToggleConsole || !ConsoleWindow.IsOpen) && VRControls.instance.GetButtonDown(key);
-                ModLog.Debug("GetButtonDown Patch: KeyCode: " + key + "__result: " + __result);
-                return false;
+                //ModLog.Debug("GetButtonDown Patch: KeyCode: " + key + "__result: " + __result + "VRControls Response: " + VRControls.instance.GetButtonDown(key));
             }
-            ModLog.Debug("GetButtonDown Patch: Running Vanilla method");
-            return true;
         }
     }
 
     [HarmonyPatch(typeof(KeyManager), nameof(KeyManager.GetButtonUp))]
     class KeyManager_GetButtonUp_Patch
     {
-        static bool Prefix(KeyCode key, ref bool __result)
+        static void Postfix(KeyCode key, ref bool __result)
         {
             if (VRControls.mainControlsActive)
             {
                 __result = (key == KeyMap.ToggleConsole || !ConsoleWindow.IsOpen) && VRControls.instance.GetButtonUp(key);
-                ModLog.Debug("GetButtonUp Patch: KeyCode: " + key + "__result: " + __result);
-                return false;
+                //ModLog.Debug("GetButtonUp Patch: KeyCode: " + key + "__result: " + __result);
             }
-            ModLog.Debug("GetButtonUp Patch: Running Vanilla method");
-            return true;
         }
     }
 
     [HarmonyPatch(typeof(KeyManager), nameof(KeyManager.GetButton))]
     class KeyManager_GetButton_Patch
     {
-        static bool Prefix(KeyCode key, ref bool __result)
+        static void Postfix(KeyCode key, ref bool __result)
         {
             if (VRControls.mainControlsActive)
             {
                 __result = (key == KeyMap.ToggleConsole || !ConsoleWindow.IsOpen) && VRControls.instance.GetButtonUp(key);
-                ModLog.Debug("GetButton Patch: KeyCode: " + key + "__result: " + __result + " ConsoleWindow.IsOpen: " + ConsoleWindow.IsOpen + " VRControls.instance.GetButtonUp(key): "+ VRControls.instance.GetButtonUp(key));
-                return false;
+                //ModLog.Debug("GetButton Patch: KeyCode: " + key + "__result: " + __result + " ConsoleWindow.IsOpen: " + ConsoleWindow.IsOpen + " VRControls.instance.GetButtonUp(key): "+ VRControls.instance.GetButtonUp(key));
             }
-            return true;
         }
     }
     /*
-    [HarmonyPatch(typeof(KeyManager), nameof(KeyManager.GetKey))]
-    class KeyManager_GetKeyDown_Patch
+    [HarmonyPatch(typeof(KeyManager), nameof(KeyManager.GetMouseDown))]
+    class KeyManager_GetMouseDown_Patch
     {
-        private static HashSet<KeyCode> pendingKeys = new HashSet<KeyCode>();
-
-        static public void EmulateKeyDown(KeyCode key)
+        static void Postfix(string key, ref bool __result)
         {
-            pendingKeys.Add(key);
-        }
-
-        static bool Prefix(KeyCode key, ref bool __result)
-        {
-            if (pendingKeys.Remove(key))
+            if (VRControls.mainControlsActive)
             {
-                __result = true;
-                return false;
+                __result = VRControls.instance.GetMouseDown(key);
+                //ModLog.Debug("GetMouseDown Patch: KeyCode: " + key + " VRControls.instance.GetMouseDown Returned: " +  __result);
             }
-            return true;
         }
-    }*/
+    }
+
+    [HarmonyPatch(typeof(KeyManager), nameof(KeyManager.GetMouseUp))]
+    class KeyManager_GetMouseUp_Patch
+    {
+        static void Postfix(string key, ref bool __result)
+        {
+            if (VRControls.mainControlsActive)
+            {
+                __result = VRControls.instance.GetMouseUp(key);
+                //ModLog.Debug("GetMouseUp Patch: KeyCode: " + key + " VRControls.instance.GetMouseUp Returned: " + __result);
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(KeyManager), nameof(KeyManager.GetMouse))]
+    class KeyManager_GetMouse_Patch
+    {
+        static void Postfix(string key, ref bool __result)
+        {
+            if (VRControls.mainControlsActive)
+            {
+                __result = VRControls.instance.GetMouse(key);
+               // ModLog.Debug("GetMouse Patch: KeyCode: " + key + " VRControls.instance.GetMouse Returned: " + __result);
+            }
+        }
+    }
+    */
 
     // This patch will make the left VR joystick move the character forward/backwards
     [HarmonyPatch(typeof(KeyManager), nameof(KeyManager.GetForwardAxis))]

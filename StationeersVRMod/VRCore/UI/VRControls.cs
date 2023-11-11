@@ -42,6 +42,7 @@ namespace StationeersVR.VRCore.UI
         // This means that we have to duplicate actions in some actionsets so keyToBooleanAction
         // should map to an array that is the conjunction of the same action in different actionsets
         private Dictionary<KeyCode, SteamVR_Action_Boolean[]> keyToBooleanAction = new Dictionary<KeyCode, SteamVR_Action_Boolean[]>();
+        private Dictionary<string, SteamVR_Action_Boolean[]> InputToBooleanAction = new Dictionary<string, SteamVR_Action_Boolean[]>();
 
         private SteamVR_Action_Vector2 walk;
         private SteamVR_Action_Vector2 pitchAndYaw;
@@ -85,8 +86,8 @@ namespace StationeersVR.VRCore.UI
         public static VRControls instance { get { return _instance; } }
         private static VRControls _instance;
         void Awake()
-        {
-
+        {            
+            _instance = this;
         }
 
         void Update()
@@ -234,10 +235,11 @@ namespace StationeersVR.VRCore.UI
 
         public bool GetButtonDown(KeyCode key)
         {
-            if (!mainActionSet.IsActive() || ignoredKeys.Contains(key))
+            /*if (!mainActionSet.IsActive() || ignoredKeys.Contains(key))
             {
+                ModLog.Debug("Key: "+ key +" Returning false because (!mainActionSet.IsActive() = " + mainActionSet.IsActive() + "|| ignoredKeys.Contains(key)" + ignoredKeys.Contains(key));
                 return false;
-            }
+            }*/
 /*          //Here we add in what situations the character should be blocked from jumping or other actions
             if (key == "Jump" && (shouldEnableRemove() || shouldDisableJumpRemove()))
             {
@@ -261,8 +263,16 @@ namespace StationeersVR.VRCore.UI
                     ModLog.Warning("Unmapped Key:" + key);
                     ignoredKeys.Add(key); // Don't check for this input again
                 }
+                ModLog.Debug("Key: " + key + "Returning false because action == null");
                 return false;
             }
+            ModLog.Debug("Key: " + key + "returning the result of action.Any(x => x.GetStateDown(SteamVR_Input_Sources.Any))");
+            foreach (var a in action)
+            {
+                bool stateDown = a.GetStateDown(SteamVR_Input_Sources.Any);
+                ModLog.Debug($"Action {a.GetShortName()} state down: {stateDown}");
+            }
+
             return action.Any(x => x.GetStateDown(SteamVR_Input_Sources.Any));
         }
 
@@ -344,7 +354,70 @@ namespace StationeersVR.VRCore.UI
             }
             return action.Any(x => x.GetStateUp(SteamVR_Input_Sources.Any));
         }
-        
+
+
+        public bool GetMouseDown(string input)
+        {
+            if (!mainActionSet.IsActive())
+            {
+                return false;
+            }
+
+            SteamVR_Action_Boolean[] action;
+            InputToBooleanAction.TryGetValue(input, out action);
+            if (action == null)
+            {
+                //if (!quickActionEnabled.Contains(input))
+                //{
+                    ModLog.Warning("Unmapped Input Key:" + input);
+                    //ignoredInputs.Add(input); // Don't check for this input again
+                //}
+                return false;
+            }
+            return action.Any(x => x.GetStateDown(SteamVR_Input_Sources.Any));
+        }
+
+        public bool GetMouseUp(string input)
+        {
+            if (!mainActionSet.IsActive())
+            {
+                return false;
+            }
+            SteamVR_Action_Boolean[] action;
+            InputToBooleanAction.TryGetValue(input, out action);
+            if (action == null)
+            {
+                //if (!quickActionEnabled.Contains(zinput))
+                //{
+                    ModLog.Warning("Unmapped ZInput Key:" + input);
+                    //ignoredZInputs.Add(zinput); // Don't check for this input again
+                //}
+                return false;
+            }
+            return action.Any(x => x.GetStateUp(SteamVR_Input_Sources.Any));
+        }
+
+        public bool GetMouse(string zinput)
+        {
+            if (!mainActionSet.IsActive())
+            {
+                return false;
+            }
+
+            SteamVR_Action_Boolean[] action;
+            InputToBooleanAction.TryGetValue(zinput, out action);
+            if (action == null)
+            {
+                //if (!quickActionEnabled.Contains(input))
+                //{
+                    ModLog.Warning("Unmapped ZInput Key:" + zinput);
+                    //ignoredZInputs.Add(zinput); // Don't check for this input again
+                //}
+                return false;
+            }
+            return action.Any(x => x.GetState(SteamVR_Input_Sources.Any));
+        }
+
         public float GetJoyLeftStickX()
         {
             if (!mainActionSet.IsActive())
@@ -583,10 +656,14 @@ namespace StationeersVR.VRCore.UI
         {
             if (!vrcontrols_initialized)
             {
-                keyToBooleanAction.Add(KeyMap.Cancel, new[] { SteamVR_Actions.stationeers_ToggleMenu });
+                SteamVR_Actions.Stationeers.Activate();
+                SteamVR_Actions.LaserPointers.Activate();
+                keyToBooleanAction.Add(KeyMap.EmoteWave, new[] { SteamVR_Actions.stationeers_UseLeft });
+                keyToBooleanAction.Add(KeyMap.Cancel, new[] { SteamVR_Actions.stationeers_Jump });
                 keyToBooleanAction.Add(KeyMap.SuitSlot, new[] { SteamVR_Actions.stationeers_ToggleInventory });
                 keyToBooleanAction.Add(KeyMap.Ascend, new[] { SteamVR_Actions.stationeers_Jump, SteamVR_Actions.laserPointers_Jump });
 
+                
                 // Print all the added keys/Action
                 foreach (var entry in keyToBooleanAction)
                 {
@@ -596,6 +673,13 @@ namespace StationeersVR.VRCore.UI
 
                     ModLog.Debug($"KeyCode: {keyvalue} -> Actions: [{actionsDescriptions}]");
                 }
+
+
+                //Maps VR controllers to mouse input:
+                InputToBooleanAction.Add("Mouse0", new[] { SteamVR_Actions.stationeers_Jump });
+                InputToBooleanAction.Add("Mouse1", new[] { SteamVR_Actions.stationeers_UseRight });
+
+
 
                 //keyToBooleanAction.Add("HelmetSlot", new[] { SteamVR_Actions.stationeers_UseRight });
 
@@ -614,8 +698,8 @@ namespace StationeersVR.VRCore.UI
                 initignoredKeys();
                 //initQuickActionOnly();
                 recenteringPoseDuration = 0f;
-                _instance = this;
                 vrcontrols_initialized = true;
+
             }
         }
 
