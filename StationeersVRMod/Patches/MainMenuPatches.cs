@@ -31,48 +31,8 @@ namespace StationeersVR
             menuCanvas.transform.rotation = new Quaternion(0f, 1f, 0f, 0f);
             menuCanvas.transform.localScale = new Vector3(0.001043074f, 0.001043074f, 0.001043074f);
             menuCanvas.transform.Rotate(Vector3.up, -30f);
-
-            // Ensure GraphicRaycaster is present for the UI interactions
-            if (menuCanvas.GetComponent<GraphicRaycaster>() == null)
-            {
-                menuCanvas.gameObject.AddComponent<GraphicRaycaster>();
-            }
-
-            // Add event trigger and collider to buttons for the laser pointer
-            AddVRPointerEventAndCollider(__instance._customWorldButton);
-            AddVRPointerEventAndCollider(__instance._newGameButton);
-            AddVRPointerEventAndCollider(__instance._loadButton);
-            AddVRPointerEventAndCollider(__instance._tutorialButton);
-            AddVRPointerEventAndCollider(__instance._joinServerButton);
-            AddVRPointerEventAndCollider(__instance._workshopButton);
-            AddVRPointerEventAndCollider(__instance._scenarioButton);
-            AddVRPointerEventAndCollider(__instance._settingsButton);
-            AddVRPointerEventAndCollider(__instance._appearanceButton);
-            AddVRPointerEventAndCollider(__instance._exitButton);
-            AddVRPointerEventAndCollider(__instance._changeLogButton);
         }
 
-        private static void AddVRPointerEventAndCollider(Button button)
-        {
-            // Add collider to the button
-            RectTransform rectTransform = button.GetComponent<RectTransform>();
-            BoxCollider2D collider = button.gameObject.GetComponent<BoxCollider2D>() ?? button.gameObject.AddComponent<BoxCollider2D>();
-            collider.size = rectTransform.sizeDelta;
-
-            // Set the layer on the button:
-            button.gameObject.layer = 12;
-
-            // Add or get the EventTrigger component
-            EventTrigger eventTrigger = button.gameObject.GetComponent<EventTrigger>() ?? button.gameObject.AddComponent<EventTrigger>();
-
-            // Add pointer click event
-            EventTrigger.Entry clickEntry = new EventTrigger.Entry();
-            clickEntry.eventID = EventTriggerType.PointerClick;
-            clickEntry.callback.AddListener((eventData) => { button.onClick.Invoke(); });
-            eventTrigger.triggers.Add(clickEntry);
-
-            // You can add more events like PointerEnter, PointerExit if you want hover effects.
-        }
 
         /* // This code is used to move the canvas at runtime using the keypad buttons, to help find the correct position.
            // Pressing * will print the current canvas coordinates to be used on the patch.

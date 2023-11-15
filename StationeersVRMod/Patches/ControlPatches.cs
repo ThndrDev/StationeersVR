@@ -30,39 +30,42 @@ namespace StationeersVR
     [UsedImplicitly]
     class KeyManager_GetButtonDown_Patch
     {
-        static void Postfix(KeyCode key, ref bool __result)
+        static bool Prefix(KeyCode key, ref bool __result)
         {
             if (VRControls.mainControlsActive)
             {
-                __result = (key == KeyMap.ToggleConsole || !ConsoleWindow.IsOpen) && VRControls.instance.GetButtonDown(key);
-                //ModLog.Debug("GetButtonDown Patch: KeyCode: " + key + "__result: " + __result + "VRControls Response: " + VRControls.instance.GetButtonDown(key));
+                __result = (key == KeyMap.ToggleConsole || !ConsoleWindow.IsOpen) && (VRControls.instance.GetButtonDown(key) || Input.GetKeyDown(key));
+                return false;
             }
+            return true;
         }
     }
 
     [HarmonyPatch(typeof(KeyManager), nameof(KeyManager.GetButtonUp))]
     class KeyManager_GetButtonUp_Patch
     {
-        static void Postfix(KeyCode key, ref bool __result)
+        static bool Prefix(KeyCode key, ref bool __result)
         {
             if (VRControls.mainControlsActive)
             {
-                __result = (key == KeyMap.ToggleConsole || !ConsoleWindow.IsOpen) && VRControls.instance.GetButtonUp(key);
-                //ModLog.Debug("GetButtonUp Patch: KeyCode: " + key + "__result: " + __result);
+                __result = (key == KeyMap.ToggleConsole || !ConsoleWindow.IsOpen) && (VRControls.instance.GetButtonUp(key) || Input.GetKeyUp(key));
+                return false;
             }
+            return true;
         }
     }
 
     [HarmonyPatch(typeof(KeyManager), nameof(KeyManager.GetButton))]
     class KeyManager_GetButton_Patch
     {
-        static void Postfix(KeyCode key, ref bool __result)
+        static bool Prefix(KeyCode key, ref bool __result)
         {
             if (VRControls.mainControlsActive)
             {
-                __result = (key == KeyMap.ToggleConsole || !ConsoleWindow.IsOpen) && VRControls.instance.GetButtonUp(key);
-                //ModLog.Debug("GetButton Patch: KeyCode: " + key + "__result: " + __result + " ConsoleWindow.IsOpen: " + ConsoleWindow.IsOpen + " VRControls.instance.GetButtonUp(key): "+ VRControls.instance.GetButtonUp(key));
+                __result = (key == KeyMap.ToggleConsole || !ConsoleWindow.IsOpen) && (VRControls.instance.GetButton(key) || Input.GetKey(key));
+                return false;
             }
+            return true;
         }
     }
     /*

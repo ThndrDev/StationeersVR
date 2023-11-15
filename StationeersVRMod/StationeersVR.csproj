@@ -35,6 +35,9 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>lib\Assembly-CSharp_publicized.dll</HintPath>
     </Reference>
+    <Reference Include="ch.sycoforge.Flares">
+      <HintPath>$(GameDir)\rocketstation_Data\Managed\ch.sycoforge.Flares.dll</HintPath>
+    </Reference>
     <Reference Include="RG.ImGui, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(GameDir)\rocketstation_Data\Managed\RG.ImGui.dll</HintPath>

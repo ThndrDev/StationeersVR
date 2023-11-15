@@ -23,6 +23,7 @@ using Unity.Collections.LowLevel.Unsafe;
 using System.Collections;
 using UnityEngine.UI;
 using StationeersVR.Patches;
+using ch.sycoforge.Flares;
 //using Pose = ValheimVRMod.Utilities.Pose;
 
 
@@ -568,6 +569,7 @@ namespace StationeersVR.VRCore
                 return;
             }
             Camera vrCam = CameraUtils.GetCamera(CameraUtils.VR_CAMERA);
+            vrCam.GetOrAddComponent<FlareReceiver>().enabled = true;
             CameraUtils.CopyCamera(mainCamera, vrCam);
             //maybeCopyPostProcessingEffects(vrCam, mainCamera);
             //maybeAddAmplifyOcclusion(vrCam);
@@ -576,10 +578,10 @@ namespace StationeersVR.VRCore
             // Turn off rendering the UI panel layer. We need to capture
             // it in a camera of higher depth so that it
             // is rendered on top of everything else. (except hands)
-/*            vrCam.cullingMask &= ~(1 << LayerUtils.getUiPanelLayer());
-            vrCam.cullingMask &= ~(1 << LayerMask.NameToLayer("UI"));
-            vrCam.cullingMask &= ~(1 << LayerUtils.getHandsLayer());
-            vrCam.cullingMask &= ~(1 << LayerUtils.getWorldspaceUiLayer());
+//            vrCam.cullingMask &= ~(1 << LayerUtils.getUiPanelLayer());
+//            vrCam.cullingMask &= ~(1 << LayerMask.NameToLayer("UI"));
+//            vrCam.cullingMask &= ~(1 << LayerUtils.getHandsLayer());
+//            vrCam.cullingMask &= ~(1 << LayerUtils.getWorldspaceUiLayer());
             mainCamera.enabled = false;
             AudioListener mainCamListener = mainCamera.GetComponent<AudioListener>();
             if (mainCamListener != null)
@@ -588,12 +590,12 @@ namespace StationeersVR.VRCore
                 DestroyImmediate(mainCamListener);
             }
             //Add fade component to camera for transition handling
-            _fadeManager = vrCam.gameObject.AddComponent<FadeToBlackManager>();
+//            _fadeManager = vrCam.gameObject.AddComponent<FadeToBlackManager>();
             _instance.SetActive(true);
             vrCam.enabled = true;
             _vrCam = vrCam;
             _vrCameraRig = vrCam.transform.parent;
-
+/*
             _fadeManager.OnFadeToWorld += () => {
                 //Recenter
                 VRPlayer.headPositionInitialized = false;
@@ -628,6 +630,7 @@ namespace StationeersVR.VRCore
         // Search for the original skybox cam, if found, copy it, disable it,
         // and make new camera child of VR camera
         // TODO: Not yet tested/enabled for VR.
+/*
         private void enableSkyboxCamera()
         {
             Camera originalSkyboxCamera = CameraUtils.GetCamera(CameraUtils.SKYBOX_CAMERA);
@@ -649,6 +652,7 @@ namespace StationeersVR.VRCore
             vrSkyboxCam.enabled = true;
             //_skyboxCam = vrSkyboxCam;
         }
+*/
 
         private void attachVrPlayerToWorldObject()
         {

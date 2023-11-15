@@ -105,6 +105,46 @@ namespace Valve.VR
             }
         }
         
+        public virtual SteamVR_Action_Boolean SnapTurnLeft
+        {
+            get
+            {
+                return SteamVR_Actions.stationeers_SnapTurnLeft;
+            }
+        }
+        
+        public virtual SteamVR_Action_Boolean SnapTurnRight
+        {
+            get
+            {
+                return SteamVR_Actions.stationeers_SnapTurnRight;
+            }
+        }
+        
+        public virtual SteamVR_Action_Boolean Jetpack
+        {
+            get
+            {
+                return SteamVR_Actions.stationeers_Jetpack;
+            }
+        }
+        
+        public virtual SteamVR_Action_Boolean Ascend
+        {
+            get
+            {
+                return SteamVR_Actions.stationeers_Ascend;
+            }
+        }
+        
+        public virtual SteamVR_Action_Boolean Descend
+        {
+            get
+            {
+                return SteamVR_Actions.stationeers_Descend;
+            }
+        }
+        
         public virtual SteamVR_Action_Vibration Haptic
         {
             get

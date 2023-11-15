@@ -5,18 +5,6 @@
       "type": "boolean"
     },
     {
-      "name": "/actions/default/in/Teleport",
-      "type": "boolean"
-    },
-    {
-      "name": "/actions/default/in/GrabPinch",
-      "type": "boolean"
-    },
-    {
-      "name": "/actions/default/in/GrabGrip",
-      "type": "boolean"
-    },
-    {
       "name": "/actions/default/in/Pose",
       "type": "pose"
     },
@@ -29,11 +17,6 @@
       "name": "/actions/default/in/SkeletonRightHand",
       "type": "skeleton",
       "skeleton": "/skeleton/hand/right"
-    },
-    {
-      "name": "/actions/default/in/Squeeze",
-      "type": "vector1",
-      "requirement": "optional"
     },
     {
       "name": "/actions/default/in/HeadsetOnHead",
@@ -133,6 +116,26 @@
       "requirement": "mandatory"
     },
     {
+      "name": "/actions/Stationeers/in/SnapTurnLeft",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/Stationeers/in/SnapTurnRight",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/Stationeers/in/Jetpack",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/Stationeers/in/Ascend",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/Stationeers/in/Descend",
+      "type": "boolean"
+    },
+    {
       "name": "/actions/Stationeers/out/Haptic",
       "type": "vibration"
     }
@@ -140,7 +143,7 @@
   "action_sets": [
     {
       "name": "/actions/default",
-      "usage": "single"
+      "usage": "leftright"
     },
     {
       "name": "/actions/LaserPointers",
@@ -208,17 +211,19 @@
   "localization": [
     {
       "language_tag": "en_US",
-      "/actions/default/in/GrabGrip": "Grab Grip",
-      "/actions/default/in/GrabPinch": "Grab Pinch",
       "/actions/default/in/HeadsetOnHead": "Headset on head (proximity sensor)",
       "/actions/default/in/InteractUI": "Interact With UI",
       "/actions/default/in/Pose": "Pose",
       "/actions/default/in/SkeletonLeftHand": "Skeleton (Left)",
       "/actions/default/in/SkeletonRightHand": "Skeleton (Right)",
-      "/actions/default/in/Teleport": "Teleport",
       "/actions/default/out/Haptic": "Haptic",
       "/actions/default/in/SnapTurnLeft": "Snap Turn (Left)",
-      "/actions/default/in/SnapTurnRight": "Snap Turn (Right)"
+      "/actions/default/in/SnapTurnRight": "Snap Turn (Right)",
+      "/actions/Stationeers/in/SnapTurnLeft": "Snap Turn (Left)",
+      "/actions/Stationeers/in/SnapTurnRight": "Snap Turn (Right)",
+      "/actions/Stationeers/in/Jetpack": "Jetpack",
+      "/actions/Stationeers/in/Ascend": "Ascend",
+      "/actions/Stationeers/in/Descend": "Descend"
     }
   ]
 }

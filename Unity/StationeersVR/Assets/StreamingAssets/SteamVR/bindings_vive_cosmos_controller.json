@@ -41,30 +41,6 @@
           }
         },
         {
-          "path": "/user/hand/left/input/grip",
-          "mode": "button",
-          "parameters": {},
-          "inputs": {
-            "click": {
-              "output": "/actions/default/in/grabgrip"
-            }
-          }
-        },
-        {
-          "path": "/user/hand/left/input/trigger",
-          "mode": "button",
-          "parameters": {
-            "click_activate_threshold": "0.8",
-            "click_deactivate_threshold": "0.7",
-            "force_input": "value"
-          },
-          "inputs": {
-            "click": {
-              "output": "/actions/default/in/grabpinch"
-            }
-          }
-        },
-        {
           "path": "/user/hand/right/input/trigger",
           "mode": "button",
           "parameters": {},
@@ -75,47 +51,6 @@
           }
         },
         {
-          "path": "/user/hand/right/input/trigger",
-          "mode": "button",
-          "parameters": {
-            "click_activate_threshold": "0.8",
-            "click_deactivate_threshold": "0.7"
-          },
-          "inputs": {
-            "click": {
-              "output": "/actions/default/in/grabpinch"
-            }
-          }
-        },
-        {
-          "path": "/user/hand/left/input/joystick",
-          "mode": "dpad",
-          "parameters": {
-            "deadzone_pct": "25",
-            "overlap_pct": "30",
-            "sub_mode": "touch"
-          },
-          "inputs": {
-            "north": {
-              "output": "/actions/default/in/teleport"
-            }
-          }
-        },
-        {
-          "path": "/user/hand/right/input/joystick",
-          "mode": "dpad",
-          "parameters": {
-            "deadzone_pct": "25",
-            "overlap_pct": "30",
-            "sub_mode": "touch"
-          },
-          "inputs": {
-            "north": {
-              "output": "/actions/default/in/teleport"
-            }
-          }
-        },
-        {
           "path": "/user/hand/left/input/joystick",
           "mode": "dpad",
           "parameters": {
@@ -146,36 +81,6 @@
             },
             "west": {
               "output": "/actions/default/in/snapturnleft"
-            }
-          }
-        },
-        {
-          "path": "/user/hand/right/input/grip",
-          "mode": "button",
-          "parameters": {},
-          "inputs": {
-            "click": {
-              "output": "/actions/default/in/grabgrip"
-            }
-          }
-        },
-        {
-          "path": "/user/hand/left/input/trigger",
-          "mode": "trigger",
-          "parameters": {},
-          "inputs": {
-            "pull": {
-              "output": "/actions/default/in/squeeze"
-            }
-          }
-        },
-        {
-          "path": "/user/hand/right/input/trigger",
-          "mode": "trigger",
-          "parameters": {},
-          "inputs": {
-            "pull": {
-              "output": "/actions/default/in/squeeze"
             }
           }
         }

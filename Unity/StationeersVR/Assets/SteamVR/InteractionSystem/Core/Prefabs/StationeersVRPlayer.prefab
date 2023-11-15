@@ -830,10 +830,10 @@ MonoBehaviour:
   trackedObject: {fileID: 0}
   grabPinchAction:
     actionPath: /actions/default/in/GrabPinch
-    needsReinit: 0
+    needsReinit: 1
   grabGripAction:
     actionPath: /actions/default/in/GrabGrip
-    needsReinit: 0
+    needsReinit: 1
   hapticAction:
     actionPath: /actions/default/out/Haptic
     needsReinit: 0
@@ -935,10 +935,10 @@ MonoBehaviour:
   trackedObject: {fileID: 0}
   grabPinchAction:
     actionPath: /actions/default/in/GrabPinch
-    needsReinit: 0
+    needsReinit: 1
   grabGripAction:
     actionPath: /actions/default/in/GrabGrip
-    needsReinit: 0
+    needsReinit: 1
   hapticAction:
     actionPath: /actions/default/out/Haptic
     needsReinit: 0
@@ -1081,10 +1081,10 @@ MonoBehaviour:
   trackedObject: {fileID: 0}
   grabPinchAction:
     actionPath: /actions/default/in/GrabPinch
-    needsReinit: 0
+    needsReinit: 1
   grabGripAction:
     actionPath: /actions/default/in/GrabGrip
-    needsReinit: 0
+    needsReinit: 1
   hapticAction:
     actionPath: /actions/default/out/Haptic
     needsReinit: 0
@@ -1325,7 +1325,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   actionSet:
-    actionSetPath: /actions/default
+    actionSetPath: /actions/Stationeers
   forSources: 0
   disableAllOtherActionSets: 0
   activateOnStart: 1
@@ -2688,10 +2688,10 @@ MonoBehaviour:
   rotateRightFX: {fileID: 1000011785618742}
   rotateLeftFX: {fileID: 1000011982216214}
   snapLeftAction:
-    actionPath: /actions/default/in/SnapTurnLeft
+    actionPath: /actions/Stationeers/in/SnapTurnLeft
     needsReinit: 0
   snapRightAction:
-    actionPath: /actions/default/in/SnapTurnRight
+    actionPath: /actions/Stationeers/in/SnapTurnRight
     needsReinit: 0
   fadeScreen: 1
   fadeTime: 0.1

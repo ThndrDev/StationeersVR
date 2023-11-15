@@ -52,7 +52,7 @@ namespace StationeersVR.Utilities
             configNearClipPlane = StVR.Config.Bind("1 - Graphics configuration",
                             "NearClipPlane",
                             .09f,
-                            new ConfigDescription("This can be used to adjust the distance where where anything inside will be clipped out and not rendered. You can try adjusting this if you experience" +
+                            new ConfigDescription("This can be used to adjust the distance where anything inside will be clipped out and not rendered. You can try adjusting this if you experience" +
                                                   " problems where you see the nose of the player character for example.",
                             new AcceptableValueRange<float>(0.05f, 0.5f)));
             nearClipPlane = configNearClipPlane.Value;
