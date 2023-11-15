@@ -24,6 +24,7 @@ using System.Collections;
 using UnityEngine.UI;
 using StationeersVR.Patches;
 using ch.sycoforge.Flares;
+using Util;
 //using Pose = ValheimVRMod.Utilities.Pose;
 
 
@@ -257,6 +258,7 @@ namespace StationeersVR.VRCore
             //THIRD_PERSON_CONFIG_OFFSET = ConfigFile.GetThirdPersonHeadOffset();
             ensurePlayerInstance();
             gameObject.AddComponent<VRControls>();
+            setPlayerTurnMode();
         }
 
         void Update()
@@ -800,6 +802,22 @@ namespace StationeersVR.VRCore
                                 -getHeadOffset(_headZoomLevel) // Player controlled offset (zeroed on tracking reset)
                                 -Vector3.forward * NECK_OFFSET // Move slightly forward to position on neck
                                 );
+        }
+
+        //Choose between characterContinuousTurn or SnapTurn
+        private void setPlayerTurnMode()
+        {            
+            if (!ConfigFile.UseSnapTurn)
+            {
+                ModLog.Debug("Continuous turn mode Enabled");
+                _instance.GetComponentInChildren<SnapTurn>().DestroyComponent();
+                VRControls.useContinousTurn = true;
+            }
+            else
+            {
+                ModLog.Debug("SnapTurn mode Enabled");
+                VRControls.useContinousTurn = false;
+            }
         }
 
         //Moves all the effects and the meshes that compose the player, doesn't move the Rigidbody
