@@ -357,7 +357,7 @@ namespace StationeersVR.VRCore.UI
             {
                 return 0.0f;
             }
-            return -pitchAndYaw.axis.y;
+            return pitchAndYaw.axis.y;
         }
       // This is used in Valheim to rotate the building pieces. Later we should make something similar to cycle/rotate stuff when building
         public int getDirectPieceRotation()

@@ -108,8 +108,8 @@ namespace StationeersVR
                         return false;
                     }
                 }
-                if (joystick < 0.1f)
-                    __result = -1f * Mathf.Clamp(joystick, -1f, 0f);
+                if (joystick > 0.1f)
+                    __result = Mathf.Clamp(joystick, 0f, 1f); 
                 return false;
             }
             return true; // VRControls not enable, so just run the vanilla method
@@ -140,8 +140,8 @@ namespace StationeersVR
                         return false;
                     }
                 }
-                if (joystick > 0.1f)
-                    __result = -1f * Mathf.Clamp(joystick, 0f, 1f);
+                if (joystick < 0.1f)
+                    __result = Mathf.Clamp(joystick, -1f, 0f);
                 return false;
             }
             return true; // VRControls not enable, so just run the vanilla method
