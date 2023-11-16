@@ -7,6 +7,8 @@ using StationeersVR.VRCore;
 using Assets.Scripts;
 using Assets.Scripts.Serialization;
 using Assets.Scripts.Util;
+using UnityEngine.Events;
+using System;
 
 // These Harmony patches are used to inject the VR inputs into the game's control system
 namespace StationeersVR
@@ -65,46 +67,84 @@ namespace StationeersVR
             return true;
         }
     }
-    /*
-    [HarmonyPatch(typeof(KeyManager), nameof(KeyManager.GetMouseDown))]
-    class KeyManager_GetMouseDown_Patch
+
+    [HarmonyPatch(typeof(Input), nameof(Input.GetKey), new Type[] { typeof(KeyCode)})]
+    class Input_GetKey_KeyCode_Patch
     {
-        static void Postfix(string key, ref bool __result)
+        static bool Prefix(KeyCode key, ref bool __result)
         {
             if (VRControls.mainControlsActive)
             {
-                __result = VRControls.instance.GetMouseDown(key);
-                //ModLog.Debug("GetMouseDown Patch: KeyCode: " + key + " VRControls.instance.GetMouseDown Returned: " +  __result);
+                __result = Input.GetKeyInt(key) || (VRControls.instance.GetButton(key));
+                return false;
             }
+            return true;
         }
     }
 
-    [HarmonyPatch(typeof(KeyManager), nameof(KeyManager.GetMouseUp))]
-    class KeyManager_GetMouseUp_Patch
+    // This patch will enable Continuous Turn if Snapturn is disabled
+    [HarmonyPatch(typeof(KeyManager), nameof(KeyManager.GetAscend))]
+    class KeyManager_GetAscend_Patch
     {
-        static void Postfix(string key, ref bool __result)
+        static bool Prefix(ref float __result)
         {
+            if (ConsoleWindow.IsOpen)
+            {
+                __result = 0f;
+                return false;
+            }
             if (VRControls.mainControlsActive)
             {
-                __result = VRControls.instance.GetMouseUp(key);
-                //ModLog.Debug("GetMouseUp Patch: KeyCode: " + key + " VRControls.instance.GetMouseUp Returned: " + __result);
+                var joystick = VRControls.instance.GetJoyRightStickY();
+                if (VRPlayer.attachedToPlayer)
+                {
+                    // Deadzone values
+                    if (joystick > -0.1f && joystick < 0.1f)
+                    {
+                        __result = 0f;
+                        return false;
+                    }
+                }
+                if (joystick > 0.1f)
+                    __result = Mathf.Clamp(joystick, 0f, 1f); 
+                return false;
             }
+            return true; // VRControls not enable, so just run the vanilla method
         }
     }
 
-    [HarmonyPatch(typeof(KeyManager), nameof(KeyManager.GetMouse))]
-    class KeyManager_GetMouse_Patch
+    // This patch will enable Continuous Turn if Snapturn is disabled
+    [HarmonyPatch(typeof(KeyManager), nameof(KeyManager.GetDescend))]
+    class KeyManager_GetDescend_Patch
     {
-        static void Postfix(string key, ref bool __result)
+        static bool Prefix(ref float __result)
         {
+            if (ConsoleWindow.IsOpen)
+            {
+                __result = 0f;
+                return false;
+            }
             if (VRControls.mainControlsActive)
             {
-                __result = VRControls.instance.GetMouse(key);
-               // ModLog.Debug("GetMouse Patch: KeyCode: " + key + " VRControls.instance.GetMouse Returned: " + __result);
+                var joystick = VRControls.instance.GetJoyRightStickY();
+                ModLog.Debug("Joystick Y value: " + joystick);
+                if (VRPlayer.attachedToPlayer)
+                {
+                    // Deadzone values
+                    if (joystick > -0.1f && joystick < 0.1f)
+                    {
+                        __result = 0f;
+                        return false;
+                    }
+                }
+                if (joystick < 0.1f)
+                    __result = Mathf.Clamp(joystick, -1f, 0f);
+                return false;
             }
+            return true; // VRControls not enable, so just run the vanilla method
         }
     }
-    */
+
 
     // This patch will make the left VR joystick move the character forward/backwards
     [HarmonyPatch(typeof(KeyManager), nameof(KeyManager.GetForwardAxis))]

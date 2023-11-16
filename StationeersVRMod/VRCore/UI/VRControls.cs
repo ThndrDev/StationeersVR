@@ -10,6 +10,7 @@ namespace StationeersVR.VRCore.UI
     class VRControls : MonoBehaviour
     {
         private bool vrcontrols_initialized = false;
+        public static bool useContinousTurn = false;
         // Time in seconds that Recenter pose must be held to recenter
         private static readonly float RECENTER_POSE_TIME = 3f;
         // Local Position relative to HMD that will trigger the Recenter action
@@ -356,7 +357,7 @@ namespace StationeersVR.VRCore.UI
             {
                 return 0.0f;
             }
-            return -pitchAndYaw.axis.y;
+            return pitchAndYaw.axis.y;
         }
       // This is used in Valheim to rotate the building pieces. Later we should make something similar to cycle/rotate stuff when building
         public int getDirectPieceRotation()
@@ -553,6 +554,7 @@ namespace StationeersVR.VRCore.UI
             return SteamVR_Actions.valheim_UseLeft.state;
         }
 */
+
         public void init()
         {
             if (!vrcontrols_initialized)
@@ -563,8 +565,8 @@ namespace StationeersVR.VRCore.UI
                 keyToBooleanAction.Add(KeyMap.PrimaryAction, new[] { SteamVR_Actions.stationeers_UseLeft, SteamVR_Actions.laserPointers_LeftClick });
                 keyToBooleanAction.Add(KeyMap.SecondaryAction, new[] { SteamVR_Actions.stationeers_Grab });
                 keyToBooleanAction.Add(KeyMap.Jetpack, new[] { SteamVR_Actions.stationeers_Jetpack });
-                keyToBooleanAction.Add(KeyMap.Ascend, new[] { SteamVR_Actions.stationeers_Ascend });
-                keyToBooleanAction.Add(KeyMap.Descend, new[] { SteamVR_Actions.stationeers_Descend });
+                //keyToBooleanAction.Add(KeyMap.Ascend, new[] { SteamVR_Actions.stationeers_Ascend });
+                //keyToBooleanAction.Add(KeyMap.Descend, new[] { SteamVR_Actions.stationeers_Descend });
 
                 keyToBooleanAction.Add(KeyMap.SuitSlot, new[] { SteamVR_Actions.stationeers_ToggleInventory });
                 keyToBooleanAction.Add(KeyMap.Cancel, new[] { SteamVR_Actions.stationeers_ToggleMenu });

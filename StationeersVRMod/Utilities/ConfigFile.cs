@@ -15,6 +15,7 @@ namespace StationeersVR.Utilities
         private static ConfigEntry<bool> configUseLookLocomotion;
         private static ConfigEntry<bool> configUseVrControls;
         private static ConfigEntry<string> configDominantHand;
+        private static ConfigEntry<bool> configUseSnapTurn;
 
         // Variables to access the configuration
         public static int LogLevel;
@@ -23,6 +24,7 @@ namespace StationeersVR.Utilities
         public static bool LeftHanded;
         public static bool UseLookLocomotion;
         public static bool UseVrControls;
+        public static bool UseSnapTurn;
         public static void HandleConfig(StationeersVR StVR) // Create and manage the configuration file parameters
         {
             //Log Section
@@ -73,12 +75,20 @@ namespace StationeersVR.Utilities
                 "This setting, if true, will also force UseOverlayGui to be false as this setting Overlay GUI is not compatible with VR laser pointer inputs.");
             UseVrControls = configUseVrControls.Value;
 
-            configDominantHand = StVR.Config.Bind("Controls",
+
+
+            configDominantHand = StVR.Config.Bind("2 - Controls",
                             "DominantHand",
                             "Right",
                             new ConfigDescription("The dominant hand of the player",
                             new AcceptableValueList<string>(new string[] { "Right", "Left" })));
 
+            configUseSnapTurn = StVR.Config.Bind("2 - Controls",
+                "UseSnapTurn",
+                true,
+                "This setting enables the use of the SnapTurn in VR to turn the character sideways." +
+                "Set this to false to enable Continuous Turn mode.");
+            UseSnapTurn = configUseSnapTurn.Value;
 
         }
         public static string GetDominantHand()
