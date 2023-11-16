@@ -49,7 +49,7 @@ namespace StationeersVR
 
         void Start()
         {
-            ModLog.Debug("Running StartStationeersVR()");
+            ModLog.Debug("Running StartStationeersVR()");  
             StartStationeersVR();
         }
 

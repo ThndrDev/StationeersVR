@@ -1,15 +1,12 @@
 ﻿using HarmonyLib;
 using JetBrains.Annotations;
-using Valve.VR;
 using StationeersVR.Utilities;
 using StationeersVR.VRCore.UI;
 using UnityEngine;
-using Valve.VR.InteractionSystem;
 using StationeersVR.VRCore;
-using Assets.Scripts.UI;
-using System.Collections.Generic;
 using Assets.Scripts;
 using Assets.Scripts.Serialization;
+using Assets.Scripts.Util;
 
 // These Harmony patches are used to inject the VR inputs into the game's control system
 namespace StationeersVR
@@ -158,6 +155,39 @@ namespace StationeersVR
                 return false;
             }
             return true;
+        }
+    }
+
+
+
+    [HarmonyPatch(typeof(CameraController), nameof(CameraController.SetMouseLook))]
+    class CameraController_SetMouseLook_Patch
+    {
+        static bool Prefix(CameraController __instance)
+        {
+            if (VRControls.mainControlsActive)
+            {
+                //Setting this to zero so it does not cause any issues
+                float num = 0;//Singleton<InputManager>.Instance.GetAxis("LookY"); //VRControls.instance.GetJoyRightStickY();
+                if (KeyManager.HasAxis(ControllerMap.VerticalLook))
+                {
+                    num = Mathf.Clamp(num + ControllerMap.VerticalLook.Output, -1f, 1f);
+                }
+                float num2 = VRControls.instance.GetJoyRightStickX();//Singleton<InputManager>.Instance.GetAxis("LookX");
+                if (KeyManager.HasAxis(ControllerMap.HorizontalLook))
+                {
+                    num2 = Mathf.Clamp(num2 + ControllerMap.HorizontalLook.Output, -1f, 1f);
+                }
+                __instance.RotationX += num * CameraController.CameraSensitivity * (float)((!Settings.CurrentData.InvertMouse) ? 1 : (-1));
+                __instance.RotationY += num2 * CameraController.CameraSensitivity;
+                __instance.RotationX = InputHelpers.ClampAngle(__instance.RotationX, __instance.CameraTiltMinimum, __instance.CameraTiltMaximum);
+                //VR Smooth Turn
+                //Below turns the VR Camera with the player
+                //Only Doing the Y axis since we do not need a joystick to look up and down
+                Quaternion cameraRotation = Quaternion.Euler(0f , __instance.RotationY, 0f);
+                VRPlayer.vrPlayerInstance._vrCameraRig.transform.rotation = cameraRotation;
+            }
+            return false;
         }
     }
 }

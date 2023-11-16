@@ -4,7 +4,7 @@ using StationeersVR.Utilities;
 using StationeersVR.VRCore.UI;
 //using AmplifyOcclusion;
 using System.Reflection;
-//using RootMotion.FinalIK;
+using RootMotion.FinalIK;
 using UnityEngine;
 //using UnityEngine.PostProcessing;
 using UnityEngine.SceneManagement;
@@ -73,8 +73,8 @@ namespace StationeersVR.VRCore
         public const float ROOMSCALE_STEP_ANIMATION_SMOOTHING = 0.3f;
         public const float ROOMSCALE_ANIMATION_WEIGHT = 2f;
 
-        //public static VRIK vrikRef { get { return _vrik; } }
-        //private static VRIK _vrik;
+        public static VRIK vrikRef { get { return _vrik; } }
+        private static VRIK _vrik;
 
         private static float referencePlayerHeight;
 
@@ -89,7 +89,7 @@ namespace StationeersVR.VRCore
         //private Camera _skyboxCam;
 
         //Roomscale movement variables
-        private Transform _vrCameraRig;
+        public Transform _vrCameraRig;
         private Vector3 _lastCamPosition = Vector3.zero;
         private Vector3 _lastPlayerPosition = Vector3.zero;
         private Vector3 _lastPlayerAttachmentPosition = Vector3.zero;
@@ -116,6 +116,8 @@ namespace StationeersVR.VRCore
 
         public static Hand dominantHand { get { return ConfigFile.LeftHanded ? leftHand : rightHand; } }
         //public static bool ShouldPauseMovement { get { return PlayerCustomizaton.IsBarberGuiVisible() || (Menu.IsVisible() && !ConfigFile.AllowMovementWhenInMenu()); } }
+        public static bool ShouldPauseMovement { get { return IsPaused(); } }
+        public static bool IsPaused() { return GameManager.GameState == Assets.Scripts.GridSystem.GameState.Paused;}
         public static bool IsClickableGuiOpen
         {
             get {
@@ -269,7 +271,7 @@ namespace StationeersVR.VRCore
             attachVrPlayerToWorldObject();
             enableCameras();
             checkAndSetHandsAndPointers();
-            //updateVrik();
+            updateVrik();
             //UpdateAmplifyOcclusionStatus();
 
 
@@ -403,13 +405,13 @@ namespace StationeersVR.VRCore
             {
                 //_leftHand.enabled = ConfigFile.UseVrControls();
                 _leftHand.enabled = true;
-                _leftHand.SetVisibility(_leftHand.enabled); //&& !vrikEnabled());
+                _leftHand.SetVisibility(_leftHand.enabled && !vrikEnabled());
             }
             if (_rightHand != null)
             {
                 //_rightHand.enabled = ConfigFile.UseVrControls();
                 _rightHand.enabled = true;
-                _rightHand.SetVisibility(_rightHand.enabled); //&& !vrikEnabled()) ;
+                _rightHand.SetVisibility(_rightHand.enabled&& !vrikEnabled()) ;
             }
             // Next check whether the hands are active, and enable the appropriate pointer based
             // on what is available and what the options set as preferred. Disable the inactive pointer(s).
@@ -830,7 +832,7 @@ namespace StationeersVR.VRCore
             return 0f;
         }
 
-/*
+
         private void updateVrik()
         {
             var player = getPlayerCharacter();
@@ -840,19 +842,18 @@ namespace StationeersVR.VRCore
             }
             maybeAddVrik(player);
             if (_vrik != null) {
-                _vrik.enabled = ConfigFile.UseVrControls() &&
+                _vrik.enabled = ConfigFile.UseVrControls &&
                     inFirstPerson &&
-                    !player.InDodge() &&
+                    /*!player.InDodge() &&
                     !player.IsStaggering() &&
-                    !player.IsSleeping() &&
+                    !player.IsSleeping() &&*/
                     validVrikAnimatorState(player.GetComponentInChildren<Animator>());
-                LeftHandQuickMenu.instance.UpdateWristBar();
-                RightHandQuickMenu.instance.UpdateWristBar();
+                //LeftHandQuickMenu.instance.UpdateWristBar();
+                //RightHandQuickMenu.instance.UpdateWristBar();
             }
         }
-*/
 
-/*
+
         private bool validVrikAnimatorState(Animator animator)
         {
             if (animator == null)
@@ -861,23 +862,23 @@ namespace StationeersVR.VRCore
             }
             return !animator.GetBool("wakeup");
         }
-*/
-/*
-        private void maybeAddVrik(Player player)
+
+
+        private void maybeAddVrik(Human player)
         {
-            if (!ConfigFile.UseVrControls() || player.gameObject.GetComponent<VRIK>() != null)
+            if (!ConfigFile.UseVrControls || player.gameObject.GetComponent<VRIK>() != null)
             {
                 return;
             }
-            var cam = CameraUtils.getCamera(CameraUtils.VR_CAMERA);
+            var cam = CameraUtils.GetCamera(CameraUtils.VR_CAMERA);
             _vrik = VrikCreator.initialize(player.gameObject, 
                 leftHand.transform, rightHand.transform, cam.transform);
-            var vrPlayerSync = player.gameObject.GetComponent<VRPlayerSync>();
+            /*var vrPlayerSync = player.gameObject.GetComponent<VRPlayerSync>();
             vrPlayerSync.camera = cam.gameObject;
             vrPlayerSync.leftHand = _vrik.solver.leftArm.target.parent.gameObject;
-            vrPlayerSync.rightHand = _vrik.solver.rightArm.target.parent.gameObject;
+            vrPlayerSync.rightHand = _vrik.solver.rightArm.target.parent.gameObject;*/
             VrikCreator.resetVrikHandTransform(player);
-            _vrik.references.leftHand.gameObject.AddComponent<HandGesture>().sourceHand = leftHand;
+            /*_vrik.references.leftHand.gameObject.AddComponent<HandGesture>().sourceHand = leftHand;
             _vrik.references.rightHand.gameObject.AddComponent<HandGesture>().sourceHand = rightHand;
             StaticObjects.leftFist().setColliderParent(_vrik.references.leftHand, false);
             StaticObjects.rightFist().setColliderParent(_vrik.references.rightHand, true);
@@ -885,7 +886,7 @@ namespace StationeersVR.VRCore
             StaticObjects.mouthCollider(cam.transform);
             StaticObjects.addQuickMenus();
             LeftHandQuickMenu.instance.refreshItems();
-            RightHandQuickMenu.instance.refreshItems();
+            RightHandQuickMenu.instance.refreshItems();*/
         }
 
         private bool vrikEnabled()
@@ -898,11 +899,11 @@ namespace StationeersVR.VRCore
             var vrik = player.gameObject.GetComponent<VRIK>();
             if (vrik != null && vrik != null)
             {
-                return vrik.enabled && !Game.IsPaused();
+                return vrik.enabled && !IsPaused();
             }
             return false;
         }
-*/
+
         private void maybeInitHeadPosition(Human playerCharacter)
         {
             if (!headPositionInitialized && inFirstPerson)
@@ -936,7 +937,7 @@ namespace StationeersVR.VRCore
                 return Vector3.zero;
             }
             return new Vector3(playerCharacter.transform.position.x,
-                    playerCharacter.CameraController.MainCameraPosition.y, playerCharacter.transform.position.z);
+                    playerCharacter.CameraController.MainCameraPosition.y - 0.095f, playerCharacter.transform.position.z);
             /*Valheim Example:
              * return new Vector3(playerCharacter.transform.position.x,
                     playerCharacter.GetEyePoint().y, playerCharacter.transform.position.z);*/
