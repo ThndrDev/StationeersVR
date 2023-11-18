@@ -9,8 +9,8 @@ namespace StationeersVR.VRCore.UI
 {
     class VRControls : MonoBehaviour
     {
-        private bool vrcontrols_initialized = false;
-        public static bool useContinousTurn = false;
+        public static bool vrcontrols_initialized = false;
+        public static bool useContinuousTurn;
         // Time in seconds that Recenter pose must be held to recenter
         private static readonly float RECENTER_POSE_TIME = 3f;
         // Local Position relative to HMD that will trigger the Recenter action
@@ -568,7 +568,7 @@ namespace StationeersVR.VRCore.UI
                 //keyToBooleanAction.Add(KeyMap.Ascend, new[] { SteamVR_Actions.stationeers_Ascend });
                 //keyToBooleanAction.Add(KeyMap.Descend, new[] { SteamVR_Actions.stationeers_Descend });
 
-                keyToBooleanAction.Add(KeyMap.SuitSlot, new[] { SteamVR_Actions.stationeers_ToggleInventory });
+                //keyToBooleanAction.Add(KeyMap.SuitSlot, new[] { SteamVR_Actions.stationeers_ToggleInventory });
                 keyToBooleanAction.Add(KeyMap.Cancel, new[] { SteamVR_Actions.stationeers_ToggleMenu });
                 //keyToBooleanAction.Add(KeyMap._Ascend, new[] { SteamVR_Actions.stationeers_Jump, SteamVR_Actions.laserPointers_Jump });
 
@@ -594,7 +594,6 @@ namespace StationeersVR.VRCore.UI
                 //initQuickActionOnly();
                 recenteringPoseDuration = 0f;
                 vrcontrols_initialized = true;
-
             }
         }
 
@@ -605,9 +604,47 @@ namespace StationeersVR.VRCore.UI
 
         private void initignoredKeys()
         {
-            // Example:
-            //ignoredKeys.Add(KeyMap.PrecisionPlace);
-            
+            ignoredKeys.Add(KeyMap.Forward);
+            ignoredKeys.Add(KeyMap.Backward);
+            ignoredKeys.Add(KeyMap.Left);
+            ignoredKeys.Add(KeyMap.Right);
+            ignoredKeys.Add(KeyMap.HelmetSlot);
+            ignoredKeys.Add(KeyMap.GlassesSlot);
+            ignoredKeys.Add(KeyMap.SuitSlot);
+            ignoredKeys.Add(KeyMap.BackSlot);
+            ignoredKeys.Add(KeyMap.UniformSlot);
+            ignoredKeys.Add(KeyMap.ToolBeltSlot);
+            ignoredKeys.Add(KeyMap.Grab);
+            ignoredKeys.Add(KeyMap.ShowScoreBoard);
+            ignoredKeys.Add(KeyMap.ShowDynamicPanel);
+            ignoredKeys.Add(KeyMap.PreviousItem);
+            ignoredKeys.Add(KeyMap.NextItem);
+            ignoredKeys.Add(KeyMap.SpawnItem);
+            ignoredKeys.Add(KeyMap.ToggleUi);
+            ignoredKeys.Add(KeyMap.ToggleConsole);
+            ignoredKeys.Add(KeyMap.ToggleInfo);
+            ignoredKeys.Add(KeyMap.ScreenShot);
+            ignoredKeys.Add(KeyMap.Internals);
+            ignoredKeys.Add(KeyMap.ToggleHandPower);
+            ignoredKeys.Add(KeyMap.Chatting);
+            ignoredKeys.Add(KeyMap.PrecisionPlace);
+            ignoredKeys.Add(KeyMap.InstantStop);
+            ignoredKeys.Add(KeyMap.Teleport);
+            ignoredKeys.Add(KeyMap.FoVUp);
+            ignoredKeys.Add(KeyMap.FoVDown);
+            ignoredKeys.Add(KeyMap.EmoteWave);
+            ignoredKeys.Add(KeyMap.FoVUp);
+            ignoredKeys.Add(KeyMap.ThirdPersonControl);
+            ignoredKeys.Add(KeyMap.HideAllWindows);
+            ignoredKeys.Add(KeyMap.SuitPressureIncrease);
+            ignoredKeys.Add(KeyMap.SuitPressureIncrease);
+            ignoredKeys.Add(KeyMap.SuitTemperatureIncrease);
+            ignoredKeys.Add(KeyMap.SuitTemperatureDecrease);
+            ignoredKeys.Add(KeyMap.JetpackThrustIncrease);
+            ignoredKeys.Add(KeyMap.JetpackThrustDecrease);
+            ignoredKeys.Add(KeyMap.FovReset);
+            ignoredKeys.Add(KeyMap.SmartTool);
+            ignoredKeys.Add(KeyMap.PingHighlight);
         }
 
     }

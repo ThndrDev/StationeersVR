@@ -83,6 +83,7 @@ namespace StationeersVR.Utilities
                             new ConfigDescription("The dominant hand of the player",
                             new AcceptableValueList<string>(new string[] { "Right", "Left" })));
 
+
             configUseSnapTurn = StVR.Config.Bind("2 - Controls",
                 "UseSnapTurn",
                 true,

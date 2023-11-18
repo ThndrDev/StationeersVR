@@ -72,7 +72,7 @@
       "requirement": "mandatory"
     },
     {
-      "name": "/actions/Stationeers/in/Jump",
+      "name": "/actions/Stationeers/in/MouseControl",
       "type": "boolean",
       "requirement": "mandatory"
     },
@@ -133,6 +133,10 @@
     },
     {
       "name": "/actions/Stationeers/in/Descend",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/Stationeers/in/ClickModifier",
       "type": "boolean"
     },
     {
@@ -223,7 +227,8 @@
       "/actions/Stationeers/in/SnapTurnRight": "Snap Turn (Right)",
       "/actions/Stationeers/in/Jetpack": "Jetpack",
       "/actions/Stationeers/in/Ascend": "Ascend",
-      "/actions/Stationeers/in/Descend": "Descend"
+      "/actions/Stationeers/in/Descend": "Descend",
+      "/actions/Stationeers/in/ClickModifier": "ClickModifier"
     }
   ]
 }

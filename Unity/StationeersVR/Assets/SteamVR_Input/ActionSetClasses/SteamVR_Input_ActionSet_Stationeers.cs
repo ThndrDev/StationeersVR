@@ -33,11 +33,11 @@ namespace Valve.VR
             }
         }
         
-        public virtual SteamVR_Action_Boolean Jump
+        public virtual SteamVR_Action_Boolean MouseControl
         {
             get
             {
-                return SteamVR_Actions.stationeers_Jump;
+                return SteamVR_Actions.stationeers_MouseControl;
             }
         }
         
@@ -142,6 +142,14 @@ namespace Valve.VR
             get
             {
                 return SteamVR_Actions.stationeers_Descend;
+            }
+        }
+        
+        public virtual SteamVR_Action_Boolean ClickModifier
+        {
+            get
+            {
+                return SteamVR_Actions.stationeers_ClickModifier;
             }
         }
         

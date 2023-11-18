@@ -170,7 +170,7 @@
             {
                "inputs" : {
                   "click" : {
-                     "output" : "/actions/stationeers/in/jump"
+                     "output" : "/actions/stationeers/in/mousecontrol"
                   }
                },
                "mode" : "button",

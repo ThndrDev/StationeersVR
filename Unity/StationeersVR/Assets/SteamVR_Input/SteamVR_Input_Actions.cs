@@ -47,7 +47,7 @@ namespace Valve.VR
         
         private static SteamVR_Action_Boolean p_stationeers_ToggleMenu;
         
-        private static SteamVR_Action_Boolean p_stationeers_Jump;
+        private static SteamVR_Action_Boolean p_stationeers_MouseControl;
         
         private static SteamVR_Action_Boolean p_stationeers_UseLeft;
         
@@ -74,6 +74,8 @@ namespace Valve.VR
         private static SteamVR_Action_Boolean p_stationeers_Ascend;
         
         private static SteamVR_Action_Boolean p_stationeers_Descend;
+        
+        private static SteamVR_Action_Boolean p_stationeers_ClickModifier;
         
         private static SteamVR_Action_Vibration p_stationeers_Haptic;
         
@@ -197,11 +199,11 @@ namespace Valve.VR
             }
         }
         
-        public static SteamVR_Action_Boolean stationeers_Jump
+        public static SteamVR_Action_Boolean stationeers_MouseControl
         {
             get
             {
-                return SteamVR_Actions.p_stationeers_Jump.GetCopy<SteamVR_Action_Boolean>();
+                return SteamVR_Actions.p_stationeers_MouseControl.GetCopy<SteamVR_Action_Boolean>();
             }
         }
         
@@ -309,6 +311,14 @@ namespace Valve.VR
             }
         }
         
+        public static SteamVR_Action_Boolean stationeers_ClickModifier
+        {
+            get
+            {
+                return SteamVR_Actions.p_stationeers_ClickModifier.GetCopy<SteamVR_Action_Boolean>();
+            }
+        }
+        
         public static SteamVR_Action_Vibration stationeers_Haptic
         {
             get
@@ -335,7 +345,7 @@ namespace Valve.VR
                     SteamVR_Actions.laserPointers_Jump,
                     SteamVR_Actions.stationeers_ToggleInventory,
                     SteamVR_Actions.stationeers_ToggleMenu,
-                    SteamVR_Actions.stationeers_Jump,
+                    SteamVR_Actions.stationeers_MouseControl,
                     SteamVR_Actions.stationeers_UseLeft,
                     SteamVR_Actions.stationeers_PitchAndYaw,
                     SteamVR_Actions.stationeers_PoseL,
@@ -349,6 +359,7 @@ namespace Valve.VR
                     SteamVR_Actions.stationeers_Jetpack,
                     SteamVR_Actions.stationeers_Ascend,
                     SteamVR_Actions.stationeers_Descend,
+                    SteamVR_Actions.stationeers_ClickModifier,
                     SteamVR_Actions.stationeers_Haptic};
             Valve.VR.SteamVR_Input.actionsIn = new Valve.VR.ISteamVR_Action_In[] {
                     SteamVR_Actions.default_InteractUI,
@@ -365,7 +376,7 @@ namespace Valve.VR
                     SteamVR_Actions.laserPointers_Jump,
                     SteamVR_Actions.stationeers_ToggleInventory,
                     SteamVR_Actions.stationeers_ToggleMenu,
-                    SteamVR_Actions.stationeers_Jump,
+                    SteamVR_Actions.stationeers_MouseControl,
                     SteamVR_Actions.stationeers_UseLeft,
                     SteamVR_Actions.stationeers_PitchAndYaw,
                     SteamVR_Actions.stationeers_PoseL,
@@ -378,7 +389,8 @@ namespace Valve.VR
                     SteamVR_Actions.stationeers_SnapTurnRight,
                     SteamVR_Actions.stationeers_Jetpack,
                     SteamVR_Actions.stationeers_Ascend,
-                    SteamVR_Actions.stationeers_Descend};
+                    SteamVR_Actions.stationeers_Descend,
+                    SteamVR_Actions.stationeers_ClickModifier};
             Valve.VR.SteamVR_Input.actionsOut = new Valve.VR.ISteamVR_Action_Out[] {
                     SteamVR_Actions.default_Haptic,
                     SteamVR_Actions.stationeers_Haptic};
@@ -400,7 +412,7 @@ namespace Valve.VR
                     SteamVR_Actions.laserPointers_Jump,
                     SteamVR_Actions.stationeers_ToggleInventory,
                     SteamVR_Actions.stationeers_ToggleMenu,
-                    SteamVR_Actions.stationeers_Jump,
+                    SteamVR_Actions.stationeers_MouseControl,
                     SteamVR_Actions.stationeers_UseLeft,
                     SteamVR_Actions.stationeers_Grab,
                     SteamVR_Actions.stationeers_UseRight,
@@ -408,7 +420,8 @@ namespace Valve.VR
                     SteamVR_Actions.stationeers_SnapTurnRight,
                     SteamVR_Actions.stationeers_Jetpack,
                     SteamVR_Actions.stationeers_Ascend,
-                    SteamVR_Actions.stationeers_Descend};
+                    SteamVR_Actions.stationeers_Descend,
+                    SteamVR_Actions.stationeers_ClickModifier};
             Valve.VR.SteamVR_Input.actionsSingle = new Valve.VR.SteamVR_Action_Single[0];
             Valve.VR.SteamVR_Input.actionsVector2 = new Valve.VR.SteamVR_Action_Vector2[] {
                     SteamVR_Actions.laserPointers_PitchAndYaw,
@@ -431,7 +444,7 @@ namespace Valve.VR
                     SteamVR_Actions.laserPointers_Jump,
                     SteamVR_Actions.stationeers_ToggleInventory,
                     SteamVR_Actions.stationeers_ToggleMenu,
-                    SteamVR_Actions.stationeers_Jump,
+                    SteamVR_Actions.stationeers_MouseControl,
                     SteamVR_Actions.stationeers_UseLeft,
                     SteamVR_Actions.stationeers_PitchAndYaw,
                     SteamVR_Actions.stationeers_ContextScroll,
@@ -442,7 +455,8 @@ namespace Valve.VR
                     SteamVR_Actions.stationeers_SnapTurnRight,
                     SteamVR_Actions.stationeers_Jetpack,
                     SteamVR_Actions.stationeers_Ascend,
-                    SteamVR_Actions.stationeers_Descend};
+                    SteamVR_Actions.stationeers_Descend,
+                    SteamVR_Actions.stationeers_ClickModifier};
         }
         
         private static void PreInitActions()
@@ -462,7 +476,7 @@ namespace Valve.VR
             SteamVR_Actions.p_laserPointers_Jump = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/LaserPointers/in/Jump")));
             SteamVR_Actions.p_stationeers_ToggleInventory = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/Stationeers/in/ToggleInventory")));
             SteamVR_Actions.p_stationeers_ToggleMenu = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/Stationeers/in/ToggleMenu")));
-            SteamVR_Actions.p_stationeers_Jump = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/Stationeers/in/Jump")));
+            SteamVR_Actions.p_stationeers_MouseControl = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/Stationeers/in/MouseControl")));
             SteamVR_Actions.p_stationeers_UseLeft = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/Stationeers/in/UseLeft")));
             SteamVR_Actions.p_stationeers_PitchAndYaw = ((SteamVR_Action_Vector2)(SteamVR_Action.Create<SteamVR_Action_Vector2>("/actions/Stationeers/in/PitchAndYaw")));
             SteamVR_Actions.p_stationeers_PoseL = ((SteamVR_Action_Pose)(SteamVR_Action.Create<SteamVR_Action_Pose>("/actions/Stationeers/in/PoseL")));
@@ -476,6 +490,7 @@ namespace Valve.VR
             SteamVR_Actions.p_stationeers_Jetpack = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/Stationeers/in/Jetpack")));
             SteamVR_Actions.p_stationeers_Ascend = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/Stationeers/in/Ascend")));
             SteamVR_Actions.p_stationeers_Descend = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/Stationeers/in/Descend")));
+            SteamVR_Actions.p_stationeers_ClickModifier = ((SteamVR_Action_Boolean)(SteamVR_Action.Create<SteamVR_Action_Boolean>("/actions/Stationeers/in/ClickModifier")));
             SteamVR_Actions.p_stationeers_Haptic = ((SteamVR_Action_Vibration)(SteamVR_Action.Create<SteamVR_Action_Vibration>("/actions/Stationeers/out/Haptic")));
         }
     }

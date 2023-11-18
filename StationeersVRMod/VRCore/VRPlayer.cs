@@ -25,6 +25,9 @@ using UnityEngine.UI;
 using StationeersVR.Patches;
 using ch.sycoforge.Flares;
 using Util;
+using Assets.Scripts.Util;
+using SimpleSpritePacker;
+using UnityEngine.TextCore.Text;
 //using Pose = ValheimVRMod.Utilities.Pose;
 
 
@@ -119,6 +122,7 @@ namespace StationeersVR.VRCore
         //public static bool ShouldPauseMovement { get { return PlayerCustomizaton.IsBarberGuiVisible() || (Menu.IsVisible() && !ConfigFile.AllowMovementWhenInMenu()); } }
         public static bool ShouldPauseMovement { get { return IsPaused(); } }
         public static bool IsPaused() { return GameManager.GameState == Assets.Scripts.GridSystem.GameState.Paused;}
+        private bool turnModeSet = false;
         public static bool IsClickableGuiOpen
         {
             get {
@@ -260,7 +264,6 @@ namespace StationeersVR.VRCore
             //THIRD_PERSON_CONFIG_OFFSET = ConfigFile.GetThirdPersonHeadOffset();
             ensurePlayerInstance();
             gameObject.AddComponent<VRControls>();
-            setPlayerTurnMode();
         }
 
         void Update()
@@ -803,23 +806,47 @@ namespace StationeersVR.VRCore
                 setPlayerVisualsOffset(playerCharacter.transform,
                                 -getHeadOffset(_headZoomLevel) // Player controlled offset (zeroed on tracking reset)
                                 -Vector3.forward * NECK_OFFSET // Move slightly forward to position on neck
-                                );
+            );
+            if (!turnModeSet)
+            {
+                setPlayerTurnMode();
+            }
         }
 
         //Choose between characterContinuousTurn or SnapTurn
-        private void setPlayerTurnMode()
+        public void setPlayerTurnMode()
         {            
             if (!ConfigFile.UseSnapTurn)
             {
                 ModLog.Debug("Continuous turn mode Enabled");
-                _instance.GetComponentInChildren<SnapTurn>().DestroyComponent();
-                VRControls.useContinousTurn = true;
+                VRControls.useContinuousTurn = true;
             }
             else
             {
-                ModLog.Debug("SnapTurn mode Enabled");
-                VRControls.useContinousTurn = false;
+                // Find the StationeersVRPlayer(Clone) GameObject in the scene.
+                GameObject vrPlayerClone = GameObject.Find("StationeersVRPlayer(Clone)");
+                if (vrPlayerClone != null)
+                {
+                    // Find the SnapTurn component in the children of the StationeersVRPlayer(Clone) GameObject.
+                    SnapTurn snapTurnComponent = vrPlayerClone.GetComponentInChildren<SnapTurn>();
+                    if (snapTurnComponent != null)
+                    {
+                        // Enable the SnapTurn component.
+                        snapTurnComponent.enabled = true;
+                        ModLog.Info("SnapTurn mode Enabled");
+                    }
+                    else
+                    {
+                        Debug.LogError("SnapTurn component not found on StationeersVRPlayer.");
+                    }
+                }
+                else
+                {
+                    Debug.LogError("StationeersVRPlayer GameObject not found in the scene.");
+                }
+                VRControls.useContinuousTurn = false;
             }
+            turnModeSet = true;
         }
 
         //Moves all the effects and the meshes that compose the player, doesn't move the Rigidbody

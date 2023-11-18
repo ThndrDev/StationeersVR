@@ -31,7 +31,7 @@ namespace StationeersVR
     {
         static bool Prefix(KeyCode key, ref bool __result)
         {
-            if (VRControls.mainControlsActive)
+            if (VRControls.mainControlsActive && VRControls.vrcontrols_initialized)
             {
                 __result = (key == KeyMap.ToggleConsole || !ConsoleWindow.IsOpen) && (VRControls.instance.GetButtonDown(key) || Input.GetKeyDown(key));
                 return false;
@@ -45,7 +45,7 @@ namespace StationeersVR
     {
         static bool Prefix(KeyCode key, ref bool __result)
         {
-            if (VRControls.mainControlsActive)
+            if (VRControls.mainControlsActive && VRControls.vrcontrols_initialized)
             {
                 __result = (key == KeyMap.ToggleConsole || !ConsoleWindow.IsOpen) && (VRControls.instance.GetButtonUp(key) || Input.GetKeyUp(key));
                 return false;
@@ -59,7 +59,7 @@ namespace StationeersVR
     {
         static bool Prefix(KeyCode key, ref bool __result)
         {
-            if (VRControls.mainControlsActive)
+            if (VRControls.mainControlsActive && VRControls.vrcontrols_initialized)
             {
                 __result = (key == KeyMap.ToggleConsole || !ConsoleWindow.IsOpen) && (VRControls.instance.GetButton(key) || Input.GetKey(key));
                 return false;
@@ -73,7 +73,7 @@ namespace StationeersVR
     {
         static bool Prefix(KeyCode key, ref bool __result)
         {
-            if (VRControls.mainControlsActive)
+            if (VRControls.mainControlsActive && VRControls.vrcontrols_initialized)
             {
                 __result = Input.GetKeyInt(key) || (VRControls.instance.GetButton(key));
                 return false;
@@ -127,7 +127,7 @@ namespace StationeersVR
             if (VRControls.mainControlsActive)
             {
                 var joystick = VRControls.instance.GetJoyRightStickY();
-                ModLog.Debug("Joystick Y value: " + joystick);
+                //ModLog.Debug("Joystick Y value: " + joystick);
                 if (VRPlayer.attachedToPlayer)
                 {
                     // Deadzone values
@@ -205,7 +205,7 @@ namespace StationeersVR
     {
         static bool Prefix(CameraController __instance)
         {
-            if (VRControls.mainControlsActive)
+            if (VRControls.mainControlsActive && VRControls.useContinuousTurn)
             {
                 //Setting this to zero so it does not cause any issues
                 float num = 0;//Singleton<InputManager>.Instance.GetAxis("LookY"); //VRControls.instance.GetJoyRightStickY();
@@ -226,8 +226,9 @@ namespace StationeersVR
                 //Only Doing the Y axis since we do not need a joystick to look up and down
                 Quaternion cameraRotation = Quaternion.Euler(0f , __instance.RotationY, 0f);
                 VRPlayer.vrPlayerInstance._vrCameraRig.transform.rotation = cameraRotation;
+                return false;
             }
-            return false;
+            return true;
         }
     }
 }

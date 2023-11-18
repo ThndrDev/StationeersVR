@@ -20,7 +20,7 @@ using UnityEngine.SceneManagement;
 
 namespace StationeersVR
 {
-    [BepInPlugin("net.StationeersVR.patches", "StationeersVR", "0.1.0.0")]
+    [BepInPlugin("StationeersVR", "Stationeers VR", "0.1.0.0")]
     public class StationeersVR : BaseUnityPlugin
     {
         public static StationeersVR Instance;
