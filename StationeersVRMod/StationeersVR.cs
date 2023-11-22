@@ -90,6 +90,9 @@ namespace StationeersVR
                 vrPlayer = new GameObject("VRPlayer");
                 DontDestroyOnLoad(vrPlayer);
                 vrPlayer.AddComponent<VRPlayer>();
+                var t = this.GetOrAddComponent<LaserPointerInputModule>();
+                t.forceModuleActive = true;
+
                 /*vrGui = new GameObject("VRGui");
                 DontDestroyOnLoad(vrGui);
                 vrGui.AddComponent<VRGUI>();
