@@ -53,9 +53,9 @@ namespace StationeersVR.Utilities
 
             configNearClipPlane = StVR.Config.Bind("1 - Graphics configuration",
                             "NearClipPlane",
-                            .09f,
+                            0.17f,
                             new ConfigDescription("This can be used to adjust the distance where anything inside will be clipped out and not rendered. You can try adjusting this if you experience" +
-                                                  " problems where you see the nose of the player character for example.",
+                                                  " problems where you see the mouth of the player character for example.",
                             new AcceptableValueRange<float>(0.05f, 0.5f)));
             nearClipPlane = configNearClipPlane.Value;
 
@@ -64,8 +64,8 @@ namespace StationeersVR.Utilities
                                 "UseLookLocomotion",
                                 true,
                                 "Setting this to true ties the direction you are looking to the walk direction while in first person mode. " +
-                                "Set this to false if you prefer to disconnect these so you can look" +
-                                " look by turning your head without affecting movement direction.");
+                                "Set this to false if you prefer to disconnect these so you can look by turning your head without affecting " +
+                                "movement direction.");
             UseLookLocomotion = configUseLookLocomotion.Value;
 
             configUseVrControls = StVR.Config.Bind("2 - Controls",
@@ -86,7 +86,7 @@ namespace StationeersVR.Utilities
 
             configUseSnapTurn = StVR.Config.Bind("2 - Controls",
                 "UseSnapTurn",
-                true,
+                false,
                 "This setting enables the use of the SnapTurn in VR to turn the character sideways." +
                 "Set this to false to enable Continuous Turn mode.");
             UseSnapTurn = configUseSnapTurn.Value;

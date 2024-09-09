@@ -8,7 +8,7 @@ using Assets.Scripts;
 using Assets.Scripts.Serialization;
 using Assets.Scripts.Util;
 using UnityEngine.Events;
-using System;
+using Assets.Scripts.Objects;
 
 // These Harmony patches are used to inject the VR inputs into the game's control system
 namespace StationeersVR
@@ -19,8 +19,15 @@ namespace StationeersVR
     {
         static void Postfix()
         {
-            ModLog.Debug("Initializing VRControls");
-            VRControls.instance.init();
+            if (ConfigFile.UseVrControls)
+            {
+                ModLog.Debug("Initializing VRControls");
+                VRControls.instance.init();
+            }
+            else
+            {
+                ModLog.Debug("VRControls disabled, Stationeers default control mode will be used instead.");
+            }
         }
     }
 
@@ -68,7 +75,7 @@ namespace StationeersVR
         }
     }
 
-    [HarmonyPatch(typeof(Input), nameof(Input.GetKey), new Type[] { typeof(KeyCode)})]
+    [HarmonyPatch(typeof(Input), nameof(Input.GetKey), new System.Type[] { typeof(KeyCode)})]
     class Input_GetKey_KeyCode_Patch
     {
         static bool Prefix(KeyCode key, ref bool __result)
@@ -82,7 +89,7 @@ namespace StationeersVR
         }
     }
 
-    // This patch will enable Continuous Turn if Snapturn is disabled
+    // This will patch the jump/Movement up to listen to the right stick of the controllers
     [HarmonyPatch(typeof(KeyManager), nameof(KeyManager.GetAscend))]
     class KeyManager_GetAscend_Patch
     {
@@ -113,7 +120,7 @@ namespace StationeersVR
         }
     }
 
-    // This patch will enable Continuous Turn if Snapturn is disabled
+    // This will patch Descend to listen to the VR controllers right stick
     [HarmonyPatch(typeof(KeyManager), nameof(KeyManager.GetDescend))]
     class KeyManager_GetDescend_Patch
     {
@@ -231,4 +238,33 @@ namespace StationeersVR
             return true;
         }
     }
+
+    //Code to debug collisions
+    /*
+    [HarmonyPatch(typeof(Assets.Scripts.MovementController))]
+    [HarmonyPatch("OnCollisionEnter")]
+    public static class MovementControllerCollisionDebugPatch
+    {
+        static void Postfix(MovementController __instance, Collision other)
+        {
+            // Log the name of the object that has the MovementController
+            Debug.Log("MovementController Object: " + __instance.gameObject.name);
+
+            // Log the name of the object it collided with
+            Debug.Log("Collided with: " + other.gameObject.name);
+
+            // Log the collider on the MovementController's GameObject that's involved in the collision
+            Collider myCollider = __instance.GetComponent<Collider>();
+            if (myCollider != null)
+            {
+                Debug.Log("Collider on MovementController: " + myCollider.GetType().Name + " at position " + myCollider.bounds.center);
+            }
+
+            // Additional logging for contact points
+            foreach (ContactPoint contact in other.contacts)
+            {
+                Debug.Log("Contact point: " + contact.point + " on collider " + contact.thisCollider.name);
+            }
+        }
+    }*/    
 }

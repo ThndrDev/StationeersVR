@@ -562,11 +562,11 @@ namespace StationeersVR.VRCore.UI
                 SteamVR_Actions.Stationeers.Activate(SteamVR_Input_Sources.Any, 0, true);
                 SteamVR_Actions.LaserPointers.Activate();
                 
-                keyToBooleanAction.Add(KeyMap.PrimaryAction, new[] { SteamVR_Actions.stationeers_UseLeft, SteamVR_Actions.laserPointers_LeftClick });
-                keyToBooleanAction.Add(KeyMap.SecondaryAction, new[] { SteamVR_Actions.stationeers_Grab });
+                keyToBooleanAction.Add(KeyMap.PrimaryAction, new[] { SteamVR_Actions.stationeers_UseRight, SteamVR_Actions.laserPointers_RightClick });
+                //keyToBooleanAction.Add(KeyMap.SecondaryAction, new[] { SteamVR_Actions.stationeers_Grab });
                 keyToBooleanAction.Add(KeyMap.Jetpack, new[] { SteamVR_Actions.stationeers_Jetpack });
-                //keyToBooleanAction.Add(KeyMap.Ascend, new[] { SteamVR_Actions.stationeers_Ascend });
-                //keyToBooleanAction.Add(KeyMap.Descend, new[] { SteamVR_Actions.stationeers_Descend });
+                keyToBooleanAction.Add(KeyMap.Ascend, new[] { SteamVR_Actions.stationeers_Ascend });
+                keyToBooleanAction.Add(KeyMap.Descend, new[] { SteamVR_Actions.stationeers_Descend });
 
                 //keyToBooleanAction.Add(KeyMap.SuitSlot, new[] { SteamVR_Actions.stationeers_ToggleInventory });
                 keyToBooleanAction.Add(KeyMap.Cancel, new[] { SteamVR_Actions.stationeers_ToggleMenu });
@@ -608,43 +608,42 @@ namespace StationeersVR.VRCore.UI
             ignoredKeys.Add(KeyMap.Backward);
             ignoredKeys.Add(KeyMap.Left);
             ignoredKeys.Add(KeyMap.Right);
-            ignoredKeys.Add(KeyMap.HelmetSlot);
-            ignoredKeys.Add(KeyMap.GlassesSlot);
-            ignoredKeys.Add(KeyMap.SuitSlot);
-            ignoredKeys.Add(KeyMap.BackSlot);
-            ignoredKeys.Add(KeyMap.UniformSlot);
-            ignoredKeys.Add(KeyMap.ToolBeltSlot);
-            ignoredKeys.Add(KeyMap.Grab);
-            ignoredKeys.Add(KeyMap.ShowScoreBoard);
-            ignoredKeys.Add(KeyMap.ShowDynamicPanel);
-            ignoredKeys.Add(KeyMap.PreviousItem);
-            ignoredKeys.Add(KeyMap.NextItem);
-            ignoredKeys.Add(KeyMap.SpawnItem);
-            ignoredKeys.Add(KeyMap.ToggleUi);
-            ignoredKeys.Add(KeyMap.ToggleConsole);
-            ignoredKeys.Add(KeyMap.ToggleInfo);
-            ignoredKeys.Add(KeyMap.ScreenShot);
-            ignoredKeys.Add(KeyMap.Internals);
-            ignoredKeys.Add(KeyMap.ToggleHandPower);
-            ignoredKeys.Add(KeyMap.Chatting);
-            ignoredKeys.Add(KeyMap.PrecisionPlace);
-            ignoredKeys.Add(KeyMap.InstantStop);
-            ignoredKeys.Add(KeyMap.Teleport);
-            ignoredKeys.Add(KeyMap.FoVUp);
-            ignoredKeys.Add(KeyMap.FoVDown);
-            ignoredKeys.Add(KeyMap.EmoteWave);
-            ignoredKeys.Add(KeyMap.FoVUp);
-            ignoredKeys.Add(KeyMap.ThirdPersonControl);
-            ignoredKeys.Add(KeyMap.HideAllWindows);
-            ignoredKeys.Add(KeyMap.SuitPressureIncrease);
-            ignoredKeys.Add(KeyMap.SuitPressureIncrease);
-            ignoredKeys.Add(KeyMap.SuitTemperatureIncrease);
-            ignoredKeys.Add(KeyMap.SuitTemperatureDecrease);
-            ignoredKeys.Add(KeyMap.JetpackThrustIncrease);
-            ignoredKeys.Add(KeyMap.JetpackThrustDecrease);
-            ignoredKeys.Add(KeyMap.FovReset);
-            ignoredKeys.Add(KeyMap.SmartTool);
-            ignoredKeys.Add(KeyMap.PingHighlight);
+            ignoredKeys.Add(KeyMap.HelmetSlot);               // Inventory UI Rework  (pose to add/remove it)
+            ignoredKeys.Add(KeyMap.GlassesSlot);              // Inventory UI Rework  (pose to turn it on/off)
+            ignoredKeys.Add(KeyMap.SuitSlot);                 // Inventory UI Rework  (pose to wear/remove it
+            ignoredKeys.Add(KeyMap.BackSlot);                 // Inventory UI Rework  
+            ignoredKeys.Add(KeyMap.UniformSlot);              // Inventory UI Rework  
+            ignoredKeys.Add(KeyMap.ToolBeltSlot);             // Inventory UI Rework       
+            ignoredKeys.Add(KeyMap.Grab);                     // not needed
+            ignoredKeys.Add(KeyMap.ShowScoreBoard);           // Keyboard
+            ignoredKeys.Add(KeyMap.ShowDynamicPanel);         // Keyboard
+            ignoredKeys.Add(KeyMap.PreviousItem);             // Keyboard
+            ignoredKeys.Add(KeyMap.NextItem);                 // Keyboard
+            ignoredKeys.Add(KeyMap.SpawnItem);                // Keyboard
+            ignoredKeys.Add(KeyMap.ToggleUi);                 // Keyboard
+            ignoredKeys.Add(KeyMap.ToggleConsole);            // Keyboard 
+            ignoredKeys.Add(KeyMap.ToggleInfo);               // ?
+            ignoredKeys.Add(KeyMap.ScreenShot);               // not needed
+            ignoredKeys.Add(KeyMap.Internals);                // not needed
+            ignoredKeys.Add(KeyMap.ToggleHandPower);          // not needed
+            ignoredKeys.Add(KeyMap.Chatting);                 // not needed (for now)
+            ignoredKeys.Add(KeyMap.PrecisionPlace);           // not needed
+            ignoredKeys.Add(KeyMap.InstantStop);              // not needed
+            ignoredKeys.Add(KeyMap.Teleport);                 // ?
+            ignoredKeys.Add(KeyMap.FoVUp);                    // will be added in mod config
+            ignoredKeys.Add(KeyMap.FoVDown);                  // will be added in mod config
+            ignoredKeys.Add(KeyMap.EmoteWave);                // not needed
+            ignoredKeys.Add(KeyMap.ThirdPersonControl);       // not needed
+            ignoredKeys.Add(KeyMap.HideAllWindows);           // not needed
+            ignoredKeys.Add(KeyMap.SuitPressureIncrease);     // control tablet
+            ignoredKeys.Add(KeyMap.SuitPressureIncrease);     // control tablet
+            ignoredKeys.Add(KeyMap.SuitTemperatureIncrease);  // control tablet
+            ignoredKeys.Add(KeyMap.SuitTemperatureDecrease);  // control tablet
+            ignoredKeys.Add(KeyMap.JetpackThrustIncrease);    // control tablet
+            ignoredKeys.Add(KeyMap.JetpackThrustDecrease);    // control tablet
+            ignoredKeys.Add(KeyMap.FovReset);                 // not needed
+            ignoredKeys.Add(KeyMap.SmartTool);                // ?
+            ignoredKeys.Add(KeyMap.PingHighlight);            // not needed
         }
 
     }
