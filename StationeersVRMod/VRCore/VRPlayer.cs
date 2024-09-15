@@ -90,7 +90,8 @@ namespace StationeersVR.VRCore
 
         private Camera _vrCam;
         private Camera _handsCam;
-        //private Camera _skyboxCam;
+        private Camera _foregroundCam;
+        private Camera _backgroundCam;
 
         //Roomscale movement variables
         public Transform _vrCameraRig;
@@ -277,7 +278,7 @@ namespace StationeersVR.VRCore
             enableCameras();
             checkAndSetHandsAndPointers();
             updateVrik();
-            UpdateUI();
+            UpdateHud();
 
             //UpdateAmplifyOcclusionStatus();
 
@@ -294,7 +295,103 @@ namespace StationeersVR.VRCore
             }
         }
 
-        public static float _scaleFactor = 0.3f;
+        public void UpdateHud()
+        {
+            List<GameObject> canvas = new List<GameObject>();
+            GameObject gCanvas = GameObject.Find("GameCanvas");
+            GameObject aCanvas = GameObject.Find("AlertCanvas");
+            GameObject cCanvas = GameObject.Find("CursorCanvas");
+            GameObject sCanvas = GameObject.Find("SystemCanvas");
+            GameObject fCanvas = GameObject.Find("FadeCanvas");
+            GameObject puCanvas = GameObject.Find("PopupsCanvas");
+            GameObject pCanvas = GameObject.Find("PingCanvas");
+            GameObject phCanvas = GameObject.Find("PanelHelpMenu");
+            GameObject pwCanvas = GameObject.Find("PanelInWorldToolTip");
+            GameObject piCanvas = GameObject.Find("PanelInternal");
+            GameObject pdCanvas = GameObject.Find("PanelDynamicThing");
+            GameObject imgui = GameObject.Find("ImGUI");
+            GameObject popupCanvas = GameObject.Find("PopupsCanvas");
+            GameObject tooltipCanvas = GameObject.Find("TooltipCanvas");
+            GameObject valucomp = GameObject.Find("ValueCompass");
+            if (canvas.Count == 0)
+            {
+                if(gCanvas != null)
+                    canvas.Add(gCanvas);
+
+                if (aCanvas != null)
+                    canvas.Add(aCanvas);
+
+                //if (cCanvas != null)
+                   // canvas.Add(cCanvas);
+
+                if (sCanvas != null)
+                    canvas.Add(sCanvas);
+
+               /* if (fCanvas != null) 
+                    canvas.Add(fCanvas);
+
+                if (puCanvas != null)
+                    canvas.Add(puCanvas);
+
+                if (pCanvas != null)
+                    canvas.Add(pCanvas);
+
+                if (phCanvas != null)
+                    canvas.Add(phCanvas);
+
+                if (pwCanvas != null)
+                    canvas.Add(pwCanvas);
+
+                if (piCanvas != null)
+                    canvas.Add(piCanvas);
+
+                if (pdCanvas != null)
+                    canvas.Add(pdCanvas);
+
+                if (imgui != null)
+                {
+                    canvas.Add(imgui);
+                    ModLog.Error("Imgui: " + imgui.name);
+                }*/
+
+                /*if (popupCanvas != null)
+                    canvas.Add(popupCanvas);
+
+                if (tooltipCanvas != null)
+                    canvas.Add(tooltipCanvas);
+
+                if (valucomp != null)
+                    canvas.Add(valucomp);*/
+            }
+           /* var test = FindObjectsOfType<Canvas>();
+            if(test != null)
+                foreach(var g in test)*/
+                    
+            if (canvas.Count > 0)
+            {
+                foreach (var can in canvas)
+                {
+                    if (can != null)
+                    {
+                        if (can.GetComponent<Canvas>() != null && Camera.current != null)
+                        {
+                            can.GetComponent<Canvas>().renderMode = UnityEngine.RenderMode.WorldSpace;
+                            can.GetComponent<Canvas>().worldCamera = Camera.current;
+                            Vector3 offSet = new Vector3(0, 0.5f, 1);
+                            can.transform.SetParent(Camera.current.transform);
+                            Scale(can.transform);
+                            can.transform.rotation = Quaternion.Euler(0, 0, 0);
+                            Quaternion cameraRotation = Quaternion.Euler(0f, CameraController.Instance.RotationY, 0f);
+                            can.transform.position = Camera.current.transform.position + offSet;
+                            //can.transform.eulerAngles = Camera.current.transform.position;
+
+                        }
+                    }
+                }
+            }
+        }
+
+        public static float _scaleFactor = 1.0f;
         void Scale(Transform transForm)
         {
             if (Camera.current)
@@ -770,6 +867,56 @@ namespace StationeersVR.VRCore
             return _instance != null;
         }
 
+        private void enablebackgroundCamera()
+        {
+            if (!(GameObject.Find("BackgroundCamera") != null))
+            {
+                return;
+            }
+            Camera originalbackgroundCamera = GameObject.Find("BackgroundCamera").GetComponent<Camera>();
+            if (!(originalbackgroundCamera == null) && !(originalbackgroundCamera.gameObject == null))
+            {
+                Camera vrCam = CameraUtils.GetCamera("VRCamera");
+                if (!(vrCam == null) && !(vrCam.gameObject == null))
+                {
+                    GameObject vrbackground = new GameObject("VRBackgroundCamera");
+                    Camera vrBackgroundCam = vrbackground.AddComponent<Camera>();
+                    vrBackgroundCam.CopyFrom(originalbackgroundCamera);
+                    vrBackgroundCam.depth = -2f;
+                    vrBackgroundCam.transform.SetParent(vrCam.transform);
+                    originalbackgroundCamera.enabled = false;
+                    vrBackgroundCam.enabled = true;
+                    _backgroundCam = vrBackgroundCam;
+                    ModLog.Error("_backgroundCam: " + _backgroundCam);
+                }
+            }
+        }
+
+        private void enableforegroundCamera()
+        {
+            if (!(GameObject.Find("ForegroundCamera") != null))
+            {
+                return;
+            }
+            Camera originalforegroundCamera = GameObject.Find("ForegroundCamera").GetComponent<Camera>();
+            if (!(originalforegroundCamera == null) && !(originalforegroundCamera.gameObject == null))
+            {
+                Camera vrCam = CameraUtils.GetCamera("VRCamera");
+                if (!(vrCam == null) && !(vrCam.gameObject == null))
+                {
+                    GameObject vrforeground = new GameObject("VRForegroundCamera");
+                    Camera vrForegroundCam = vrforeground.AddComponent<Camera>();
+                    vrForegroundCam.CopyFrom(originalforegroundCamera);
+                    vrForegroundCam.depth = -2f;
+                    vrForegroundCam.transform.SetParent(vrCam.transform);
+                    originalforegroundCamera.enabled = false;
+                    vrForegroundCam.enabled = true;
+                    _foregroundCam = vrForegroundCam;
+                    ModLog.Error("_foregroundCam: " + _foregroundCam);
+                }
+            }
+        }
+
         private void enableCameras()
         {
             if (_vrCam == null || !_vrCam.enabled)
@@ -783,10 +930,14 @@ namespace StationeersVR.VRCore
             {
                 enableHandsCamera();
             }
- /*           if (_skyboxCam == null || !_skyboxCam.enabled)
+            if (_backgroundCam == null || !_backgroundCam.enabled)
             {
-                enableSkyboxCamera();
-            }*/
+                enablebackgroundCamera();
+        }
+            if (_foregroundCam == null || !_foregroundCam.enabled)
+            {
+                enableforegroundCamera();
+            }
         }
 
         private void enableVrCamera()
@@ -827,6 +978,8 @@ namespace StationeersVR.VRCore
 //            _fadeManager = vrCam.gameObject.AddComponent<FadeToBlackManager>();
             _instance.SetActive(true);
             vrCam.enabled = true;
+            //ModLog.Error("Scale: " + Human.LocalHuman.transform.localScale);
+            vrCam.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
             _vrCam = vrCam;
             _vrCameraRig = vrCam.transform.parent;
 /*

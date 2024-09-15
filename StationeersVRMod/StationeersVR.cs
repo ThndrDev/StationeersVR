@@ -17,6 +17,7 @@ using StationeersVR.Utilities;
 using StationeersVR.VRCore;
 using StationeersVR.Patches;
 using UnityEngine.SceneManagement;
+using UnityEngine.EventSystems;
 
 namespace StationeersVR
 {
@@ -26,6 +27,8 @@ namespace StationeersVR
         public static StationeersVR Instance;
 
         private GameObject vrPlayer;
+        private GameObject gazeCursor;
+        private GazeBasicInputModule gazeInput;
         //private GameObject vrGui;
 
         void Awake()
@@ -90,8 +93,11 @@ namespace StationeersVR
                 vrPlayer = new GameObject("VRPlayer");
                 DontDestroyOnLoad(vrPlayer);
                 vrPlayer.AddComponent<VRPlayer>();
-                var t = this.GetOrAddComponent<LaserPointerInputModule>();
-                t.forceModuleActive = true;
+                gazeCursor = new GameObject("GazeCursor");
+                DontDestroyOnLoad(gazeCursor);
+                gazeCursor.AddComponent<SimpleGazeCursor>();
+                gazeInput = this.GetOrAddComponent<GazeBasicInputModule>();
+                gazeInput.forceModuleActive = true;
 
                 /*vrGui = new GameObject("VRGui");
                 DontDestroyOnLoad(vrGui);
