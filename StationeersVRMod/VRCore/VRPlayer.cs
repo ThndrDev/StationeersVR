@@ -1,7 +1,6 @@
 using BepInEx;
 using static StationeersVR.Utilities.VRAssetManager;
 using StationeersVR.Utilities;
-using StationeersVR.VRCore.UI;
 //using AmplifyOcclusion;
 using System.Reflection;
 using RootMotion.FinalIK;
@@ -28,6 +27,8 @@ using Util;
 using Assets.Scripts.Util;
 using SimpleSpritePacker;
 using UnityEngine.TextCore.Text;
+using Assets.Scripts.GridSystem;
+using UnityEngine.EventSystems;
 //using Pose = ValheimVRMod.Utilities.Pose;
 
 
@@ -264,7 +265,7 @@ namespace StationeersVR.VRCore
             FIRST_PERSON_OFFSET = Vector3.zero;
             //THIRD_PERSON_CONFIG_OFFSET = ConfigFile.GetThirdPersonHeadOffset();
             ensurePlayerInstance();
-            gameObject.AddComponent<VRControls>();
+            //gameObject.AddComponent<VRControls>();
         }
 
         void Update()
@@ -318,31 +319,31 @@ namespace StationeersVR.VRCore
                 if(gCanvas != null)
                     canvas.Add(gCanvas);
 
-                if (aCanvas != null)
-                    canvas.Add(aCanvas);
+                //if (aCanvas != null)
+                  //  canvas.Add(aCanvas);
 
                 //if (cCanvas != null)
                    // canvas.Add(cCanvas);
 
-                if (sCanvas != null)
+               /* if (sCanvas != null)
                     canvas.Add(sCanvas);
 
-               /* if (fCanvas != null) 
+                if (fCanvas != null) 
                     canvas.Add(fCanvas);
 
                 if (puCanvas != null)
                     canvas.Add(puCanvas);
 
-                if (pCanvas != null)
+               /* if (pCanvas != null)
                     canvas.Add(pCanvas);
 
                 if (phCanvas != null)
-                    canvas.Add(phCanvas);
+                    canvas.Add(phCanvas);*/
 
                 if (pwCanvas != null)
                     canvas.Add(pwCanvas);
 
-                if (piCanvas != null)
+                /*if (piCanvas != null)
                     canvas.Add(piCanvas);
 
                 if (pdCanvas != null)
@@ -352,20 +353,18 @@ namespace StationeersVR.VRCore
                 {
                     canvas.Add(imgui);
                     ModLog.Error("Imgui: " + imgui.name);
-                }*/
+                }
 
-                /*if (popupCanvas != null)
-                    canvas.Add(popupCanvas);
+                if (popupCanvas != null)
+                    canvas.Add(popupCanvas);*/
 
-                if (tooltipCanvas != null)
-                    canvas.Add(tooltipCanvas);
+                //if (tooltipCanvas != null)
+                 //   canvas.Add(tooltipCanvas);
+                /*
 
                 if (valucomp != null)
                     canvas.Add(valucomp);*/
             }
-           /* var test = FindObjectsOfType<Canvas>();
-            if(test != null)
-                foreach(var g in test)*/
                     
             if (canvas.Count > 0)
             {
@@ -375,23 +374,37 @@ namespace StationeersVR.VRCore
                     {
                         if (can.GetComponent<Canvas>() != null && Camera.current != null)
                         {
-                            can.GetComponent<Canvas>().renderMode = UnityEngine.RenderMode.WorldSpace;
-                            can.GetComponent<Canvas>().worldCamera = Camera.current;
-                            Vector3 offSet = new Vector3(0, 0.5f, 1);
-                            can.transform.SetParent(Camera.current.transform);
-                            Scale(can.transform);
-                            can.transform.rotation = Quaternion.Euler(0, 0, 0);
-                            Quaternion cameraRotation = Quaternion.Euler(0f, CameraController.Instance.RotationY, 0f);
-                            can.transform.position = Camera.current.transform.position + offSet;
-                            //can.transform.eulerAngles = Camera.current.transform.position;
-
+                            //ModLog.Error("PanelInWorldToolTipCanvas: " + pwCanvas);
+                            setCameraHudPosition(can.GetComponent<Canvas>());
                         }
                     }
                 }
             }
         }
 
-        public static float _scaleFactor = 1.0f;
+        private void setCameraHudPosition(Canvas canvas)
+        {
+            canvas.GetComponent<Canvas>().renderMode = UnityEngine.RenderMode.WorldSpace;
+            if (canvas.name != "PanelInWorldToolTip")
+            {
+                float canvasWidth = canvas.GetComponent<RectTransform>().rect.width;
+                float scaleFactor = 3.5f / Camera.current.pixelWidth / 2;
+                canvas.gameObject.transform.SetParent(Camera.current.transform, false);
+                canvas.gameObject.transform.position = new Vector2(Camera.current.pixelWidth / 2f, Camera.current.pixelHeight / 2f);
+                float hudDistance = 2;
+                float hudVerticalOffset = +1.0f;
+                canvas.transform.localPosition = new Vector3(0, 0 + hudVerticalOffset, hudDistance);
+                canvas.GetComponent<RectTransform>().localScale = Vector3.one * scaleFactor * hudDistance * 1;
+                canvas.transform.localRotation = Quaternion.Euler(Vector3.zero);
+                //CameraController._mainCamera.transform.position = new Vector3(Camera.current.transform.position.x,0,Camera.current.transform.position.z);
+
+                //ModLog.Error("Width: " + b);
+                //cameraHudCanvasGroup.alpha = 1f;
+            }
+
+        }
+
+        public static float _scaleFactor = 1.2f;
         void Scale(Transform transForm)
         {
             if (Camera.current)
@@ -1199,7 +1212,7 @@ namespace StationeersVR.VRCore
             if (!ConfigFile.UseSnapTurn)
             {
                 ModLog.Debug("Continuous turn mode Enabled");
-                VRControls.useContinuousTurn = true;
+                //VRControls.useContinuousTurn = true;
             }
             else
             {
@@ -1224,7 +1237,7 @@ namespace StationeersVR.VRCore
                 {
                     Debug.LogError("StationeersVRPlayer GameObject not found in the scene.");
                 }
-                VRControls.useContinuousTurn = false;
+                //VRControls.useContinuousTurn = false;
             }
             turnModeSet = true;
         }
@@ -1296,8 +1309,8 @@ namespace StationeersVR.VRCore
                 return;
             }
             var cam = CameraUtils.GetCamera(CameraUtils.VR_CAMERA);
-            _vrik = VrikCreator.initialize(player.gameObject, 
-                leftHand.transform, rightHand.transform, cam.transform);
+            //_vrik = VrikCreator.initialize(player.gameObject, 
+              //  leftHand.transform, rightHand.transform, cam.transform);
             /*var vrPlayerSync = player.gameObject.GetComponent<VRPlayerSync>();
             vrPlayerSync.camera = cam.gameObject;
             vrPlayerSync.leftHand = _vrik.solver.leftArm.target.parent.gameObject;

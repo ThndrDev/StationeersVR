@@ -16,6 +16,9 @@ using Discord;
 using Objects.Items;
 using static UnityEngine.UIElements.UIR.Allocator2D;
 using Assets.Scripts.Inventory;
+using Assets.Scripts.GridSystem;
+using Valve.VR.InteractionSystem;
+using System.Xml;
 
 namespace StationeersVR.Utilities
 {
@@ -28,18 +31,18 @@ namespace StationeersVR.Utilities
         public static LineRenderer line;
 
         public static GameObject cursorInstance;
-
+        public static SimpleGazeCursor __instance = new SimpleGazeCursor();
         // Use this for initialization
-        void Start()
+        public void Start()
         {
             cursorInstance = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            cursorInstance.transform.localScale = new Vector3(0.05f, 0.05f, 0.05f);
+            cursorInstance.transform.localScale = new Vector3(0.02f, 0.02f, 0.02f);
             gameObject.AddComponent<LineRenderer>();
             line = gameObject.GetComponent<LineRenderer>();
             line.startColor = new Color(0f, 1f, 1f, 1f);
             line.endColor = new Color(1f, 0f, 0f, 1f);
-            line.startWidth = 0.004f;
-            line.endWidth = 0.005f;
+            line.startWidth = 0.002f;
+            line.endWidth = 0.004f;
             if (cursorInstance.GetComponent<SphereCollider>() != null)
                 cursorInstance.GetComponent<SphereCollider>().enabled = false;
             DontDestroyOnLoad(cursorInstance);
@@ -74,7 +77,7 @@ namespace StationeersVR.Utilities
 
             if (!InventoryManager.AllowMouseControl)
             {
-                return Input.mousePosition;
+                return new Vector2(Input.mousePosition.x / Screen.width * Camera.current.pixelWidth, Input.mousePosition.y / Screen.height * Camera.current.pixelHeight);
             }
             else
             {
@@ -92,7 +95,6 @@ namespace StationeersVR.Utilities
                 Vector3 lookAtPosition = Camera.current.ScreenToWorldPoint(new Vector3(Camera.current.pixelWidth / 2, Camera.current.pixelHeight / 2, Camera.current.nearClipPlane));
                 line.SetPosition(0, lookAtPosition);
                 //This Raycast that hits the UI
-                Ray ray = Camera.current.ScreenPointToRay(pos);
                 if (raycast.gameObject != null && raycast.distance < InputMouse.MaxInteractDistance)
                 {
                     line.SetPosition(1, raycast.worldPosition);
@@ -104,6 +106,23 @@ namespace StationeersVR.Utilities
 
                     cursorInstance.transform.position = CursorManager._raycastHit.point;
                     line.SetPosition(1, CursorManager._raycastHit.point);
+                }
+                else
+                {
+                    if (Cursor.lockState == CursorLockMode.None)
+                    {
+                        Vector2 test = new Vector2(Input.mousePosition.x / Screen.width * Camera.current.pixelWidth, Input.mousePosition.y / Screen.height * Camera.current.pixelHeight);
+                        Vector3 posi = Camera.current.ScreenPointToRay(test).GetPoint(InputMouse.MaxInteractDistance);
+                        cursorInstance.transform.position = posi;
+                        line.SetPosition(1, posi);
+                    }
+                    if (Cursor.lockState == CursorLockMode.Locked)
+                    {
+                        //ModLog.Error("CursorLock3: " + Cursor.lockState);
+                        Vector3 defaultpos = new Vector3(Camera.current.pixelWidth / 2f, Camera.current.pixelHeight / 2f, InputMouse.MaxInteractDistance);
+                        cursorInstance.transform.position = Camera.current.ScreenToWorldPoint(defaultpos);
+                        line.SetPosition(1, Camera.current.ScreenToWorldPoint(defaultpos));
+                    }
                 }
             }
         }

@@ -1,11 +1,8 @@
-﻿
-using Assets.Scripts;
-using Assets.Scripts.UI;
-using Assets.Scripts.Util;
-using StationeersVR.Utilities;
-using System.Text;
+﻿using System.Text;
+using UnityEngine;
+using UnityEngine.EventSystems;
 
- namespace UnityEngine.EventSystems
+namespace StationeersVR.Utilities
 {
     public class GazeBasicInputModule : PointerInputModule
     {

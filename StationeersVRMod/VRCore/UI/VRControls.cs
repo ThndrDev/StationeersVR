@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+/*using System.Collections.Generic;
 using UnityEngine;
 using Valve.VR;
 using StationeersVR.Utilities;
@@ -18,7 +18,7 @@ namespace StationeersVR.VRCore.UI
         private static readonly Vector3 RECENTER_POSE_POSITION_R = new Vector3(0.1f, 0f, 0.1f);
         // Tolerance for above pose
         private static readonly float RECENTER_POSE_TOLERANCE = 0.2f; // Magnitude
-/*
+
         // number of updates to skip before allowing a "rotation" update to occur
         // when using the alt piece rotation mode (ie, context scroll is not bound).
         private static readonly float ALT_PIECE_ROTATION_TIME_DELAY = 0.250f;
@@ -30,7 +30,7 @@ namespace StationeersVR.VRCore.UI
         private float altMapZoomElapsedTime = 0f;
         private bool altMapZoomTriggered = false;
         private float buildQuickActionTimer;
-*/
+
 
         private HashSet<KeyCode> ignoredKeys = new HashSet<KeyCode>();
         private HashSet<KeyCode> quickActionEnabled = new HashSet<KeyCode>(); // never ignore these
@@ -98,12 +98,10 @@ namespace StationeersVR.VRCore.UI
             {
                 checkRecenterPose(Time.unscaledDeltaTime);
             }
-*/
-/*
             // This is used in Valheim to quidk choose/change the tools and weapons. Maybe we can use something similar in Stationeers?
             checkQuickItems<RightHandQuickMenu>(StaticObjects.rightHandQuickMenu, SteamVR_Actions.valheim_QuickSwitch, true);
             checkQuickItems<LeftHandQuickMenu>(StaticObjects.leftHandQuickMenu, SteamVR_Actions.valheim_QuickActions, false);
-*/
+
         }
 
         void FixedUpdate()
@@ -112,7 +110,7 @@ namespace StationeersVR.VRCore.UI
             //updateAltMapZoomTimer();
         }
 
- /*       
+      
          private void checkQuickItems<T>(GameObject obj, SteamVR_Action_Boolean action, bool useRightClick) where T : QuickAbstract {
 
              if (!obj) {
@@ -163,8 +161,7 @@ namespace StationeersVR.VRCore.UI
                  obj.SetActive(false);
              }
          }
- */
- /*
+
         private void checkRecenterPose(float dt)
         {
             if (!ConfigFile.DisableRecenterPose && isInRecenterPose())
@@ -181,7 +178,7 @@ namespace StationeersVR.VRCore.UI
                 recenteringPoseDuration = 0f;
             }
         }
- */
+ 
         private bool isInRecenterPose()
         {
             var hmd = VRPlayer.instance.GetComponent<Valve.VR.InteractionSystem.Player>().hmdTransform;
@@ -219,7 +216,7 @@ namespace StationeersVR.VRCore.UI
             }
             else if (!laserActionSet.IsActive() && VRPlayer.activePointer != null)
             {
-                laserActionSet.Activate(SteamVR_Input_Sources.Any, 1 /* Higher priority than main action set */);
+                laserActionSet.Activate(SteamVR_Input_Sources.Any, 1 /* Higher priority than main action set );
             }
         }
 
@@ -238,7 +235,7 @@ namespace StationeersVR.VRCore.UI
             {
                 return false;
             }
-*/
+
             SteamVR_Action_Boolean[] action;
             keyToBooleanAction.TryGetValue(key, out action);
             if (action == null)
@@ -264,7 +261,7 @@ namespace StationeersVR.VRCore.UI
             {
                 return false;
             }
-*/
+
             SteamVR_Action_Boolean[] action;
             keyToBooleanAction.TryGetValue(key, out action);
             if (action == null)
@@ -285,7 +282,7 @@ namespace StationeersVR.VRCore.UI
             return (SteamVR_Actions.valheim_Use.GetState(SteamVR_Input_Sources.Any) && SteamVR_Actions.valheim_UseLeft.GetState(SteamVR_Input_Sources.Any))
                 || (SteamVR_Actions.valheim_Grab.GetState(SteamVR_Input_Sources.RightHand));
         }
-*/
+
         public bool GetButtonUp(KeyCode key)
         {
             if (!mainActionSet.IsActive() || ignoredKeys.Contains(key))
@@ -305,7 +302,7 @@ namespace StationeersVR.VRCore.UI
             {
                 return false;
             }
-*/
+
             SteamVR_Action_Boolean[] action;
             keyToBooleanAction.TryGetValue(key, out action);
             if (action == null)
@@ -445,7 +442,7 @@ namespace StationeersVR.VRCore.UI
             //    return 0;
             //}
         }
- */
+ 
         public bool getClickModifier()
         {
             // TODO: update _clickModifier in the action set to use grab buttons. It is obsoletely bound to left controller trigger now and cannot be used here.
@@ -481,8 +478,8 @@ namespace StationeersVR.VRCore.UI
                 return 0;
             }
         }
- */
- /*
+ 
+ 
         public int getPieceRefModifier()
         {
             float yAxis = GetJoyRightStickY();
@@ -498,8 +495,8 @@ namespace StationeersVR.VRCore.UI
                 return 0;
             }
         }
- */
- /*
+ 
+ 
         private bool inPlaceMode()
         {
             return Player.m_localPlayer != null && Player.m_localPlayer.InPlaceMode();
@@ -522,8 +519,7 @@ namespace StationeersVR.VRCore.UI
                 return false;
             }
             return Player.m_localPlayer.m_hovering != null;
-        }
-*/
+        }/
         // Used to determine when the player is in a mode where the right joystick should
         // be used for rotation of an object while building rather than rotating the
         // player character
@@ -553,7 +549,7 @@ namespace StationeersVR.VRCore.UI
         {
             return SteamVR_Actions.valheim_UseLeft.state;
         }
-*/
+
 
         public void init()
         {
@@ -647,4 +643,4 @@ namespace StationeersVR.VRCore.UI
         }
 
     }
-}
+}*/

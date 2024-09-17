@@ -12,7 +12,6 @@ using StationeersVR.VRCore;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
-using UI.RocketImGuiWrapper;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;

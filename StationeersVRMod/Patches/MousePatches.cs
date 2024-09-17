@@ -1,22 +1,11 @@
+using Assets.Scripts;
+using Assets.Scripts.Inventory;
+using Assets.Scripts.Objects;
 using Assets.Scripts.UI;
 ﻿using Assets.Scripts.Util;
-using CharacterCustomisation;
 using HarmonyLib;
-using ImGuiNET;
 using StationeersVR.Utilities;
-using StationeersVR.VRCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using UI.ImGuiUi;
-using UI.Tooltips;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.Experimental.Rendering;
-using UnityEngine.UI;
-using static Assets.Scripts.Util.Defines;
-using static RootMotion.FinalIK.InteractionTrigger;
-using static UnityEngine.GraphicsBuffer;
 using Color = UnityEngine.Color;
 
 namespace StationeersVR.Patches
@@ -30,13 +19,39 @@ namespace StationeersVR.Patches
             [HarmonyPrefix]
             static bool Prefix(ref Ray __result)
             {
-                Vector2 pos = SimpleGazeCursor.GetRayCastMode();//new Vector2(Camera.current.pixelWidth / 2f, Camera.current.pixelHeight / 2f);
+                Vector2 pos = SimpleGazeCursor.GetRayCastMode();
                 __result = Camera.current.ScreenPointToRay(pos);
                 return false;
             }
         }
 
-       /* [HarmonyPatch(typeof(InputMouse), nameof(InputMouse.Idle))]
+
+        [HarmonyPatch(typeof(InputMouse), nameof(InputMouse.GetHoverWorldSlot))]
+        public static class InputMouse_GetHoverWorldSlot_Patch
+        {
+            [HarmonyPrefix]
+            static bool Prefix(ref Slot __result)
+            {
+                if (Physics.Raycast(Camera.current.ScreenPointToRay(SimpleGazeCursor.GetRayCastMode()), out var hitInfo, InputMouse.MaxInteractDistance, CursorManager.Instance.CursorHitMask))
+                {
+                    Thing componentInParent = hitInfo.transform.GetComponentInParent<Thing>();
+                    if (componentInParent != null)
+                    {
+                        Interactable interactable = componentInParent.GetInteractable(hitInfo.collider);
+                        if (interactable != null && interactable.Slot != null)
+                        {
+                            __result = interactable.Slot;
+                            return false;
+                        }
+                    }
+                }
+                __result = null;
+                return false;
+            }
+        }
+
+
+        [HarmonyPatch(typeof(InputMouse), nameof(InputMouse.Idle))]
         public static class InputMouse_Idley_Patch
         {
             public static Ray result;
@@ -44,9 +59,11 @@ namespace StationeersVR.Patches
             static bool Prefix(InputMouse __instance)
             {
                 PassiveTooltip passiveTooltip = default(PassiveTooltip);
+                passiveTooltip.FollowMouseMovement = true;
                 __instance.DraggedThing = null;
-                if (Physics.Raycast(CameraController.CurrentCamera.ScreenPointToRay(Input.mousePosition), out var hitInfo, InputMouse.MaxInteractDistance, CursorManager.Instance.CursorHitMask))
+                if (Physics.Raycast(Camera.current.ScreenPointToRay(SimpleGazeCursor.GetRayCastMode()), out var hitInfo, InputMouse.MaxInteractDistance, CursorManager.Instance.CursorHitMask))
                 {
+                   // ModLog.Error("Idle()");
                     __instance.CursorTransform = hitInfo.transform;
                     __instance.CursorThing = Thing.Find(hitInfo.collider);
                     __instance.CursorItem = __instance.CursorThing as Item;
@@ -107,6 +124,10 @@ namespace StationeersVR.Patches
                         {
                             __instance.WorldMode = WorldMouseMode.Click;
                             __instance.MousePosition = Input.mousePosition;
+                            return false;
+                        }
+                    }
+                }
                 return false;
             }
         }

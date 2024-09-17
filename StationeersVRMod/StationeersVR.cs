@@ -27,7 +27,6 @@ namespace StationeersVR
         public static StationeersVR Instance;
 
         private GameObject vrPlayer;
-        private GameObject gazeCursor;
         private GazeBasicInputModule gazeInput;
         //private GameObject vrGui;
 
@@ -80,25 +79,22 @@ namespace StationeersVR
 
 
             //Later we should implement an option for non VR players to play together with VR players in multiplayer. But for now let's just force false in here
-/*
-            if (StationeersVR.NonVrPlayer)
-            {
-                ModLog.Debug("Non VR Mode Patching Complete.");
-                return;
-            }
-*/
+            /*
+                        if (StationeersVR.NonVrPlayer)
+                        {
+                            ModLog.Debug("Non VR Mode Patching Complete.");
+                            return;
+                        }
+            */
             if (VRManager.InitializeVR())
             {
                 VRManager.StartVR();
                 vrPlayer = new GameObject("VRPlayer");
                 DontDestroyOnLoad(vrPlayer);
                 vrPlayer.AddComponent<VRPlayer>();
-                gazeCursor = new GameObject("GazeCursor");
-                DontDestroyOnLoad(gazeCursor);
-                gazeCursor.AddComponent<SimpleGazeCursor>();
                 gazeInput = this.GetOrAddComponent<GazeBasicInputModule>();
                 gazeInput.forceModuleActive = true;
-
+               
                 /*vrGui = new GameObject("VRGui");
                 DontDestroyOnLoad(vrGui);
                 vrGui.AddComponent<VRGUI>();
