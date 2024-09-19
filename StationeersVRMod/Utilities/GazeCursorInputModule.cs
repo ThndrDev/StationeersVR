@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using StationeersVR.VRCore.UI;
 
 namespace StationeersVR.Utilities
 {
@@ -108,7 +109,7 @@ namespace StationeersVR.Utilities
 
             var leftPressData = pointerData.GetButtonState(PointerEventData.InputButton.Left).eventData;
 
-            ProcessPress(leftPressData.buttonData, leftPressData.PressedThisFrame(), leftPressData.ReleasedThisFrame());
+            ProcessPress(leftPressData.buttonData, leftPressData.PressedThisFrame() || VRControls.instance.GetButtonDown(KeyMap.PrimaryAction), leftPressData.ReleasedThisFrame() || VRControls.instance.GetButtonUp(KeyMap.PrimaryAction));
             ProcessMove(leftPressData.buttonData);
 
             if (Input.GetMouseButton(0))
