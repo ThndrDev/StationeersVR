@@ -6,6 +6,7 @@ using Assets.Scripts.UI;
 using HarmonyLib;
 using StationeersVR.Utilities;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Color = UnityEngine.Color;
 
 namespace StationeersVR.Patches
@@ -59,7 +60,6 @@ namespace StationeersVR.Patches
             static bool Prefix(InputMouse __instance)
             {
                 PassiveTooltip passiveTooltip = default(PassiveTooltip);
-                passiveTooltip.FollowMouseMovement = true;
                 __instance.DraggedThing = null;
                 if (Physics.Raycast(Camera.current.ScreenPointToRay(SimpleGazeCursor.GetRayCastMode()), out var hitInfo, InputMouse.MaxInteractDistance, CursorManager.Instance.CursorHitMask))
                 {

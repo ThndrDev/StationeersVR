@@ -280,7 +280,8 @@ namespace StationeersVR.VRCore
             checkAndSetHandsAndPointers();
             updateVrik();
             UpdateHud();
-
+            if (Input.GetKey(KeyCode.T))
+                VRManager.TryRecenter();
             //UpdateAmplifyOcclusionStatus();
 
 
@@ -305,27 +306,27 @@ namespace StationeersVR.VRCore
             GameObject sCanvas = GameObject.Find("SystemCanvas");
             GameObject fCanvas = GameObject.Find("FadeCanvas");
             GameObject puCanvas = GameObject.Find("PopupsCanvas");
-            GameObject pCanvas = GameObject.Find("PingCanvas");
+            //GameObject pCanvas = GameObject.Find("PingCanvas");
             GameObject phCanvas = GameObject.Find("PanelHelpMenu");
             GameObject pwCanvas = GameObject.Find("PanelInWorldToolTip");
-            GameObject piCanvas = GameObject.Find("PanelInternal");
-            GameObject pdCanvas = GameObject.Find("PanelDynamicThing");
-            GameObject imgui = GameObject.Find("ImGUI");
-            GameObject popupCanvas = GameObject.Find("PopupsCanvas");
-            GameObject tooltipCanvas = GameObject.Find("TooltipCanvas");
-            GameObject valucomp = GameObject.Find("ValueCompass");
+            //GameObject piCanvas = GameObject.Find("PanelInternal");
+            //GameObject pdCanvas = GameObject.Find("PanelDynamicThing");
+            //GameObject imgui = GameObject.Find("ImGUI");
+            //GameObject popupCanvas = GameObject.Find("PopupsCanvas");
+            //GameObject tooltipCanvas = GameObject.Find("TooltipCanvas");
+            //GameObject valucomp = GameObject.Find("ValueCompass");
             if (canvas.Count == 0)
             {
                 if(gCanvas != null)
                     canvas.Add(gCanvas);
 
-                //if (aCanvas != null)
-                  //  canvas.Add(aCanvas);
+                if (aCanvas != null)
+                    canvas.Add(aCanvas);
 
-                //if (cCanvas != null)
-                   // canvas.Add(cCanvas);
+                if (cCanvas != null)
+                    canvas.Add(cCanvas);
 
-               /* if (sCanvas != null)
+                if (sCanvas != null)
                     canvas.Add(sCanvas);
 
                 if (fCanvas != null) 
@@ -335,10 +336,10 @@ namespace StationeersVR.VRCore
                     canvas.Add(puCanvas);
 
                /* if (pCanvas != null)
-                    canvas.Add(pCanvas);
+                    canvas.Add(pCanvas);*/
 
                 if (phCanvas != null)
-                    canvas.Add(phCanvas);*/
+                    canvas.Add(phCanvas);
 
                 if (pwCanvas != null)
                     canvas.Add(pwCanvas);
@@ -374,7 +375,6 @@ namespace StationeersVR.VRCore
                     {
                         if (can.GetComponent<Canvas>() != null && Camera.current != null)
                         {
-                            //ModLog.Error("PanelInWorldToolTipCanvas: " + pwCanvas);
                             setCameraHudPosition(can.GetComponent<Canvas>());
                         }
                     }
@@ -384,251 +384,32 @@ namespace StationeersVR.VRCore
 
         private void setCameraHudPosition(Canvas canvas)
         {
-            canvas.GetComponent<Canvas>().renderMode = UnityEngine.RenderMode.WorldSpace;
-            if (canvas.name != "PanelInWorldToolTip")
+            float scaleFactor = 3.5f / Camera.current.pixelWidth / 2;
+            float scaleFactor1 = 2.0f / Camera.current.pixelWidth / 2;
+            float hudDistance = 2;
+            float hudVerticalOffset = +1.0f;
+            float hudHorizontalOffset = 1.0f;
+            canvas.renderMode = UnityEngine.RenderMode.WorldSpace;
+            if (canvas.name == "AlertCanvas")
             {
-                float canvasWidth = canvas.GetComponent<RectTransform>().rect.width;
-                float scaleFactor = 3.5f / Camera.current.pixelWidth / 2;
+                //ModLog.Error("RenderMode: " + canvas.renderMode);
+                canvas.transform.SetParent(Camera.current.transform, false);
+                canvas.worldCamera = Camera.current;
+                canvas.GetComponent<RectTransform>().localScale = Vector3.one * scaleFactor1 * hudDistance * 1;
+                canvas.transform.position = new Vector3(Camera.current.pixelWidth / 2f, Camera.current.pixelHeight / 2f,hudDistance);
+                canvas.transform.localPosition = new Vector3(0 + hudHorizontalOffset, 0 , hudDistance);
+            }
+            else
+            {
                 canvas.gameObject.transform.SetParent(Camera.current.transform, false);
                 canvas.gameObject.transform.position = new Vector2(Camera.current.pixelWidth / 2f, Camera.current.pixelHeight / 2f);
-                float hudDistance = 2;
-                float hudVerticalOffset = +1.0f;
+
                 canvas.transform.localPosition = new Vector3(0, 0 + hudVerticalOffset, hudDistance);
                 canvas.GetComponent<RectTransform>().localScale = Vector3.one * scaleFactor * hudDistance * 1;
                 canvas.transform.localRotation = Quaternion.Euler(Vector3.zero);
-                //CameraController._mainCamera.transform.position = new Vector3(Camera.current.transform.position.x,0,Camera.current.transform.position.z);
-
-                //ModLog.Error("Width: " + b);
-                //cameraHudCanvasGroup.alpha = 1f;
-            }
-
-        }
-
-        public static float _scaleFactor = 1.2f;
-        void Scale(Transform transForm)
-        {
-            if (Camera.current)
-            {
-                float camHeight;
-                if (Camera.current.orthographic)
-                {
-                    camHeight = Camera.current.orthographicSize * 2;
-                }
-                else
-                {
-                    float distanceToCamera = Vector3.Distance(Camera.current.transform.position, transForm.position);
-                    camHeight = 2.0f * distanceToCamera * Mathf.Tan(Mathf.Deg2Rad * (Camera.current.fieldOfView * 0.5f));
-                }
-                float scale = (camHeight / Camera.current.pixelWidth) * _scaleFactor;
-                transForm.localScale = new Vector3(scale, scale, scale);
             }
         }
 
-        void UpdateUI()
-        {
-            var gameCanvas = GameObject.Find("GameCanvas");
-            var popUpCanvas = GameObject.Find("PopupsCanvas");
-            var systemCanvas = GameObject.Find("SystemCanvas");
-            var alertCanvas = GameObject.Find("AlertCanvas");
-            var cursorCanvas = GameObject.Find("CursorCanvas");
-            var pingCanvas = GameObject.Find("PingCanvas");
-            var helpmenuCanvas = GameObject.Find("PanelHelpMenu");
-            var PanelDynamicThing = GameObject.Find("PanelDynamicThing");
-            var ValueCompass = GameObject.Find("ValueCompass");
-            var PanelInternal = GameObject.Find("PanelInternal");
-            var FadeCanvas = GameObject.Find("FadeCanvas");
-            var Start = GameObject.Find("Start");
-            var TutorialNarration = GameObject.Find("TutorialNarration");
-            var PanelInWorldToolTip = GameObject.Find("PanelInWorldToolTip");
-            //var imguiCanvas = GameObject.Find("ImGuiCanvas");
-            if (gameCanvas != null)
-            {
-                Canvas canvas = gameCanvas.GetComponent<Canvas>();
-                if (canvas != null)
-                {
-                    canvas.renderMode = UnityEngine.RenderMode.WorldSpace;
-                    canvas.worldCamera = Camera.current;
-                    canvas.transform.rotation = Quaternion.Euler(0, 90, 0);
-                    Scale(canvas.transform);
-                    canvas.transform.LookAt(canvas.transform.position + Camera.current.transform.rotation * Vector3.forward, Camera.current.transform.rotation * Vector3.up);
-                    canvas.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(VRPlayer.leftHand.transform.position.x, VRPlayer.leftHand.transform.position.y + 0.2f, VRPlayer.leftHand.transform.position.z);
-                }
-            }
-            if (PanelInWorldToolTip != null)
-            {
-                Canvas canvas = PanelInWorldToolTip.GetComponent<Canvas>();
-                if (canvas != null)
-                {
-                    canvas.renderMode = UnityEngine.RenderMode.WorldSpace;
-                    canvas.worldCamera = Camera.current;
-                    canvas.transform.rotation = Quaternion.Euler(0, 90, 0);
-                    Scale(canvas.transform);
-                    canvas.transform.LookAt(canvas.transform.position + Camera.current.transform.rotation * Vector3.forward, Camera.current.transform.rotation * Vector3.up);
-                    //ModLog.Error("Pos" + canvas.transform.position);
-                    canvas.transform.localPosition = new Vector3(VRPlayer.leftHand.transform.position.x, VRPlayer.leftHand.transform.position.y + 0.2f, VRPlayer.leftHand.transform.position.z);
-                }
-            }
-            if (TutorialNarration != null)
-            {
-                Canvas canvas = TutorialNarration.GetComponent<Canvas>();
-                if (canvas != null)
-                {
-                    canvas.renderMode = UnityEngine.RenderMode.WorldSpace;
-                    canvas.worldCamera = Camera.current;
-                    canvas.transform.rotation = Quaternion.Euler(0, 90, 0);
-                    Scale(canvas.transform);
-                    canvas.transform.LookAt(canvas.transform.position + Camera.current.transform.rotation * Vector3.forward, Camera.current.transform.rotation * Vector3.up);
-                    canvas.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(VRPlayer.leftHand.transform.position.x, VRPlayer.leftHand.transform.position.y + 0.2f, VRPlayer.leftHand.transform.position.z);
-                }
-            }
-            if (Start != null)
-            {
-                Canvas canvas = Start.GetComponent<Canvas>();
-                if (canvas != null)
-                {
-                    canvas.renderMode = UnityEngine.RenderMode.WorldSpace;
-                    canvas.worldCamera = Camera.current;
-                    canvas.transform.rotation = Quaternion.Euler(0, 90, 0);
-                    Scale(canvas.transform);
-                    canvas.transform.LookAt(canvas.transform.position + Camera.current.transform.rotation * Vector3.forward, Camera.current.transform.rotation * Vector3.up);
-                    canvas.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(VRPlayer.leftHand.transform.position.x, VRPlayer.leftHand.transform.position.y + 0.2f, VRPlayer.leftHand.transform.position.z);
-                }
-            }
-            if (FadeCanvas != null)
-            {
-                Canvas canvas = FadeCanvas.GetComponent<Canvas>();
-                if (canvas != null)
-                {
-                    canvas.renderMode = UnityEngine.RenderMode.WorldSpace;
-                    canvas.worldCamera = Camera.current;
-                    canvas.transform.rotation = Quaternion.Euler(0, 90, 0);
-                    Scale(canvas.transform);
-                    canvas.transform.LookAt(canvas.transform.position + Camera.current.transform.rotation * Vector3.forward, Camera.current.transform.rotation * Vector3.up);
-                    canvas.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(VRPlayer.leftHand.transform.position.x, VRPlayer.leftHand.transform.position.y + 0.2f, VRPlayer.leftHand.transform.position.z);
-                }
-            }
-            if (PanelInternal != null)
-            {
-                Canvas canvas = PanelInternal.GetComponent<Canvas>();
-                if (canvas != null)
-                {
-                    canvas.renderMode = UnityEngine.RenderMode.WorldSpace;
-                    canvas.worldCamera = Camera.current;
-                    canvas.transform.rotation = Quaternion.Euler(0, 90, 0);
-                    Scale(canvas.transform);
-                    canvas.transform.LookAt(canvas.transform.position + Camera.current.transform.rotation * Vector3.forward, Camera.current.transform.rotation * Vector3.up);
-                    canvas.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(VRPlayer.leftHand.transform.position.x, VRPlayer.leftHand.transform.position.y + 0.2f, VRPlayer.leftHand.transform.position.z);
-                }
-            }
-            if (ValueCompass != null)
-            {
-                Canvas canvas = ValueCompass.GetComponent<Canvas>();
-                if (canvas != null)
-                {
-                    canvas.renderMode = UnityEngine.RenderMode.WorldSpace;
-                    canvas.worldCamera = Camera.current;
-                    canvas.transform.rotation = Quaternion.Euler(0, 90, 0);
-                    Scale(canvas.transform);
-                    canvas.transform.LookAt(canvas.transform.position + Camera.current.transform.rotation * Vector3.forward, Camera.current.transform.rotation * Vector3.up);
-                    canvas.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(VRPlayer.leftHand.transform.position.x, VRPlayer.leftHand.transform.position.y + 0.2f, VRPlayer.leftHand.transform.position.z);
-                }
-            }
-            if (PanelDynamicThing != null)
-            {
-                Canvas canvas = PanelDynamicThing.GetComponent<Canvas>();
-                if (canvas != null)
-                {
-                    canvas.renderMode = UnityEngine.RenderMode.WorldSpace;
-                    canvas.worldCamera = Camera.current;
-                    canvas.transform.rotation = Quaternion.Euler(0, 90, 0);
-                    Scale(canvas.transform);
-                    canvas.transform.LookAt(canvas.transform.position + Camera.current.transform.rotation * Vector3.forward, Camera.current.transform.rotation * Vector3.up);
-                    canvas.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(VRPlayer.leftHand.transform.position.x, VRPlayer.leftHand.transform.position.y + 0.2f, VRPlayer.leftHand.transform.position.z);
-                }
-            }
-            if (helpmenuCanvas != null)
-            {
-                Canvas canvas = helpmenuCanvas.GetComponent<Canvas>();
-                if (canvas != null)
-                {
-                    canvas.renderMode = UnityEngine.RenderMode.WorldSpace;
-                    canvas.worldCamera = Camera.current;
-                    canvas.transform.rotation = Quaternion.Euler(0, 90, 0);
-                    Scale(canvas.transform);
-                    canvas.transform.LookAt(canvas.transform.position + Camera.current.transform.rotation * Vector3.forward, Camera.current.transform.rotation * Vector3.up);
-                    canvas.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(VRPlayer.leftHand.transform.position.x, VRPlayer.leftHand.transform.position.y + 0.2f, VRPlayer.leftHand.transform.position.z);
-                }
-            }
-            if (popUpCanvas != null)
-            {
-                Canvas canvas = popUpCanvas.GetComponent<Canvas>();
-                if (canvas != null)
-                {
-                    //ModLog.Error("popUpCanvas: " + canvas.rootCanvas);
-                    canvas.renderMode = UnityEngine.RenderMode.WorldSpace;
-                    canvas.worldCamera = Camera.current;
-                    canvas.transform.rotation = Quaternion.Euler(0, 90, 0);
-                    Scale(canvas.transform);
-                    canvas.transform.LookAt(canvas.transform.position + Camera.current.transform.rotation * Vector3.forward, Camera.current.transform.rotation * Vector3.up);
-                    canvas.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(VRPlayer.leftHand.transform.position.x, VRPlayer.leftHand.transform.position.y + 0.2f, VRPlayer.leftHand.transform.position.z);
-                }
-            }
-            if (systemCanvas != null)
-            {
-                Canvas canvas = systemCanvas.GetComponent<Canvas>();
-                if (canvas != null)
-                {
-                    //ModLog.Error("systemCanvas: " + canvas.rootCanvas);
-                    canvas.renderMode = UnityEngine.RenderMode.WorldSpace;
-                    canvas.worldCamera = Camera.current;
-                    canvas.transform.rotation = Quaternion.Euler(0, 90, 0);
-                    Scale(canvas.transform);
-                    canvas.transform.LookAt(canvas.transform.position + Camera.current.transform.rotation * Vector3.forward, Camera.current.transform.rotation * Vector3.up);
-                    canvas.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(VRPlayer.leftHand.transform.position.x, VRPlayer.leftHand.transform.position.y + 0.2f, VRPlayer.leftHand.transform.position.z);
-                }
-            }
-            if (alertCanvas != null)
-            {
-                Canvas canvas = alertCanvas.GetComponent<Canvas>();
-                if (canvas != null)
-                {
-                    //ModLog.Error("alertCanvas: " + canvas.rootCanvas);
-                    canvas.renderMode = UnityEngine.RenderMode.WorldSpace;
-                    canvas.worldCamera = Camera.current;
-                    canvas.transform.rotation = Quaternion.Euler(0, 90, 0);
-                    Scale(canvas.transform);
-                    canvas.transform.LookAt(canvas.transform.position + Camera.current.transform.rotation * Vector3.forward, Camera.current.transform.rotation * Vector3.up);
-                    canvas.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(VRPlayer.leftHand.transform.position.x, VRPlayer.leftHand.transform.position.y + 0.2f, VRPlayer.leftHand.transform.position.z);
-
-                }
-            }
-            if (cursorCanvas != null)
-            {
-                Canvas canvas = cursorCanvas.GetComponent<Canvas>();
-                if (canvas != null)
-                {
-                    canvas.renderMode = UnityEngine.RenderMode.WorldSpace;
-                    canvas.worldCamera = Camera.current;
-                    canvas.transform.rotation = Quaternion.Euler(0, 90, 0);
-                    Scale(canvas.transform);
-                    canvas.transform.LookAt(canvas.transform.position + Camera.current.transform.rotation * Vector3.forward, Camera.current.transform.rotation * Vector3.up);
-                    canvas.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(VRPlayer.leftHand.transform.position.x, VRPlayer.leftHand.transform.position.y + 0.2f, VRPlayer.leftHand.transform.position.z);
-                }
-            }
-            if (pingCanvas != null)
-            {
-                Canvas canvas = pingCanvas.GetComponent<Canvas>();
-                if (canvas != null)
-                {
-                    canvas.renderMode = UnityEngine.RenderMode.WorldSpace;
-                    canvas.worldCamera = Camera.current;
-                    canvas.transform.rotation = Quaternion.Euler(0, 90, 0);
-                    Scale(canvas.transform);
-                    canvas.transform.LookAt(canvas.transform.position + Camera.current.transform.rotation * Vector3.forward, Camera.current.transform.rotation * Vector3.up);
-                    canvas.GetComponent<RectTransform>().anchoredPosition3D = new Vector3(VRPlayer.leftHand.transform.position.x, VRPlayer.leftHand.transform.position.y + 0.2f, VRPlayer.leftHand.transform.position.z);
-                }
-            }
-        }
         /*
                 private void FixedUpdate() 
                 {

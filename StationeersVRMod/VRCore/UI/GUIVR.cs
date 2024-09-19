@@ -16,6 +16,7 @@ namespace StationeersVR.VRCore.UI
         public static Transform panelClothing;
         public static Transform panelStatusInfo;
         public static Transform panelinWorldToolTip;
+        public static Transform panelGameMenu;
 
         [HarmonyPatch(typeof(WorldManager), nameof(WorldManager.ManagerAwake))]
         public static class WorldManager_ManagerAwake_Patch
@@ -23,6 +24,7 @@ namespace StationeersVR.VRCore.UI
             [HarmonyPostfix]
             static void Postfix()
             {
+                VRManager.TryRecenter();
                 gazeCursor = new GameObject("GazeCursor");
                 DontDestroyOnLoad(gazeCursor);
                 gazeCursor.AddComponent<SimpleGazeCursor>();
@@ -32,14 +34,13 @@ namespace StationeersVR.VRCore.UI
                 ModLog.Error("panelClothing: " + panelClothing);
                 ModLog.Error("panelStatusInfo: " + panelStatusInfo);
                 ModLog.Error("panelinWorldToolTip: " + panelinWorldToolTip);
-                panelClothing.transform.localPosition = new Vector3(panelClothing.transform.localPosition.x + 1000, panelClothing.transform.localPosition.y, panelClothing.transform.localPosition.z);
-                panelStatusInfo.transform.localPosition = new Vector3(panelStatusInfo.transform.localPosition.x - 900, panelStatusInfo.transform.localPosition.y, panelStatusInfo.transform.localPosition.z);
-                Vector3 defaultpos = new Vector3(Camera.current.pixelWidth / 2f, Camera.current.pixelHeight / 2f, InputMouse.MaxInteractDistance);
-                Vector3 posi = Camera.current.ScreenPointToRay(Input.mousePosition).GetPoint(InputMouse.MaxInteractDistance);
-                if (Cursor.lockState == CursorLockMode.Locked)
-                    panelinWorldToolTip.transform.localPosition = Camera.current.ScreenToWorldPoint(defaultpos);
-                else
-                    panelinWorldToolTip.transform.localPosition = SimpleGazeCursor.GetRayCastMode();
+                panelClothing.localPosition = new Vector3(panelClothing.localPosition.x + 1000, panelClothing.localPosition.y, panelClothing.localPosition.z);
+                panelStatusInfo.localPosition = new Vector3(panelStatusInfo.localPosition.x - 900, panelStatusInfo.localPosition.y, panelStatusInfo.localPosition.z);
+                
+               // panelGameMenu = GameObject.Find("AlertCanvas").transform;
+                //ModLog.Error("panelGameMenu: " + panelGameMenu);
+               // panelGameMenu.localScale = new Vector3(0.5f, 0.5f, 0.5f);
+               //panelGameMenu.position = new Vector3(panelGameMenu.localPosition.x + 4000, panelGameMenu.localPosition.y, panelGameMenu.localPosition.z);
             }
         }
     }
