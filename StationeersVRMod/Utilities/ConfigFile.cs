@@ -70,9 +70,10 @@ namespace StationeersVR.Utilities
 
             configUseVrControls = StVR.Config.Bind("2 - Controls",
                 "UseVRControls",
-                true,
+                false,
                 "This setting enables the use of the VR motion controllers as input (Only Oculus Touch and Valve Index supported)." +
-                "This setting, if true, will also force UseOverlayGui to be false as this setting Overlay GUI is not compatible with VR laser pointer inputs.");
+                "Set this to false to use the keyboard and mouse as input." + 
+                "VR native Controls are still a huge WIP and not completely playable, so for now only use it for testing purposes.");
             UseVrControls = configUseVrControls.Value;
 
 

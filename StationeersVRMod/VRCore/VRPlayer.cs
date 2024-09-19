@@ -29,7 +29,8 @@ using SimpleSpritePacker;
 using UnityEngine.TextCore.Text;
 using Assets.Scripts.GridSystem;
 using UnityEngine.EventSystems;
-//using Pose = ValheimVRMod.Utilities.Pose;
+using StationeersVR.VRCore.UI;
+
 
 
 /**
@@ -265,7 +266,10 @@ namespace StationeersVR.VRCore
             FIRST_PERSON_OFFSET = Vector3.zero;
             //THIRD_PERSON_CONFIG_OFFSET = ConfigFile.GetThirdPersonHeadOffset();
             ensurePlayerInstance();
-            //gameObject.AddComponent<VRControls>();
+            if (ConfigFile.UseVrControls)
+            {
+                gameObject.AddComponent<VRControls>();
+            }               
         }
 
         void Update()
@@ -280,8 +284,12 @@ namespace StationeersVR.VRCore
             checkAndSetHandsAndPointers();
             updateVrik();
             UpdateHud();
-            if (Input.GetKey(KeyCode.T))
+            if (Input.GetKey(KeyCode.Y))
+            {
+                ModLog.Debug("Triggered Recenter pose action.");
                 VRManager.TryRecenter();
+            }
+
             //UpdateAmplifyOcclusionStatus();
 
 
@@ -1090,8 +1098,10 @@ namespace StationeersVR.VRCore
                 return;
             }
             var cam = CameraUtils.GetCamera(CameraUtils.VR_CAMERA);
-            //_vrik = VrikCreator.initialize(player.gameObject, 
-              //  leftHand.transform, rightHand.transform, cam.transform);
+            if (ConfigFile.UseVrControls)
+            {
+                _vrik = VrikCreator.initialize(player.gameObject, leftHand.transform, rightHand.transform, cam.transform);
+            }
             /*var vrPlayerSync = player.gameObject.GetComponent<VRPlayerSync>();
             vrPlayerSync.camera = cam.gameObject;
             vrPlayerSync.leftHand = _vrik.solver.leftArm.target.parent.gameObject;
@@ -1352,7 +1362,7 @@ namespace StationeersVR.VRCore
             _roomscaleAnimationForwardSpeed =  Mathf.SmoothDamp(_roomscaleAnimationForwardSpeed, shouldMove ? deltaPosition.z / Time.fixedDeltaTime : 0, ref _forwardSmoothVel, ROOMSCALE_STEP_ANIMATION_SMOOTHING, 99f);
             _roomscaleAnimationSideSpeed =  Mathf.SmoothDamp(_roomscaleAnimationSideSpeed, shouldMove ? deltaPosition.x / Time.fixedDeltaTime : 0, ref _sideSmoothVel, ROOMSCALE_STEP_ANIMATION_SMOOTHING, 99f);
         }
-
+ */
         public void ResetRoomscaleCamera()
         {
             if(_vrCameraRig != null)
@@ -1362,7 +1372,7 @@ namespace StationeersVR.VRCore
                 _vrCameraRig.localPosition = -vrCamPosition;
             }
         }
-*/
+
         public void TriggerHandVibration(float time)
         {
             timerLeft = time;

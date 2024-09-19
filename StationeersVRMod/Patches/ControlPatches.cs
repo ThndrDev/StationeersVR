@@ -1,13 +1,17 @@
-﻿using HarmonyLib;
+﻿using JetBrains.Annotations;
+using StationeersVR.Utilities;
+using StationeersVR.VRCore.UI;
+using HarmonyLib;
 using UnityEngine;
 using StationeersVR.VRCore;
 using Assets.Scripts;
 using Assets.Scripts.Util;
+using Assets.Scripts.Serialization;
 
 // These Harmony patches are used to inject the VR inputs into the game's control system
 namespace StationeersVR
 {
-    /*[HarmonyPatch(typeof(Settings), nameof(Settings.LoadSettings))]
+    [HarmonyPatch(typeof(Settings), nameof(Settings.LoadSettings))]
     [UsedImplicitly]
     class Settings_LoadSettings_Patch
     {
@@ -16,11 +20,11 @@ namespace StationeersVR
             if (ConfigFile.UseVrControls)
             {
                 ModLog.Debug("Initializing VRControls");
-                //VRControls.instance.init();
+                VRControls.instance.init();
             }
             else
             {
-                ModLog.Debug("VRControls disabled, Stationeers default control mode will be used instead.");
+                ModLog.Debug("VRControls disabled, Keyboard and mouse should be used instead.");
             }
         }
     }
@@ -197,7 +201,7 @@ namespace StationeersVR
             }
             return true;
         }
-    }*/
+    }
 
 
 

@@ -170,15 +170,14 @@ namespace StationeersVR.VRCore
             return true;
         }
 
-        //Not yet used:
         public static void TryRecenter()
         {
-/*
+
             if (VRPlayer.ShouldPauseMovement)
             {
                 return;
             }
-*/
+
             List<XRInputSubsystem> inputSubsystems = new();
             SubsystemManager.GetInstances(inputSubsystems);
             foreach (var subsystem in inputSubsystems)
@@ -189,7 +188,7 @@ namespace StationeersVR.VRCore
             
             // Trigger recentering head position on player body
             VRPlayer.headPositionInitialized = false;
-            //VRPlayer.vrPlayerInstance?.ResetRoomscaleCamera();
+            VRPlayer.vrPlayerInstance?.ResetRoomscaleCamera();
         }
 
 
