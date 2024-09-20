@@ -39,8 +39,8 @@ namespace StationeersVR.VRCore.UI
 
         private SteamVR_Action_Vector2 contextScroll;
 
-        private SteamVR_Action_Pose poseL;
-        private SteamVR_Action_Pose poseR;
+        public SteamVR_Action_Pose poseL;
+        public SteamVR_Action_Pose poseR;
 
         // Action for "Use" using the left hand controller
         private SteamVR_Action_Boolean _useLeftHand = SteamVR_Actions.stationeers_UseLeft;
