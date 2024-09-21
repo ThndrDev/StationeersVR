@@ -109,7 +109,10 @@ namespace StationeersVR.Utilities
 
             var leftPressData = pointerData.GetButtonState(PointerEventData.InputButton.Left).eventData;
 
-            ProcessPress(leftPressData.buttonData, leftPressData.PressedThisFrame() || VRControls.instance.GetButtonDown(KeyMap.PrimaryAction), leftPressData.ReleasedThisFrame() || VRControls.instance.GetButtonUp(KeyMap.PrimaryAction));
+            if(ConfigFile.UseVrControls)
+                ProcessPress(leftPressData.buttonData, leftPressData.PressedThisFrame() || VRControls.instance.GetButtonDown(KeyMap.PrimaryAction), leftPressData.ReleasedThisFrame() || VRControls.instance.GetButtonUp(KeyMap.PrimaryAction));
+            else
+                ProcessPress(leftPressData.buttonData, leftPressData.PressedThisFrame(), leftPressData.ReleasedThisFrame());
             ProcessMove(leftPressData.buttonData);
 
             if (Input.GetMouseButton(0))
