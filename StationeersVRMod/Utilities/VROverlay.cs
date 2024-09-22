@@ -1,22 +1,25 @@
-﻿using Assets.Scripts.UI;
-using UnityEngine;
+﻿using UnityEngine;
 using Valve.VR;
 
 namespace StationeersVR.Utilities
 {
-
     static class VROverlay
     {
         private static ulong overlayHandle = 0;
         private static bool isOverlayInitialized = false;
-        public static void ShowLoadingScreenInVR()
+        public static void ShowLoadingScreenInVR(string overlayName, Texture loadingTexture, float overlayWidthInMeters, float overlayDistance, float overlayCurvature)
         {
+            if (overlayHandle != 0)
+            {
+                Debug.LogError("Failed to create overlay: " + overlayName + " There's already an active LoadingScreen overlay.");
+                return;
+            }
             if (!isOverlayInitialized)
             {
                 var overlay = OpenVR.Overlay;
                 if (overlay != null)
                 {
-                    EVROverlayError error = overlay.CreateOverlay("StationeersVR.LoadingScreen", "Loading Screen", ref overlayHandle);
+                    EVROverlayError error = overlay.CreateOverlay("StationeersVR." + overlayName, "Loading Screen", ref overlayHandle);
                     if (error != EVROverlayError.None)
                     {
                         Debug.LogError("Failed to create overlay: " + error.ToString());
@@ -31,8 +34,6 @@ namespace StationeersVR.Utilities
                 }
             }
 
-            // Get the background texture
-            Texture loadingTexture = ImGuiLoadingScreen.backgroundTexture;
             if (loadingTexture == null)
             {
                 Debug.LogError("Loading texture is null");
@@ -55,7 +56,6 @@ namespace StationeersVR.Utilities
                 return;
             }
 
-            float overlayWidthInMeters = 10.0f; // Set the overlay width (increase to make the image larger)
             overlayInterface.SetOverlayWidthInMeters(overlayHandle, overlayWidthInMeters);
 
             // Flip the texture vertically by adjusting the texture bounds
@@ -71,7 +71,7 @@ namespace StationeersVR.Utilities
 
             // Position the overlay closer to the player
             var transform = new SteamVR_Utils.RigidTransform(
-                Vector3.forward * 3f, // Position in front of the player
+                Vector3.forward * overlayDistance, // Position in front of the player
                 Quaternion.identity      // No rotation
             );
             HmdMatrix34_t hmdMatrix = transform.ToHmdMatrix34();
@@ -82,7 +82,7 @@ namespace StationeersVR.Utilities
                 ref hmdMatrix
             );
 
-            overlayInterface.SetOverlayCurvature(overlayHandle, 0.2f);
+            overlayInterface.SetOverlayCurvature(overlayHandle, overlayCurvature);
 
             // Show the overlay
             overlayInterface.ShowOverlay(overlayHandle);

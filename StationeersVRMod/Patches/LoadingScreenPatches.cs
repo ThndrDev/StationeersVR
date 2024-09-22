@@ -5,13 +5,14 @@ using StationeersVR.Utilities;
 namespace StationeersVR
 {
     [HarmonyPatch(typeof(ImGuiLoadingScreen), "SetActive")]
-    public class ImGuiLoadingScreenPatch
+    public class ImGuiLoadingScreen_SetActive_Patch
     {
         static void Postfix(bool active)
         {
             if (active)
             {
-                VROverlay.ShowLoadingScreenInVR();
+                
+                VROverlay.ShowLoadingScreenInVR("LoadingScreen", ImGuiLoadingScreen.backgroundTexture, 10f, 3f, 0.2f);
             }
             else
             {
