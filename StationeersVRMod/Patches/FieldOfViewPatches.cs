@@ -35,7 +35,7 @@ namespace StationeersVR.Patches
         public static class MenuCutscene_SetPosition_Patch
         {
             [HarmonyPrefix]
-            static bool Prefix(float fov, MenuCutscene __instance)
+            static bool Prefix(MenuCutscene __instance)
             {
                 if (!GameManager.IsBatchMode)
                 {
