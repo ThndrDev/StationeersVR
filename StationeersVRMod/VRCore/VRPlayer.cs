@@ -283,7 +283,7 @@ namespace StationeersVR.VRCore
             enableCameras();
             checkAndSetHandsAndPointers();
             updateVrik();
-            UpdateHud();
+            GUIVR.UpdateHud();
             if (Input.GetKey(KeyCode.Y))
             {
                 ModLog.Debug("Triggered Recenter pose action.");
@@ -305,118 +305,7 @@ namespace StationeersVR.VRCore
             }
         }
 
-        public void UpdateHud()
-        {
-            List<GameObject> canvas = new List<GameObject>();
-            GameObject gCanvas = GameObject.Find("GameCanvas");
-            GameObject aCanvas = GameObject.Find("AlertCanvas");
-            GameObject cCanvas = GameObject.Find("CursorCanvas");
-            GameObject sCanvas = GameObject.Find("SystemCanvas");
-            GameObject fCanvas = GameObject.Find("FadeCanvas");
-            GameObject puCanvas = GameObject.Find("PopupsCanvas");
-            //GameObject pCanvas = GameObject.Find("PingCanvas");
-            GameObject phCanvas = GameObject.Find("PanelHelpMenu");
-            GameObject pwCanvas = GameObject.Find("PanelInWorldToolTip");
-            //GameObject piCanvas = GameObject.Find("PanelInternal");
-            //GameObject pdCanvas = GameObject.Find("PanelDynamicThing");
-            //GameObject imgui = GameObject.Find("ImGUI");
-            //GameObject popupCanvas = GameObject.Find("PopupsCanvas");
-            //GameObject tooltipCanvas = GameObject.Find("TooltipCanvas");
-            //GameObject valucomp = GameObject.Find("ValueCompass");
-            if (canvas.Count == 0)
-            {
-                if(gCanvas != null)
-                    canvas.Add(gCanvas);
-
-                if (aCanvas != null)
-                    canvas.Add(aCanvas);
-
-                if (cCanvas != null)
-                    canvas.Add(cCanvas);
-
-                if (sCanvas != null)
-                    canvas.Add(sCanvas);
-
-                if (fCanvas != null) 
-                    canvas.Add(fCanvas);
-
-                if (puCanvas != null)
-                    canvas.Add(puCanvas);
-
-               /* if (pCanvas != null)
-                    canvas.Add(pCanvas);*/
-
-                if (phCanvas != null)
-                    canvas.Add(phCanvas);
-
-                if (pwCanvas != null)
-                    canvas.Add(pwCanvas);
-
-                /*if (piCanvas != null)
-                    canvas.Add(piCanvas);
-
-                if (pdCanvas != null)
-                    canvas.Add(pdCanvas);
-
-                if (imgui != null)
-                {
-                    canvas.Add(imgui);
-                    ModLog.Error("Imgui: " + imgui.name);
-                }
-
-                if (popupCanvas != null)
-                    canvas.Add(popupCanvas);*/
-
-                //if (tooltipCanvas != null)
-                 //   canvas.Add(tooltipCanvas);
-                /*
-
-                if (valucomp != null)
-                    canvas.Add(valucomp);*/
-            }
-                    
-            if (canvas.Count > 0)
-            {
-                foreach (var can in canvas)
-                {
-                    if (can != null)
-                    {
-                        if (can.GetComponent<Canvas>() != null && Camera.current != null)
-                        {
-                            setCameraHudPosition(can.GetComponent<Canvas>());
-                        }
-                    }
-                }
-            }
-        }
-
-        private void setCameraHudPosition(Canvas canvas)
-        {
-            float scaleFactor = 3.5f / Camera.current.pixelWidth / 2;
-            float scaleFactor1 = 2.0f / Camera.current.pixelWidth / 2;
-            float hudDistance = 2;
-            float hudVerticalOffset = +1.0f;
-            float hudHorizontalOffset = 1.0f;
-            canvas.renderMode = UnityEngine.RenderMode.WorldSpace;
-            if (canvas.name == "AlertCanvas")
-            {
-                //ModLog.Error("RenderMode: " + canvas.renderMode);
-                canvas.transform.SetParent(Camera.current.transform, false);
-                canvas.worldCamera = Camera.current;
-                canvas.GetComponent<RectTransform>().localScale = Vector3.one * scaleFactor1 * hudDistance * 1;
-                canvas.transform.position = new Vector3(Camera.current.pixelWidth / 2f, Camera.current.pixelHeight / 2f,hudDistance);
-                canvas.transform.localPosition = new Vector3(0 + hudHorizontalOffset, 0 , hudDistance);
-            }
-            else
-            {
-                canvas.gameObject.transform.SetParent(Camera.current.transform, false);
-                canvas.gameObject.transform.position = new Vector2(Camera.current.pixelWidth / 2f, Camera.current.pixelHeight / 2f);
-
-                canvas.transform.localPosition = new Vector3(0, 0 + hudVerticalOffset, hudDistance);
-                canvas.GetComponent<RectTransform>().localScale = Vector3.one * scaleFactor * hudDistance * 1;
-                canvas.transform.localRotation = Quaternion.Euler(Vector3.zero);
-            }
-        }
+    
 
         /*
                 private void FixedUpdate() 
