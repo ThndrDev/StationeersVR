@@ -887,10 +887,14 @@ namespace StationeersVR.VRCore
         //Choose between characterContinuousTurn or SnapTurn
         public void setPlayerTurnMode()
         {            
+            if (!ConfigFile.UseVrControls)
+            {
+                return;
+            }
             if (!ConfigFile.UseSnapTurn)
             {
                 ModLog.Debug("Continuous turn mode Enabled");
-                //VRControls.useContinuousTurn = true;
+                VRControls.useContinuousTurn = true;
             }
             else
             {
@@ -915,7 +919,7 @@ namespace StationeersVR.VRCore
                 {
                     Debug.LogError("StationeersVRPlayer GameObject not found in the scene.");
                 }
-                //VRControls.useContinuousTurn = false;
+                VRControls.useContinuousTurn = false;
             }
             turnModeSet = true;
         }
@@ -1209,7 +1213,7 @@ namespace StationeersVR.VRCore
  /*       void DoRoomScaleMovement()
         {
             var player = getPlayerCharacter();
-            if (_vrCam == null || player == null || player.gameObject == null || player.IsAttached())
+            if (_vrCam == null || player == null || player.gameObject == null || player.ParentSlot != null || player.LockedToSeat)
             {
               return;
             }
@@ -1218,26 +1222,18 @@ namespace StationeersVR.VRCore
             bool shouldMove = deltaPosition.magnitude > 0.005f;
             if(shouldMove)
             {
-                //Check for motion discrepancies
-                if(ConfigFile.RoomscaleFadeToBlack() && !_fadeManager.IsFadingToBlack)
+                var lastDeltaMovement = player.position - _lastPlayerPosition;
+                lastDeltaMovement.y = 0;
+
+                if(roomscaleMovement.magnitude * 0.6f > lastDeltaMovement.magnitude)
                 {
-                    var lastDeltaMovement = player.m_body.position - _lastPlayerPosition;
-                    if(player.m_lastAttachBody && _lastPlayerAttachmentPosition != Vector3.zero)
-                    {
-                        //Account for ships, and moving attachments
-                        lastDeltaMovement -= (player.m_lastAttachBody.position - _lastPlayerAttachmentPosition);
-                    }
-                    lastDeltaMovement.y = 0;
-
-                    if(roomscaleMovement.magnitude * 0.6f > lastDeltaMovement.magnitude)
-                    {
-                        SteamVR_Fade.Start(Color.black, 0);
-                        SteamVR_Fade.Start(Color.clear, 1.5f); 
-                    }
-
-                    _lastPlayerPosition = player.m_body.position;
-                    _lastPlayerAttachmentPosition = player.m_lastAttachBody ? player.m_lastAttachBody.position : Vector3.zero;
+                    SteamVR_Fade.Start(Color.black, 0);
+                    SteamVR_Fade.Start(Color.clear, 1.5f); 
                 }
+
+                _lastPlayerPosition = player.position;
+                _lastPlayerAttachmentPosition = player._lastLocalPostion != null ? player._lastLocalPostion : Vector3.zero;
+
 
                 //Calculate new postion
                 _lastCamPosition = _vrCam.transform.localPosition;

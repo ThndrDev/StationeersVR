@@ -170,7 +170,7 @@ namespace StationeersVR
                         return false;
                     }
                 }
-                __result = __result + joystick;
+                __result = __result + joystick + VRPlayer.roomscaleAnimationForwardSpeed * VRPlayer.ROOMSCALE_ANIMATION_WEIGHT;
                 return false;
             }
             return true;
@@ -196,7 +196,7 @@ namespace StationeersVR
                         return false;
                     }
                 }
-                __result = __result + joystick;
+                __result = __result + joystick + VRPlayer.roomscaleAnimationSideSpeed * VRPlayer.ROOMSCALE_ANIMATION_WEIGHT;
                 return false;
             }
             return true;
