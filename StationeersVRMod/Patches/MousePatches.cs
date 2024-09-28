@@ -29,45 +29,6 @@ namespace StationeersVR.Patches
                 return false;
             }
         }
-
-        [HarmonyPatch(typeof(Tooltip), nameof(Tooltip.LateUpdate))]
-        public static class Tooltip_LateUpdate_Patch
-        {
-            [HarmonyPrefix]
-            static bool Prefix(Tooltip __instance)
-            {
-                __instance.WantDraw = false;
-                __instance.Dirty = false;
-                __instance.Mode = TooltipMode.Hidden;
-                if (__instance.gameObject.activeSelf && __instance.TooltipFollowMouse)
-                {
-                    Canvas canvas;
-                    GameObject go = new GameObject("ToolTip");
-                   // go.transform.SetParent(Camera.current.transform);
-                    if (go.GetComponent<Canvas>() == null)
-                        go.AddComponent<Canvas>();
-                   // if (go.GetComponent<Canvas>() != null)
-                        canvas = go.GetComponent<Canvas>();
-                    if (canvas != null)
-                    {
-                        __instance.transform.SetParent(go.transform, false);
-                        Vector3 pos = new Vector3(go.transform.position.x, go.transform.position.y+50, go.transform.position.z);
-                        go.transform.position = pos;
-                        canvas.renderMode = RenderMode.WorldSpace;
-                        __instance.GetComponent<RectTransform>().localScale = new Vector3(0.002f, 0.002f, 0.002f);
-                        __instance.transform.LookAt(VRPlayer.vrPlayerInstance._vrCameraRig,Vector3.up);
-                        __instance.transform.Rotate(0, 180, 0);
-                        RectTransformUtility.ScreenPointToLocalPointInRectangle(screenPoint: new Vector3(SimpleGazeCursor.GetRayCastMode().x - (float)__instance._offsetX, SimpleGazeCursor.GetRayCastMode().y - (float)__instance._offsetY, InputMouse.MaxInteractDistance), rect: (__instance.MainRectTransform == null) ? __instance.RectTransform : __instance.MainRectTransform, cam: null, localPoint: out var localPoint);
-                        __instance.GetComponent<Canvas>().renderMode = RenderMode.WorldSpace;
-                        Vector3 testVec = SimpleGazeCursor.cursorInstance.transform.position;
-                        testVec.y += +0.2f;
-                        __instance.transform.position = testVec;
-                    }
-                }
-                return false;
-            }
-        }
-
        
         [HarmonyPatch(typeof(InputMouse), nameof(InputMouse.GetHoverWorldSlot))]
         public static class InputMouse_GetHoverWorldSlot_Patch
