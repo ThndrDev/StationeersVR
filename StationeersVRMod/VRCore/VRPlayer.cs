@@ -423,14 +423,12 @@ namespace StationeersVR.VRCore
             tryInitializeHands();
             if (_leftHand != null)
             {
-                //_leftHand.enabled = ConfigFile.UseVrControls();
-                _leftHand.enabled = true;
+                _leftHand.enabled = ConfigFile.UseVrControls;
                 _leftHand.SetVisibility(_leftHand.enabled && !vrikEnabled());
             }
             if (_rightHand != null)
             {
-                //_rightHand.enabled = ConfigFile.UseVrControls();
-                _rightHand.enabled = true;
+                _rightHand.enabled = ConfigFile.UseVrControls;
                 _rightHand.SetVisibility(_rightHand.enabled&& !vrikEnabled()) ;
             }
             // Next check whether the hands are active, and enable the appropriate pointer based
@@ -474,6 +472,7 @@ namespace StationeersVR.VRCore
                     _leftPointer = _leftHand.GetComponent<SteamVR_LaserPointer>();
                     if (_leftPointer != null)
                     {
+                        _leftPointer.pointer.SetActive(false);
                         //_leftPointer.raycastLayerMask = LayerUtils.UI_PANEL_LAYER_MASK;
                     }
                 }
@@ -487,6 +486,7 @@ namespace StationeersVR.VRCore
                     _rightPointer = _rightHand.GetComponent<SteamVR_LaserPointer>();
                     if (_rightPointer != null)
                     {
+                        _rightPointer.pointer.SetActive(false);
                         //_rightPointer.raycastLayerMask = LayerUtils.UI_PANEL_LAYER_MASK;
                     }
                 }
@@ -501,16 +501,15 @@ namespace StationeersVR.VRCore
             {
                 return;
             }
-            p.active = active; //&& shouldLaserPointersBeActive();
-            //p.setVisible(p.pointerIsActive() && Cursor.visible);
+            p.pointer.SetActive(active && shouldLaserPointersBeActive());
         }
-/*
+
         private bool shouldLaserPointersBeActive()
         {
-            bool isInPlaceMode = (getPlayerCharacter() != null) && getPlayerCharacter().InPlaceMode();
-            return ConfigFile.UseVrControls() && (Cursor.visible || isInPlaceMode);
+            bool isInPlaceMode = (getPlayerCharacter() != null);// && getPlayerCharacter().InPlaceMode;
+            return ConfigFile.UseVrControls && (Cursor.visible || isInPlaceMode);
         }
-*/
+
 
         // Returns true if both the hand and pointer are not null
         // and the hand is active
