@@ -659,6 +659,8 @@ namespace StationeersVR.VRCore
 //            vrCam.cullingMask &= ~(1 << LayerUtils.getHandsLayer());
 //            vrCam.cullingMask &= ~(1 << LayerUtils.getWorldspaceUiLayer());
             mainCamera.enabled = false;
+            mainCamera.gameObject.tag = "Untagged";
+            vrCam.tag = "MainCamera";
             AudioListener mainCamListener = mainCamera.GetComponent<AudioListener>();
             if (mainCamListener != null)
             {

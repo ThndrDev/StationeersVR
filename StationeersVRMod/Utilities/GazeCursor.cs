@@ -44,10 +44,8 @@ namespace StationeersVR.Utilities
                 lineMaterial = new Material(CursorManager.Instance.CursorShader);
                 lineMaterial.color = Color.red;
                 if (line == null)
-                    gameObject.AddComponent<LineRenderer>();
-                else
-                    line = gameObject.GetComponent<LineRenderer>();
-                line.GetComponent<Renderer>().material = lineMaterial;
+                    line = gameObject.AddComponent<LineRenderer>();
+                line.material = lineMaterial;
                 line.startColor = new Color(0f, 1f, 1f, 1f);
                 line.endColor = new Color(1f, 0f, 0f, 1f);
                 line.startWidth = 0.002f;
@@ -101,14 +99,14 @@ namespace StationeersVR.Utilities
                 //Scale The Cursor so it's not to small when far and to big when close
                 ScaleCusorSphere();
                 oldSortingOrder = cursorInstance.GetComponent<Renderer>().sortingOrder;
-                //This Raycast that hits the UI,Iventory,menus ect.
+                //This Raycast that hits the UI, Iventory, menus ect.
                 if (raycast.gameObject != null && raycast.distance < InputMouse.MaxInteractDistance)
                 {
                     cursorInstance.GetComponent<Renderer>().sortingOrder = raycast.gameObject.GetComponentInParent<Canvas>().sortingOrder;
                     cursorInstance.transform.position = raycast.worldPosition;
                     cursorMaterial.color = Color.green;
                 }
-                //This Raycast hits switches,items any interactable but anything with UI
+                //This Raycast hits switches, items any interactable but not anything with UI
                 else if (CursorManager._raycastHit.transform != null && CursorManager._raycastHit.distance < InputMouse.MaxInteractDistance)
                 {
                     cursorInstance.transform.position = CursorManager._raycastHit.point;
@@ -116,7 +114,6 @@ namespace StationeersVR.Utilities
                 }
                 else
                 {
-                    cursorMaterial.color = Color.white;
                     //These are here so the pointer stays in place or does not disappear when it has no hit point, both gaze and mouse cursor here
                     if (Cursor.lockState == CursorLockMode.None)
                     {
@@ -136,6 +133,10 @@ namespace StationeersVR.Utilities
         }
         private void UpdateDebugPointer()
         {
+            if (Camera.current == null)
+            {
+                return;
+            }
             if (pointerDebug)
             {
                 if (raycast.gameObject != null && raycast.distance < InputMouse.MaxInteractDistance)
