@@ -93,6 +93,24 @@ namespace StationeersVR.Patches
             }
         }
 
+        [HarmonyPatch(typeof(DraggableWindow), nameof(DraggableWindow.OnDrag))]
+        public static class DraggableWindow_OnDrag_Patch
+        {
+            [HarmonyPrefix]
+            static bool Prefix(PointerEventData eventData, DraggableWindow __instance)
+            {
+                Vector3 worldPoint = Vector3.zero;
+                if (RectTransformUtility.ScreenPointToWorldPointInRectangle(__instance.RectTransform, eventData.position, eventData.pressEventCamera, out worldPoint))
+                {
+                    //worldPoint -= __instance._offset;
+                    Vector2 test = new Vector2(Input.mousePosition.x / Screen.width * Camera.current.pixelWidth, Input.mousePosition.y / Screen.height * Camera.current.pixelHeight);
+                    Vector3 posi = Camera.current.ScreenPointToRay(test).GetPoint(1);
+                    __instance.RectTransform.position = posi;
+                    __instance.ClampToScreen();
+                }
+                return false;
+            }
+        }
 
         [HarmonyPatch(typeof(InputMouse), nameof(InputMouse.Idle))]
         public static class InputMouse_Idley_Patch
