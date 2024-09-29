@@ -89,6 +89,7 @@ namespace StationeersVR.VRCore
         private static GameObject _instance;
         private static VRPlayer _vrPlayerInstance;
         private static HeadZoomLevel _headZoomLevel = HeadZoomLevel.FirstPerson;
+        public static GameState currentgameState;
 
         private Camera _vrCam;
         private Camera _handsCam;
@@ -284,6 +285,7 @@ namespace StationeersVR.VRCore
             checkAndSetHandsAndPointers();
             updateVrik();
             GUIVR.UpdateHud();
+            GetGameState();
             if (Input.GetKey(KeyCode.Y))
             {
                 ModLog.Debug("Triggered Recenter pose action.");
@@ -305,6 +307,16 @@ namespace StationeersVR.VRCore
             }
         }
 
+        void GetGameState()
+        {
+            currentgameState = GameManager.GameState;
+            if(GameManager.GameState != currentgameState)
+            {
+                ModLog.Debug("GameState Change Vr Re-Centered");
+                VRManager.TryRecenter();
+            }
+
+        }
     
 
         /*
