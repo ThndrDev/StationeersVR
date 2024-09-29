@@ -119,6 +119,10 @@ namespace StationeersVR.Utilities
             {
                 ProcessDrag(leftPressData.buttonData);
             }
+            if (!Mathf.Approximately(leftPressData.buttonData.scrollDelta.sqrMagnitude, 0f))
+            {
+                ExecuteEvents.ExecuteHierarchy(ExecuteEvents.GetEventHandler<IScrollHandler>(leftPressData.buttonData.pointerCurrentRaycast.gameObject), leftPressData.buttonData, ExecuteEvents.scrollHandler);
+            }
         }
 
 

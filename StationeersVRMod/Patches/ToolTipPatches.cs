@@ -15,6 +15,23 @@ namespace StationeersVR.Patches
 {
     internal class ToolTipPatches
     {
+        public static GameObject go;
+
+        [HarmonyPatch(typeof(Tooltip), nameof(Tooltip.Start))]
+        public static class Tooltip_Start_Patch
+        {
+            [HarmonyPrefix]
+            static void Prefix(Tooltip __instance)
+            {
+                go = new GameObject("ToolTip");
+                if (go.GetComponent<Canvas>() == null)
+                    go.AddComponent<Canvas>();
+                __instance.transform.SetParent(go.transform, false);
+                go.GetComponent<Canvas>().renderMode = RenderMode.WorldSpace;
+                __instance.transform.Rotate(0, 180, 0);
+                __instance.transform.localScale = new Vector3(0.001f, 0.001f, 0.001f);
+            }
+        }
 
         [HarmonyPatch(typeof(Tooltip), nameof(Tooltip.LateUpdate))]
         public static class Tooltip_LateUpdate_Patch
@@ -27,28 +44,10 @@ namespace StationeersVR.Patches
                 __instance.Mode = TooltipMode.Hidden;
                 if (__instance.gameObject.activeSelf && __instance.TooltipFollowMouse)
                 {
-                    Canvas canvas;
-                    GameObject go = new GameObject("ToolTip");
-                    // go.transform.SetParent(Camera.current.transform);
-                    if (go.GetComponent<Canvas>() == null)
-                        go.AddComponent<Canvas>();
-                    // if (go.GetComponent<Canvas>() != null)
-                    canvas = go.GetComponent<Canvas>();
-                    if (canvas != null)
-                    {
-                        __instance.transform.SetParent(go.transform, false);
-                        Vector3 pos = new Vector3(go.transform.position.x, go.transform.position.y + 50, go.transform.position.z);
-                        go.transform.position = pos;
-                        canvas.renderMode = RenderMode.WorldSpace;
-                        __instance.GetComponent<RectTransform>().localScale = new Vector3(0.002f, 0.002f, 0.002f);
-                        __instance.transform.LookAt(VRPlayer.vrPlayerInstance._vrCameraRig, Vector3.up);
-                        __instance.transform.Rotate(0, 180, 0);
-                        RectTransformUtility.ScreenPointToLocalPointInRectangle(screenPoint: new Vector3(SimpleGazeCursor.GetRayCastMode().x - (float)__instance._offsetX, SimpleGazeCursor.GetRayCastMode().y - (float)__instance._offsetY, InputMouse.MaxInteractDistance), rect: (__instance.MainRectTransform == null) ? __instance.RectTransform : __instance.MainRectTransform, cam: null, localPoint: out var localPoint);
-                        __instance.GetComponent<Canvas>().renderMode = RenderMode.WorldSpace;
-                        Vector3 testVec = SimpleGazeCursor.cursorInstance.transform.position;
-                        testVec.y += +0.2f;
-                        __instance.transform.position = testVec;
-                    }
+                    __instance.transform.LookAt(Camera.current.transform, Vector3.up);
+                    __instance.transform.position = SimpleGazeCursor.cursorInstance.transform.position + new Vector3(0, 0.2f, 0);
+                    __instance.transform.Rotate(0, 180, 0);
+
                 }
                 return false;
             }
@@ -58,7 +57,7 @@ namespace StationeersVR.Patches
         public static class Tooltip_HandleToolTipDisplay_Patch
         {
             [HarmonyPrefix]
-            static bool Prefix(PassiveTooltip cursorPassiveTooltip,Tooltip __instance)
+            static bool Prefix(PassiveTooltip cursorPassiveTooltip, Tooltip __instance)
             {
                 __instance.WantDraw = true;
                 if ((bool)InventoryManager.ParentHuman && (bool)InventoryManager.Instance.ActiveHand.Slot.Occupant && InventoryManager.Instance.ActiveHand.Slot.Occupant is Tablet)
@@ -109,11 +108,9 @@ namespace StationeersVR.Patches
                 __instance.TooltipFollowMouse = cursorPassiveTooltip.FollowMouseMovement;
                 if (!__instance.TooltipFollowMouse)
                 {
-                    Vector3 testVec = SimpleGazeCursor.cursorInstance.transform.position;
-                    testVec.y += +0.2f;
-                    __instance.transform.position = testVec;
-                    __instance.GetComponent<RectTransform>().localScale = new Vector3(0.002f, 0.002f, 0.002f);
-                    //__instance.RectTransform.position = new Vector2(Screen.width, Screen.height) / 2f + __instance._offset;
+                    __instance.RectTransform.LookAt(Camera.current.transform, Vector3.up);
+                    __instance.transform.position = SimpleGazeCursor.cursorInstance.transform.position + new Vector3(0, 0.2f, 0);
+                    __instance.RectTransform.Rotate(0, 180, 0);
                 }
                 return false;
             }
