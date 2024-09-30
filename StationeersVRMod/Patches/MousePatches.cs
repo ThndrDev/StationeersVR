@@ -7,6 +7,7 @@ using Assets.Scripts.UI;
 using HarmonyLib;
 using StationeersVR.Utilities;
 using StationeersVR.VRCore;
+using StationeersVR.VRCore.UI;
 using UI.Tooltips;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -63,9 +64,9 @@ namespace StationeersVR.Patches
                 Vector3 worldPoint = Vector3.zero;
                 if (RectTransformUtility.ScreenPointToWorldPointInRectangle(__instance.RectTransform, eventData.position, eventData.pressEventCamera, out worldPoint))
                 {
-                    //worldPoint -= __instance._offset;
                     Vector2 test = new Vector2(Input.mousePosition.x / Screen.width * Camera.current.pixelWidth, Input.mousePosition.y / Screen.height * Camera.current.pixelHeight);
-                    Vector3 posi = Camera.current.ScreenPointToRay(test).GetPoint(1);
+                    Vector3 posi = Camera.current.ScreenPointToRay(test).GetPoint(2);
+                    posi.z = GUIVR.gameCanvas.position.z;
                     __instance.RectTransform.position = posi;
                     __instance.ClampToScreen();
                 }
