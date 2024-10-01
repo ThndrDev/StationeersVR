@@ -76,14 +76,10 @@ namespace StationeersVR.Utilities
             //Need to use Camera pixelWidth and pixelHeight with the Screen width and heigh so you have no restrction on mouse movement in vr
             if (!InventoryManager.AllowMouseControl)
             {
-                if(GUIVR.gameCanvas)
-                    GUIVR.gameCanvas.gameObject.SetActive(true);
                 return new Vector2(Input.mousePosition.x / Screen.width * Camera.current.pixelWidth, Input.mousePosition.y / Screen.height * Camera.current.pixelHeight);
             }
             else
             {
-                if (GUIVR.gameCanvas)
-                    GUIVR.gameCanvas.gameObject.SetActive(false);
                 return new Vector2(Camera.current.pixelWidth / 2f, Camera.current.pixelHeight / 2f);
             }
         }

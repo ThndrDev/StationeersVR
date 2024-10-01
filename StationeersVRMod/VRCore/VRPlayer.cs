@@ -285,6 +285,7 @@ namespace StationeersVR.VRCore
             checkAndSetHandsAndPointers();
             updateVrik();
             GUIVR.UpdateHud();
+            GUIVR.ToggleHudElements();
             GetGameState();
             if (Input.GetKey(KeyCode.Y))
             {
