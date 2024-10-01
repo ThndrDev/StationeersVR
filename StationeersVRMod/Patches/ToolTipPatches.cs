@@ -2,14 +2,18 @@
 using Assets.Scripts.Objects;
 using Assets.Scripts.Objects.Items;
 using Assets.Scripts.UI;
+using Assets.Scripts.Util;
 using HarmonyLib;
+using SimpleSpritePacker;
 using StationeersVR.Utilities;
 using StationeersVR.VRCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
 using Trading;
+using UI.Tooltips;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace StationeersVR.Patches
 {
@@ -30,6 +34,49 @@ namespace StationeersVR.Patches
                 go.GetComponent<Canvas>().renderMode = RenderMode.WorldSpace;
                 __instance.transform.Rotate(0, 180, 0);
                 __instance.transform.localScale = new Vector3(0.001f, 0.001f, 0.001f);
+                go.GetComponent<Canvas>().sortingOrder = __instance.transform.GetComponentInParent<Canvas>().sortingOrder + 1;
+            }
+        }
+
+        [HarmonyPatch(typeof(PanelToolTipScreenSpace), nameof(PanelToolTipScreenSpace.Initialize))]
+        public static class PanelToolTipScreenSpace_Initialize_Patch
+        {
+            [HarmonyPrefix]
+            static void Prefix(PanelToolTipScreenSpace __instance)
+            {
+                go = new GameObject("ToolTipScreenSpace");
+                if (go.GetComponent<Canvas>() == null)
+                    go.AddComponent<Canvas>();
+                __instance.Transform.SetParent(go.transform, false);
+                __instance.Transform.GetComponent<RectTransform>().localScale = new Vector3(0.0005f, 0.0005f, 0.0005f);
+                go.GetComponent<Canvas>().sortingOrder = __instance.Transform.GetComponentInParent<Canvas>().sortingOrder + 1;
+            }
+        }
+
+        [HarmonyPatch(typeof(PanelToolTipScreenSpace), nameof(PanelToolTipScreenSpace.LateUpdate))]
+        public static class PanelToolTipScreenSpace_LateUpdate_Patch
+        {
+            [HarmonyPrefix]
+            static bool Prefix(PanelToolTipScreenSpace __instance)
+            {
+                if (__instance.IsVisible)
+                {
+                    if (__instance._tooltipToUpdate != null && !__instance._tooltipToUpdate.TooltipIsVisible)
+                    {
+                        __instance.ClearToolTip();
+                        return false;
+                    }
+                    __instance._tooltipToUpdate?.DoUpdate();
+                    Vector3 mousePosition = SimpleGazeCursor.cursorInstance.transform.position;
+                   // Vector3 quadrant = UITooltipPanel.GetQuadrant(mousePosition);
+                  //  Vector3 vector = new Vector3( __instance._offset,  __instance._offset);
+                    __instance.Transform.LookAt(Camera.current.transform, Vector3.up);
+                    __instance.Transform.position = mousePosition + new Vector3(0,0.02f,0);// + vector;// - vector;// * __instance._canvas.scaleFactor;
+                    __instance.Transform.Rotate(0, 180, 0);
+                    __instance.RefreshText();
+                }
+            
+                return false;
             }
         }
 
