@@ -57,6 +57,7 @@ namespace StationeersVR.Utilities
             cursorInstance = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             cursorInstance.transform.localScale = new Vector3(0.02f, 0.02f, 0.02f);
             cursorInstance.GetComponent<Renderer>().material = cursorMaterial;
+            cursorInstance.layer = 27;
             if (cursorInstance.GetComponent<SphereCollider>() != null)
                 cursorInstance.GetComponent<SphereCollider>().enabled = false;
             DontDestroyOnLoad(cursorInstance);

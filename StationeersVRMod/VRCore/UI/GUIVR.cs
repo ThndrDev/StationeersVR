@@ -27,6 +27,7 @@ namespace StationeersVR.VRCore.UI
         public static Transform helperHints;
         public static Transform inventoryWindows;
         public static Transform cursor;
+        public static Transform stationpediaHint;
 
         public static Quaternion lastVrPlayerRotation = Quaternion.identity;
 
@@ -43,10 +44,12 @@ namespace StationeersVR.VRCore.UI
 
                 gameCanvas = GameObject.Find("GameCanvas").transform;
                 gameCanvas.GetComponent<Canvas>().renderMode = RenderMode.WorldSpace;
+                gameCanvas.gameObject.layer = 27;
                 ModLog.Error("GameCanvas: " + gameCanvas);
 
                 alertCanvas = GameObject.Find("AlertCanvas").transform;
                 alertCanvas.GetComponent<Canvas>().renderMode = RenderMode.WorldSpace;
+                alertCanvas.gameObject.layer = 27;
                 ModLog.Error("AlertCanvas: " + alertCanvas);
 
                 panelClothing = gameCanvas.Find("PanelClothing").transform;
@@ -54,7 +57,9 @@ namespace StationeersVR.VRCore.UI
                 panelHands = gameCanvas.Find("PanelHands").transform;
                 helperHints = gameCanvas.Find("HelperHints").transform;
                 inventoryWindows = gameCanvas.Find("InventoryWindows").transform;
+                inventoryWindows.gameObject.layer = 27;
                 cursor = gameCanvas.Find("Cursor");
+                stationpediaHint = gameCanvas.Find("StationpediaHint");
 
                 ModLog.Error("panelClothing: " + panelClothing);
                 ModLog.Error("panelStatusInfo: " + panelStatusInfo);
@@ -62,6 +67,7 @@ namespace StationeersVR.VRCore.UI
                 ModLog.Error("HelperHints: " + helperHints);
                 ModLog.Error("InventoryWindows: " + inventoryWindows);
                 ModLog.Error("Cursor: " + cursor);
+                ModLog.Error("StationpediaHint: " + stationpediaHint);
                 //ModLog.Error("StationpediaHints: " + stationPediaHints);
                 //panelClothing.localPosition = new Vector3(panelClothing.localPosition.x + 300, panelClothing.localPosition.y, panelClothing.localPosition.z);
                 //panelStatusInfo.localPosition = new Vector3(panelStatusInfo.localPosition.x - 200, panelStatusInfo.localPosition.y, panelStatusInfo.localPosition.z);
@@ -129,6 +135,8 @@ namespace StationeersVR.VRCore.UI
                     helperHints.gameObject.SetActive(true);
                 if (inventoryWindows)
                     inventoryWindows.gameObject.SetActive(true);
+                if (stationpediaHint)
+                    stationpediaHint.gameObject.SetActive(true);
             }
             else
             {
@@ -142,6 +150,8 @@ namespace StationeersVR.VRCore.UI
                     helperHints.gameObject.SetActive(false);
                 if (inventoryWindows)
                     inventoryWindows.gameObject.SetActive(false);
+                if (stationpediaHint)
+                    stationpediaHint.gameObject.SetActive(false);
             }
         }
 

@@ -35,6 +35,8 @@ namespace StationeersVR.Patches
                 __instance.transform.Rotate(0, 180, 0);
                 __instance.transform.localScale = new Vector3(0.001f, 0.001f, 0.001f);
                 go.GetComponent<Canvas>().sortingOrder = __instance.transform.GetComponentInParent<Canvas>().sortingOrder + 1;
+                __instance.transform.gameObject.layer = 27;
+                go.layer = 27;
             }
         }
 
@@ -50,6 +52,8 @@ namespace StationeersVR.Patches
                 __instance.Transform.SetParent(go.transform, false);
                 __instance.Transform.GetComponent<RectTransform>().localScale = new Vector3(0.0005f, 0.0005f, 0.0005f);
                 go.GetComponent<Canvas>().sortingOrder = __instance.Transform.GetComponentInParent<Canvas>().sortingOrder + 1;
+                __instance.Transform.gameObject.layer = 27;
+                go.layer = 27;
             }
         }
 

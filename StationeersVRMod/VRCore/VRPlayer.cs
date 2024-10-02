@@ -30,6 +30,7 @@ using UnityEngine.TextCore.Text;
 using Assets.Scripts.GridSystem;
 using UnityEngine.EventSystems;
 using StationeersVR.VRCore.UI;
+using Assets.Scripts.Objects;
 
 
 
@@ -483,7 +484,7 @@ namespace StationeersVR.VRCore
                 if (_leftHand != null)
                 {
                     _leftPointer = _leftHand.GetComponent<SteamVR_LaserPointer>();
-                    if (_leftPointer != null)
+                    if (_leftPointer.pointer != null)
                     {
                         _leftPointer.pointer.SetActive(false);
                         //_leftPointer.raycastLayerMask = LayerUtils.UI_PANEL_LAYER_MASK;
@@ -497,7 +498,7 @@ namespace StationeersVR.VRCore
                 if (_rightHand != null)
                 {
                     _rightPointer = _rightHand.GetComponent<SteamVR_LaserPointer>();
-                    if (_rightPointer != null)
+                    if (_rightPointer.pointer != null)
                     {
                         _rightPointer.pointer.SetActive(false);
                         //_rightPointer.raycastLayerMask = LayerUtils.UI_PANEL_LAYER_MASK;
@@ -687,6 +688,8 @@ namespace StationeersVR.VRCore
             vrCam.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
             _vrCam = vrCam;
             _vrCameraRig = vrCam.transform.parent;
+            createUiPanelCamera();
+
 /*
             _fadeManager.OnFadeToWorld += () => {
                 //Recenter
@@ -694,6 +697,51 @@ namespace StationeersVR.VRCore
                 VRPlayer.vrPlayerInstance?.ResetRoomscaleCamera();
             };
 */
+        }
+        public static Camera _guiCamera;
+
+        private void createUiPanelCamera()
+        {
+            ModLog.Error("Creating GUI Camera");
+            //_guiTexture = new RenderTexture(new RenderTextureDescriptor((int)GUI_DIMENSIONS.x, (int)GUI_DIMENSIONS.y));
+            GameObject guiCamObj = new GameObject(CameraUtils.VRGUI_SCREENSPACE_CAM);
+            DontDestroyOnLoad(guiCamObj);
+            _guiCamera = guiCamObj.AddComponent<Camera>();
+            _guiCamera.orthographic = true;
+            // Assign the RenderTexture to the camera
+            _guiCamera.targetTexture = ImGuiManager.current.renderTexture;
+            _guiCamera.depth = _vrCam.depth + 1;
+            //_guiCamera.useOcclusionCulling = false;
+            _guiCamera.renderingPath = RenderingPath.Forward;
+            // This enables transparency on the GUI
+            // I tried "Depth" for the clear flags, but
+            // it had weird/unexpected results and Color
+            // just works...
+            _guiCamera.clearFlags = CameraClearFlags.Depth;
+            // Required to actually capture only the GUI layer
+            //_guiCamera.cullingMask = (0 << LayerMask.NameToLayer("UI"));
+            _guiCamera.cullingMask = (1 << LayerMask.NameToLayer("UI"));
+            _guiCamera.farClipPlane = 5f;
+            _guiCamera.nearClipPlane = 0.1f;
+            _guiCamera.enabled = true;
+            createUiPanelCamera1();
+        }
+        public static Camera _uiPanelCamera;
+        private void createUiPanelCamera1()
+        {
+            var vrCam = CameraUtils.GetCamera(CameraUtils.VR_CAMERA);
+            if (vrCam == null || vrCam.gameObject == null)
+            {
+                return;
+            }
+            GameObject uiPanelCameraObj = new GameObject(CameraUtils.VR_UI_CAMERA);
+            _uiPanelCamera = uiPanelCameraObj.AddComponent<Camera>();
+            _uiPanelCamera.CopyFrom(CameraUtils.GetCamera(CameraUtils.VR_CAMERA));
+            _uiPanelCamera.depth = _guiCamera.depth;
+            _uiPanelCamera.clearFlags = CameraClearFlags.Depth;
+            _uiPanelCamera.renderingPath = RenderingPath.Forward;
+            //_uiPanelCamera.cullingMask = LayerUtils.UI_PANEL_LAYER_MASK;
+            _uiPanelCamera.transform.SetParent(vrCam.transform);
         }
 
         // Create a camera and assign its culling mask
