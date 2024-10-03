@@ -3,6 +3,7 @@ using Assets.Scripts.Objects.Entities;
 using Assets.Scripts.UI;
 using Assets.Scripts.Util;
 using HarmonyLib;
+using SimpleSpritePacker;
 using StationeersVR.Utilities;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ using UI.ImGuiUi;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 using Valve.VR;
 using Valve.VR.InteractionSystem;
 
@@ -33,6 +35,7 @@ namespace StationeersVR.VRCore.UI
         public static Transform stationpediaHint;
         public static Transform panelInputPrefabs;
         public static Transform panelInputText;
+        public static Transform panelHelpMenu;
 
         public static Quaternion lastVrPlayerRotation = Quaternion.identity;
 
@@ -56,6 +59,12 @@ namespace StationeersVR.VRCore.UI
                 alertCanvas.GetComponent<Canvas>().renderMode = RenderMode.WorldSpace;
                 alertCanvas.gameObject.layer = 27;
                 ModLog.Error("AlertCanvas: " + alertCanvas);
+
+                panelHelpMenu = GameObject.Find("PanelHelpMenu").transform;
+                panelHelpMenu.GetComponent<Canvas>().renderMode = RenderMode.WorldSpace;
+                panelHelpMenu.gameObject.layer = 27;
+                panelHelpMenu.GetComponent<Canvas>().sortingOrder = gameCanvas.GetComponent<Canvas>().sortingOrder + 1;
+                ModLog.Error("PanelHelpMenu: " + panelHelpMenu);
 
                 panelClothing = gameCanvas.Find("PanelClothing").transform;
                 panelStatusInfo = gameCanvas.Find("PanelStatusInfo").transform;
@@ -112,7 +121,13 @@ namespace StationeersVR.VRCore.UI
                 {
                     GameObject.FindObjectOfType<TMP_InputField>().ProcessEvent(Event.current);
                     GameObject.FindObjectOfType<TMP_InputField>().ForceLabelUpdate();
+                    if (panelHelpMenu.GetComponentInChildren<TMP_InputField>() != null)
+                    {
+                        panelHelpMenu.GetComponentInChildren<TMP_InputField>().ProcessEvent(Event.current);
+                        panelHelpMenu.GetComponentInChildren<TMP_InputField>().ForceLabelUpdate();
+                    }
                 }
+
                 //Temp sloution for labeller till i find a good area to patch
                 if (GameObject.Find("PanelInputText") != null)
                 {
@@ -127,16 +142,25 @@ namespace StationeersVR.VRCore.UI
                 }
                 //alertCanvas.GetComponent<Canvas>().worldCamera = Camera.current;
                 //ModLog.Error("worldCamera:" + Human.LocalHuman.AimIk.transform.position.z);
+                panelHelpMenu.LookAt(Camera.current.transform);
+                panelHelpMenu.GetComponent<RectTransform>().localScale = new Vector3(0.5f, 0.5f, 0.5f);
+
                 var playerInstance = VRPlayer.vrPlayerInstance._vrCameraRig.transform;
+                var offsetPosition = new Vector3(1f, 1.5f, 2.0f);
+                panelHelpMenu.LookAt(Camera.current.transform);
+                panelHelpMenu.Rotate(0, 180, 0);
+                panelHelpMenu.GetComponent<RectTransform>().localScale = new Vector3(0.001f, 0.001f, 0.001f);
+                panelHelpMenu.position = Camera.current.transform.position + Camera.current.transform.forward * hudDistance;
+
                 gameCanvas.gameObject.transform.SetParent(Camera.current.transform, false);
                 gameCanvas.gameObject.transform.position = Camera.current.transform.position + Camera.current.transform.forward * hudDistance;//new Vector2(Camera.current.pixelWidth / 2f, Camera.current.pixelHeight / 2f);
-
                 gameCanvas.transform.localPosition = new Vector3(0, 0 + hudVerticalOffset, hudDistance);
                 gameCanvas.GetComponent<RectTransform>().localScale = Vector3.one * scaleFactor * hudDistance * 1;
                 gameCanvas.transform.localRotation = Quaternion.Euler(Vector3.zero);
+
                 alertCanvas.SetParent(playerInstance);
                 lastVrPlayerRotation = playerInstance.rotation;
-                var offsetPosition = new Vector3(1f, 1.5f, 2.0f);
+                
                 float rotationDelta = playerInstance.rotation.eulerAngles.y - lastVrPlayerRotation.eulerAngles.y;
                 lastVrPlayerRotation = playerInstance.rotation;
                 var newRotation = Quaternion.LookRotation(getCurrentGuiDirection(), playerInstance.up);
