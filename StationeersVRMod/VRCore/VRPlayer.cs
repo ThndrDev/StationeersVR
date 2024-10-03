@@ -96,6 +96,8 @@ namespace StationeersVR.VRCore
         private Camera _handsCam;
         private Camera _foregroundCam;
         private Camera _backgroundCam;
+        public static Camera _guiCamera;
+        public static Camera _uiPanelCamera;
 
         //Roomscale movement variables
         public Transform _vrCameraRig;
@@ -272,6 +274,27 @@ namespace StationeersVR.VRCore
             {
                 gameObject.AddComponent<VRControls>();
             }               
+        }
+
+        float _scaleFactor = 0.7f;
+
+        public void Scale(RectTransform rect)
+        {
+            if (Camera.current)
+            {
+                float camHeight;
+                if (Camera.current.orthographic)
+                {
+                    camHeight = Camera.current.orthographicSize * 2;
+                }
+                else
+                {
+                    float distanceToCamera = Vector3.Distance(Camera.current.transform.position, rect.position);
+                    camHeight = 2.0f * distanceToCamera * Mathf.Tan(Mathf.Deg2Rad * (Camera.current.fieldOfView * 0.5f));
+                }
+                float scale = (camHeight / Screen.width) * _scaleFactor;
+                rect.localScale = new Vector3(scale, scale, scale);
+            }
         }
 
         void Update()
@@ -511,7 +534,7 @@ namespace StationeersVR.VRCore
         // and laser pointers should currently be active.
         private void setPointerActive(SteamVR_LaserPointer p, bool active)
         {
-            if (p == null)
+            if (p.pointer == null)
             {
                 return;
             }
@@ -626,13 +649,15 @@ namespace StationeersVR.VRCore
             if (_vrCam == null || !_vrCam.enabled)
             {
                 enableVrCamera();
+                createUiPanelCamera();
             } else
             {
                 _vrCam.nearClipPlane = ConfigFile.nearClipPlane;
             }
             if (_handsCam == null || !_handsCam.enabled)
             {
-                enableHandsCamera();
+                //disabled for now since we don't need them, I believe this was used for the hand ui in Valheim VR
+                //enableHandsCamera();
             }
             if (_backgroundCam == null || !_backgroundCam.enabled)
             {
@@ -688,7 +713,6 @@ namespace StationeersVR.VRCore
             vrCam.transform.localScale = new Vector3(0.3f, 0.3f, 0.3f);
             _vrCam = vrCam;
             _vrCameraRig = vrCam.transform.parent;
-            createUiPanelCamera();
 
 /*
             _fadeManager.OnFadeToWorld += () => {
@@ -698,7 +722,7 @@ namespace StationeersVR.VRCore
             };
 */
         }
-        public static Camera _guiCamera;
+
 
         private void createUiPanelCamera()
         {
@@ -726,7 +750,7 @@ namespace StationeersVR.VRCore
             _guiCamera.enabled = true;
             createUiPanelCamera1();
         }
-        public static Camera _uiPanelCamera;
+
         private void createUiPanelCamera1()
         {
             var vrCam = CameraUtils.GetCamera(CameraUtils.VR_CAMERA);
@@ -740,7 +764,7 @@ namespace StationeersVR.VRCore
             _uiPanelCamera.depth = _guiCamera.depth;
             _uiPanelCamera.clearFlags = CameraClearFlags.Depth;
             _uiPanelCamera.renderingPath = RenderingPath.Forward;
-            //_uiPanelCamera.cullingMask = LayerUtils.UI_PANEL_LAYER_MASK;
+            _uiPanelCamera.cullingMask = LayerUtils.HANDS_LAYER_MASK;
             _uiPanelCamera.transform.SetParent(vrCam.transform);
         }
 

@@ -7,8 +7,11 @@ using StationeersVR.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using TMPro;
 using UI.ImGuiUi;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 using Valve.VR;
 using Valve.VR.InteractionSystem;
 
@@ -28,6 +31,8 @@ namespace StationeersVR.VRCore.UI
         public static Transform inventoryWindows;
         public static Transform cursor;
         public static Transform stationpediaHint;
+        public static Transform panelInputPrefabs;
+        public static Transform panelInputText;
 
         public static Quaternion lastVrPlayerRotation = Quaternion.identity;
 
@@ -60,7 +65,8 @@ namespace StationeersVR.VRCore.UI
                 inventoryWindows.gameObject.layer = 27;
                 cursor = gameCanvas.Find("Cursor");
                 stationpediaHint = gameCanvas.Find("StationpediaHint");
-
+                panelInputPrefabs = gameCanvas.Find("PanelInputPrefabs");
+                
                 ModLog.Error("panelClothing: " + panelClothing);
                 ModLog.Error("panelStatusInfo: " + panelStatusInfo);
                 ModLog.Error("PanelHands: " + panelHands);
@@ -68,6 +74,8 @@ namespace StationeersVR.VRCore.UI
                 ModLog.Error("InventoryWindows: " + inventoryWindows);
                 ModLog.Error("Cursor: " + cursor);
                 ModLog.Error("StationpediaHint: " + stationpediaHint);
+                ModLog.Error("PanelInputPrefabs: " + panelInputPrefabs);
+
                 //ModLog.Error("StationpediaHints: " + stationPediaHints);
                 //panelClothing.localPosition = new Vector3(panelClothing.localPosition.x + 300, panelClothing.localPosition.y, panelClothing.localPosition.z);
                 //panelStatusInfo.localPosition = new Vector3(panelStatusInfo.localPosition.x - 200, panelStatusInfo.localPosition.y, panelStatusInfo.localPosition.z);
@@ -92,13 +100,31 @@ namespace StationeersVR.VRCore.UI
 
         public static void UpdateHud()
         {
-            if (alertCanvas != null && VRPlayer.instance != null)
+            if (Camera.current != null && gameCanvas != null)
             {
                 float scaleFactor = 2.0f / Camera.current.pixelWidth / 2;
                 float scaleFactorx = 4.5f / Camera.current.pixelWidth / 2;
                 float scaleFactory = 3.5f / Camera.current.pixelWidth / 2;
                 float hudDistance = 2.0f;
                 float hudVerticalOffset = +0f;
+                //Temp sloution for making some inputfields work till I find out what's causing them not to work
+                if (Input.anyKeyDown)
+                {
+                    GameObject.FindObjectOfType<TMP_InputField>().ProcessEvent(Event.current);
+                    GameObject.FindObjectOfType<TMP_InputField>().ForceLabelUpdate();
+                }
+                //Temp sloution for labeller till i find a good area to patch
+                if (GameObject.Find("PanelInputText") != null)
+                {
+                    panelInputText = GameObject.Find("PanelInputText").transform;
+                    panelInputText.GetComponent<Canvas>().renderMode = RenderMode.WorldSpace;
+                    panelInputText.gameObject.transform.SetParent(Camera.current.transform, false);
+                    panelInputText.transform.position = Camera.current.transform.position + Camera.current.transform.forward * hudDistance;
+                    panelInputText.GetComponent<RectTransform>().localScale = Vector3.one * 8.0f / Camera.current.pixelWidth / 2 * hudDistance * 1;
+                    panelInputText.gameObject.layer = 27;
+                    //ModLog.Error("PanelInputText: " + panelInputText.GetComponentInChildren<TMP_InputField>().ProcessEvent(Event.current));
+                    //panelInputText.GetComponentInChildren<TMP_InputField>().ProcessEvent(Event.KeyboardEvent(Event.current.keyCode.ToString()));
+                }
                 //alertCanvas.GetComponent<Canvas>().worldCamera = Camera.current;
                 //ModLog.Error("worldCamera:" + Human.LocalHuman.AimIk.transform.position.z);
                 var playerInstance = VRPlayer.vrPlayerInstance._vrCameraRig.transform;

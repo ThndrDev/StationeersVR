@@ -104,7 +104,8 @@ namespace StationeersVR.Utilities
                 //This Raycast that hits the UI, Iventory, menus ect.
                 if (raycast.gameObject != null && raycast.distance < InputMouse.MaxInteractDistance)
                 {
-                    cursorInstance.GetComponent<Renderer>().sortingOrder = raycast.gameObject.GetComponentInParent<Canvas>().sortingOrder;
+                    if (raycast.gameObject.GetComponentInParent<Canvas>() != null)
+                        cursorInstance.GetComponent<Renderer>().sortingOrder = raycast.gameObject.GetComponentInParent<Canvas>().sortingOrder;
                     cursorInstance.transform.position = raycast.worldPosition;
                     cursorMaterial.color = Color.green;
                 }

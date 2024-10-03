@@ -63,6 +63,9 @@
     <Reference Include="UniTask.TextMeshPro">
       <HintPath>$(GameDir)\rocketstation_Data\Managed\UniTask.TextMeshPro.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>$(GameDir)\rocketstation_Data\Managed\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.XR.Management">
       <HintPath>lib\Unity.XR.Management_publicized.dll</HintPath>
     </Reference>

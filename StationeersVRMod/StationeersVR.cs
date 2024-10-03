@@ -18,6 +18,7 @@ using StationeersVR.VRCore;
 using StationeersVR.Patches;
 using UnityEngine.SceneManagement;
 using UnityEngine.EventSystems;
+using Assets.Scripts.UI;
 
 namespace StationeersVR
 {
@@ -70,6 +71,18 @@ namespace StationeersVR
             {
                 dumpall();
             }
+            //This is the first loading screen
+            if (SceneManager.GetActiveScene().name == "Splash")
+                foreach (var t in SceneManager.GetActiveScene().GetRootGameObjects())
+                    if (t.GetComponentInChildren<Canvas>() != null)
+                    {
+                        t.GetComponentInChildren<Canvas>().renderMode = UnityEngine.RenderMode.WorldSpace;
+                        t.transform.position = Camera.current.transform.position + Camera.current.transform.forward * InputMouse.MaxInteractDistance;
+                        VRPlayer.vrPlayerInstance.Scale(t.GetComponentInChildren<RectTransform>());
+                        t.transform.LookAt(Camera.current.transform);
+                        t.transform.Rotate(0, 180, 0);
+                        //ModLog.Error("SceneName: " + t.GetComponentInChildren<Canvas>().renderMode);
+                    }
         }
 
         void StartStationeersVR()
