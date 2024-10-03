@@ -36,6 +36,8 @@ namespace StationeersVR.VRCore.UI
         public static Transform panelInputPrefabs;
         public static Transform panelInputText;
         public static Transform panelHelpMenu;
+        public static Transform panelInputCode;
+        public static Transform popupsCanvas;
 
         public static Quaternion lastVrPlayerRotation = Quaternion.identity;
 
@@ -59,6 +61,11 @@ namespace StationeersVR.VRCore.UI
                 alertCanvas.GetComponent<Canvas>().renderMode = RenderMode.WorldSpace;
                 alertCanvas.gameObject.layer = 27;
                 ModLog.Error("AlertCanvas: " + alertCanvas);
+
+                popupsCanvas = GameObject.Find("PopupsCanvas").transform;
+                popupsCanvas.GetComponent<Canvas>().renderMode = RenderMode.WorldSpace;
+                popupsCanvas.gameObject.layer = 27;
+                ModLog.Error("PopupsCanvas: " + popupsCanvas);
 
                 panelHelpMenu = GameObject.Find("PanelHelpMenu").transform;
                 panelHelpMenu.GetComponent<Canvas>().renderMode = RenderMode.WorldSpace;
@@ -138,10 +145,29 @@ namespace StationeersVR.VRCore.UI
                     panelInputText.GetComponent<RectTransform>().localScale = Vector3.one * 8.0f / Camera.current.pixelWidth / 2 * hudDistance * 1;
                     panelInputText.gameObject.layer = 27;
                     //ModLog.Error("PanelInputText: " + panelInputText.GetComponentInChildren<TMP_InputField>().ProcessEvent(Event.current));
-                    //panelInputText.GetComponentInChildren<TMP_InputField>().ProcessEvent(Event.KeyboardEvent(Event.current.keyCode.ToString()));
+                    //panelInputText.GetComponentInChildren<TMP_InpFileNameutField>().ProcessEvent(Event.KeyboardEvent(Event.current.keyCode.ToString()));
                 }
                 //alertCanvas.GetComponent<Canvas>().worldCamera = Camera.current;
                 //ModLog.Error("worldCamera:" + Human.LocalHuman.AimIk.transform.position.z);
+                if (GameObject.Find("PanelInputCode") != null)
+                {
+                    panelInputCode = GameObject.Find("PanelInputCode").transform;
+                    panelInputCode.GetComponent<Canvas>().renderMode = RenderMode.WorldSpace;
+                    panelInputCode.gameObject.layer = 27;
+                    panelInputCode.GetComponent<Canvas>().sortingOrder = gameCanvas.GetComponent<Canvas>().sortingOrder + 1;
+                    //ModLog.Error("PanelInputCode: " + panelInputCode);
+                    panelInputCode.LookAt(Camera.current.transform);
+                    panelInputCode.Rotate(0, 180, 0);
+                    panelInputCode.position = Camera.current.transform.position + Camera.current.transform.forward * 1;
+                    panelInputCode.GetComponent<RectTransform>().localScale = new Vector3(0.0007f, 0.0007f, 0.0007f);
+                    /*if (panelInputCode.GetComponentInChildren<TMP_InputField>() != null)
+                    {
+                        panelInputCode.GetComponentInChildren<TMP_InputField>().ProcessEvent(Event.current);
+                        panelInputCode.GetComponentInChildren<TMP_InputField>().ForceLabelUpdate();
+                        //ModLog.Error("" + panelInputCode.GetComponentInChildren<InputField>().);
+                    }*/
+                }
+
                 panelHelpMenu.LookAt(Camera.current.transform);
                 panelHelpMenu.GetComponent<RectTransform>().localScale = new Vector3(0.5f, 0.5f, 0.5f);
 
@@ -151,6 +177,11 @@ namespace StationeersVR.VRCore.UI
                 panelHelpMenu.Rotate(0, 180, 0);
                 panelHelpMenu.GetComponent<RectTransform>().localScale = new Vector3(0.001f, 0.001f, 0.001f);
                 panelHelpMenu.position = Camera.current.transform.position + Camera.current.transform.forward * hudDistance;
+
+                popupsCanvas.LookAt(Camera.current.transform);
+                popupsCanvas.Rotate(0, 180, 0);
+                popupsCanvas.GetComponent<RectTransform>().localScale = new Vector3(0.001f, 0.001f, 0.001f);
+                popupsCanvas.position = Camera.current.transform.position + Camera.current.transform.forward * hudDistance;
 
                 gameCanvas.gameObject.transform.SetParent(Camera.current.transform, false);
                 gameCanvas.gameObject.transform.position = Camera.current.transform.position + Camera.current.transform.forward * hudDistance;//new Vector2(Camera.current.pixelWidth / 2f, Camera.current.pixelHeight / 2f);
