@@ -939,7 +939,8 @@ namespace StationeersVR.VRCore
                 ModLog.Error("SteamVR Player instance is null. Cannot attach!");
                 return;
             }
-            _instance.transform.SetParent(playerCharacter.transform, false);
+            //Maybe a fix for the lander
+            _instance.transform.SetParent(playerCharacter.CameraRig.transform, false);
             attachedToPlayer = true;
             //ModLog.Debug("Player character and SteamVR instance found! Attaching to player.");
 
