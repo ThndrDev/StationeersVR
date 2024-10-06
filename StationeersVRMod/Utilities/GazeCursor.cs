@@ -35,7 +35,7 @@ namespace StationeersVR.Utilities
         public static Material lineMaterial = null;
         public static Material cursorMaterial = null;
         //This is the Scale for the sphere
-        public float FixedSize = .0002f;
+
         public int oldSortingOrder;
         // Use this for initialization
         public void Start()
@@ -55,7 +55,7 @@ namespace StationeersVR.Utilities
             cursorMaterial = new Material(CursorManager.Instance.CursorShader);
             cursorMaterial.color = Color.white;
             cursorInstance = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            cursorInstance.transform.localScale = new Vector3(0.02f, 0.02f, 0.02f);
+            cursorInstance.transform.localScale = new Vector3(0.06f, 0.06f, 0.06f);
             cursorInstance.GetComponent<Renderer>().material = cursorMaterial;
             cursorInstance.layer = 27;
             if (cursorInstance.GetComponent<SphereCollider>() != null)
@@ -85,7 +85,7 @@ namespace StationeersVR.Utilities
             }
         }
 
-        public void ScaleCusorSphere()
+        public void ScaleVrCursor(float FixedSize)
         {
             var distance = (Camera.current.transform.position - cursorInstance.transform.position).magnitude;
             var size = distance * FixedSize * Camera.current.fieldOfView;
@@ -99,11 +99,12 @@ namespace StationeersVR.Utilities
             if (Camera.current != null)
             {
                 //Scale The Cursor so it's not to small when far and to big when close
-                ScaleCusorSphere();
+
                 oldSortingOrder = cursorInstance.GetComponent<Renderer>().sortingOrder;
                 //This Raycast that hits the UI, Iventory, menus ect.
                 if (raycast.gameObject != null && raycast.distance < InputMouse.MaxInteractDistance)
                 {
+                    ScaleVrCursor(.00008f);
                     if (raycast.gameObject.GetComponentInParent<Canvas>() != null)
                         cursorInstance.GetComponent<Renderer>().sortingOrder = raycast.gameObject.GetComponentInParent<Canvas>().sortingOrder;
                     cursorInstance.transform.position = raycast.worldPosition;
@@ -112,6 +113,7 @@ namespace StationeersVR.Utilities
                 //This Raycast hits switches, items any interactable but not anything with UI
                 else if (CursorManager._raycastHit.transform != null && CursorManager._raycastHit.distance < InputMouse.MaxInteractDistance)
                 {
+                    ScaleVrCursor(.0002f);
                     cursorInstance.transform.position = CursorManager._raycastHit.point;
                     cursorMaterial.color = Color.green;
                 }
