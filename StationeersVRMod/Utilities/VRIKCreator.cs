@@ -3,17 +3,19 @@ using RootMotion.FinalIK;
 using UnityEngine;
 using Valve.VR.InteractionSystem;
 using StationeersVR.VRCore;
+using static RootMotion.FinalIK.FBBIKHeadEffector;
+using static UnityEngine.GraphicsBuffer;
 
 namespace StationeersVR.Utilities
 {
     public class VrikCreator
     {
-        private static readonly Vector3 leftUnequippedPosition = new Vector3(-0.027f, 0.05f, -0.18f);
-        private static readonly Quaternion leftUnequippedRotation = new Quaternion(8, 5, -5, 0);
+        private static readonly Vector3 leftUnequippedPosition = new Vector3(6.25f, 0.43f, -22.55f);
+        private static readonly Quaternion leftUnequippedRotation = new Quaternion(-0.76970f, -0.60964f, 0.16337f, 0.09599f);
         private static readonly Vector3 leftUnequippedEllbow = new Vector3(1, 0, 0);
 
-        private static readonly Vector3 rightUnequippedPosition = new Vector3(0.027f, 0.05f, -0.18f);
-        private static readonly Quaternion rightUnequippedRotation = new Quaternion(35, -13f, -35f, -0.001f);
+        private static readonly Vector3 rightUnequippedPosition = new Vector3(6.82f, 0.43f, -22.55f);
+        private static readonly Quaternion rightUnequippedRotation = new Quaternion(0.16331f, 0.09593f, -0.76971f, -0.60965f);
         private static readonly Vector3 rightUnequippedEllbow = new Vector3(-1, 0, 0);
 
         private static readonly Vector3 leftEquippedPosition = new Vector3(-0.02f, 0.09f, -0.1f);
@@ -195,9 +197,9 @@ namespace StationeersVR.Utilities
             }
             else*/
 
-            vrik.solver.leftArm.target.localPosition = leftUnequippedPosition;
-            vrik.solver.leftArm.target.localRotation = leftUnequippedRotation;
-            vrik.solver.leftArm.palmToThumbAxis = leftUnequippedEllbow;
+            vrik.solver.leftArm.target.position = leftUnequippedPosition;
+            vrik.solver.leftArm.target.rotation = leftUnequippedRotation;
+            //vrik.solver.leftArm.palmToThumbAxis = leftUnequippedEllbow;
 
 
             /*if (player.GetComponent<VRPlayerSync>()?.currentRightWeapon != null)
@@ -215,9 +217,9 @@ namespace StationeersVR.Utilities
                 return;
             }*/
 
-            vrik.solver.rightArm.target.localPosition = rightUnequippedPosition;
-            vrik.solver.rightArm.target.localRotation = rightUnequippedRotation;
-            vrik.solver.rightArm.palmToThumbAxis = rightUnequippedEllbow;
+            vrik.solver.rightArm.target.position = rightUnequippedPosition;
+            vrik.solver.rightArm.target.rotation = rightUnequippedRotation;
+            //vrik.solver.rightArm.palmToThumbAxis = rightUnequippedEllbow;
         }
 
         public static Transform GetLocalPlayerDominantHandConnector()
