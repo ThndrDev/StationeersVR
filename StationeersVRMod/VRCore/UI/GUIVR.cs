@@ -132,8 +132,11 @@ namespace StationeersVR.VRCore.UI
                 //Temp sloution for making some inputfields work till I find out what's causing them not to work
                 if (Input.anyKeyDown)
                 {
-                    GameObject.FindObjectOfType<TMP_InputField>().ProcessEvent(Event.current);
-                    GameObject.FindObjectOfType<TMP_InputField>().ForceLabelUpdate();
+                    if (GameObject.FindObjectOfType<TMP_InputField>() != null)
+                    {
+                        GameObject.FindObjectOfType<TMP_InputField>().ProcessEvent(Event.current);
+                        GameObject.FindObjectOfType<TMP_InputField>().ForceLabelUpdate();
+                    }
                     if (panelHelpMenu.GetComponentInChildren<TMP_InputField>() != null)
                     {
                         panelHelpMenu.GetComponentInChildren<TMP_InputField>().ProcessEvent(Event.current);
@@ -178,7 +181,7 @@ namespace StationeersVR.VRCore.UI
                 var offsetPosition = new Vector3(1f, 1.5f, 2.0f);
                 panelHelpMenu.LookAt(Camera.current.transform);
                 panelHelpMenu.Rotate(0, 180, 0);
-                panelHelpMenu.GetComponent<RectTransform>().localScale = new Vector3(0.005f, 0.005f, 0.005f);
+                panelHelpMenu.GetComponent<RectTransform>().localScale = new Vector3(0.001f, 0.001f, 0.001f);
                 panelHelpMenu.position = Camera.current.transform.position + Camera.current.transform.forward * 1;
 
                 panelDyanmicThing.SetParent(Camera.current.transform,false);
