@@ -38,6 +38,7 @@ namespace StationeersVR.VRCore.UI
         public static Transform panelHelpMenu;
         public static Transform panelInputCode;
         public static Transform popupsCanvas;
+        public static Transform panelDyanmicThing;
 
         public static Quaternion lastVrPlayerRotation = Quaternion.identity;
 
@@ -66,6 +67,11 @@ namespace StationeersVR.VRCore.UI
                 popupsCanvas.GetComponent<Canvas>().renderMode = RenderMode.WorldSpace;
                 popupsCanvas.gameObject.layer = 27;
                 ModLog.Error("PopupsCanvas: " + popupsCanvas);
+
+                panelDyanmicThing = GameObject.Find("PanelDynamicThing").transform;
+                panelDyanmicThing.GetComponent<Canvas>().renderMode = RenderMode.WorldSpace;
+                panelDyanmicThing.gameObject.layer = 27;
+                ModLog.Error("PanelDynamicThing: " + panelDyanmicThing);
 
                 panelHelpMenu = GameObject.Find("PanelHelpMenu").transform;
                 panelHelpMenu.GetComponent<Canvas>().renderMode = RenderMode.WorldSpace;
@@ -168,15 +174,20 @@ namespace StationeersVR.VRCore.UI
                     }*/
                 }
 
-                panelHelpMenu.LookAt(Camera.current.transform);
-                panelHelpMenu.GetComponent<RectTransform>().localScale = new Vector3(0.5f, 0.5f, 0.5f);
-
                 var playerInstance = VRPlayer.vrPlayerInstance._vrCameraRig.transform;
                 var offsetPosition = new Vector3(1f, 1.5f, 2.0f);
                 panelHelpMenu.LookAt(Camera.current.transform);
                 panelHelpMenu.Rotate(0, 180, 0);
-                panelHelpMenu.GetComponent<RectTransform>().localScale = new Vector3(0.001f, 0.001f, 0.001f);
-                panelHelpMenu.position = Camera.current.transform.position + Camera.current.transform.forward * hudDistance;
+                panelHelpMenu.GetComponent<RectTransform>().localScale = new Vector3(0.005f, 0.005f, 0.005f);
+                panelHelpMenu.position = Camera.current.transform.position + Camera.current.transform.forward * 1;
+
+                panelDyanmicThing.SetParent(Camera.current.transform,false);
+                panelDyanmicThing.LookAt(Camera.current.transform);
+                panelDyanmicThing.Rotate(0, 180, 0);
+                panelDyanmicThing.GetComponent<RectTransform>().localScale = new Vector3(0.003f, 0.003f, 0.003f);
+                panelDyanmicThing.position = Camera.current.transform.position + Camera.current.transform.forward * 1;
+                panelDyanmicThing.localPosition = new Vector3(panelDyanmicThing.localPosition.x +3, panelDyanmicThing.localPosition.y-1, panelDyanmicThing.localPosition.z);
+                panelDyanmicThing.transform.localRotation = Quaternion.Euler(Vector3.zero);
 
                 popupsCanvas.LookAt(Camera.current.transform);
                 popupsCanvas.Rotate(0, 180, 0);
@@ -189,14 +200,13 @@ namespace StationeersVR.VRCore.UI
                 gameCanvas.GetComponent<RectTransform>().localScale = Vector3.one * scaleFactor * hudDistance * 1;
                 gameCanvas.transform.localRotation = Quaternion.Euler(Vector3.zero);
 
-                alertCanvas.SetParent(playerInstance);
+                alertCanvas.SetParent(playerInstance,false);
                 lastVrPlayerRotation = playerInstance.rotation;
                 
                 float rotationDelta = playerInstance.rotation.eulerAngles.y - lastVrPlayerRotation.eulerAngles.y;
                 lastVrPlayerRotation = playerInstance.rotation;
                 var newRotation = Quaternion.LookRotation(getCurrentGuiDirection(), playerInstance.up);
                 newRotation *= Quaternion.AngleAxis(rotationDelta, Vector3.up);
-                //alertCanvas.GetComponent<Canvas>().renderMode = RenderMode.WorldSpace;
                 alertCanvas.GetComponent<RectTransform>().localScale = Vector3.one * scaleFactor * hudDistance * 1;
                 alertCanvas.LookAt(playerInstance.position);
                 alertCanvas.rotation = playerInstance.rotation;
