@@ -50,7 +50,7 @@ namespace StationeersVR.Patches
                 if (go.GetComponent<Canvas>() == null)
                     go.AddComponent<Canvas>();
                 __instance.Transform.SetParent(go.transform, false);
-                __instance.Transform.GetComponent<RectTransform>().localScale = new Vector3(0.0005f, 0.0005f, 0.0005f);
+                __instance.Transform.GetComponent<RectTransform>().localScale = new Vector3(0.0002f, 0.0002f, 0.0002f);
                 go.GetComponent<Canvas>().sortingOrder = __instance.Transform.GetComponentInParent<Canvas>().sortingOrder + 1;
                 __instance.Transform.gameObject.layer = 27;
                 go.layer = 27;

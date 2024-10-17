@@ -181,7 +181,14 @@ namespace StationeersVR.Utilities
             {
                 return;
             }
+            if (ConfigFile.UseVrControls) 
+            {
+                vrik.solver.leftArm.target.localPosition = leftEquippedPosition;
+                vrik.solver.leftArm.target.localRotation = leftEquippedRotation;
 
+                vrik.solver.rightArm.target.position = rightUnequippedPosition;
+                vrik.solver.rightArm.target.rotation = rightUnequippedRotation;
+            }
             /*if (player.GetComponent<VRPlayerSync>()?.currentLeftWeapon != null)
             {
                 if (VHVRConfig.LeftHanded() && player.GetComponent<VRPlayerSync>().currentLeftWeapon.name.StartsWith("Spear") && !VHVRConfig.SpearInverseWield())
@@ -197,8 +204,8 @@ namespace StationeersVR.Utilities
             }
             else*/
 
-            vrik.solver.leftArm.target.position = leftUnequippedPosition;
-            vrik.solver.leftArm.target.rotation = leftUnequippedRotation;
+            //vrik.solver.leftArm.target.position = leftUnequippedPosition;
+            //vrik.solver.leftArm.target.rotation = leftUnequippedRotation;
             //vrik.solver.leftArm.palmToThumbAxis = leftUnequippedEllbow;
 
 
@@ -217,8 +224,8 @@ namespace StationeersVR.Utilities
                 return;
             }*/
 
-            vrik.solver.rightArm.target.position = rightUnequippedPosition;
-            vrik.solver.rightArm.target.rotation = rightUnequippedRotation;
+            //vrik.solver.rightArm.target.position = rightUnequippedPosition;
+            //vrik.solver.rightArm.target.rotation = rightUnequippedRotation;
             //vrik.solver.rightArm.palmToThumbAxis = rightUnequippedEllbow;
         }
 

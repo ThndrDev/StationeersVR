@@ -274,11 +274,10 @@ namespace StationeersVR.VRCore
             {
                 gameObject.AddComponent<VRControls>();
             }
+            gameObject.AddComponent<InputFieldManager>();
         }
 
-        float _scaleFactor = 0.7f;
-
-        public void Scale(RectTransform rect)
+        public void Scale(RectTransform rect, float _scaleFactor)
         {
             if (Camera.current)
             {
@@ -334,10 +333,10 @@ namespace StationeersVR.VRCore
 
         void GetGameState()
         {
-            currentgameState = GameManager.GameState;
             if(GameManager.GameState != currentgameState)
             {
-                ModLog.Debug("GameState Change Vr Re-Centered");
+                currentgameState = GameManager.GameState;
+                ModLog.Debug("Gamestate Changed to " + currentgameState + " Vr Re-Centered");
                 VRManager.TryRecenter();
             }
 
@@ -345,36 +344,36 @@ namespace StationeersVR.VRCore
 
 
         /*
-                private void FixedUpdate() 
+        private void FixedUpdate()
+        {
+            if (ShouldPauseMovement)
+            {
+                if (vrikEnabled() && !pausedMovement)
                 {
-                    if (ShouldPauseMovement)
-                    {
-                        if (vrikEnabled() && !pausedMovement)
-                        {
-                            VrikCreator.PauseLocalPlayerVrik();
-                            pausedMovement = true;
-                        }
-                    }
-                    else
-                    {
-                        if (vrikEnabled() && pausedMovement)
-                        {
-                            // Before unpausing, move the camera back to the position before the pause to prevent teleporting the player to the cuurent camera position.
-                            _vrCameraRig.localPosition -= Vector3.ProjectOnPlane(_vrCam.transform.localPosition - _lastCamPosition, Vector3.up);
-                            _lastCamPosition = _vrCam.transform.localPosition;
-                            VrikCreator.UnpauseLocalPlayerVrik();
-                            pausedMovement = false;
-                        }
-                        if (inFirstPerson)
-                        {
-                            DoRoomScaleMovement();
-                        }
-                        else
-                        {
-                            roomscaleMovement = Vector3.zero;
-                        }
-                    }
+                    VrikCreator.PauseLocalPlayerVrik();
+                    pausedMovement = true;
                 }
+            }
+            else
+            {
+                if (vrikEnabled() && pausedMovement)
+                {
+                    // Before unpausing, move the camera back to the position before the pause to prevent teleporting the player to the cuurent camera position.
+                    _vrCameraRig.localPosition -= Vector3.ProjectOnPlane(_vrCam.transform.localPosition - _lastCamPosition, Vector3.up);
+                    _lastCamPosition = _vrCam.transform.localPosition;
+                    VrikCreator.UnpauseLocalPlayerVrik();
+                    pausedMovement = false;
+                }
+                if (inFirstPerson)
+                {
+                            DoRoomScaleMovement();
+                }
+                else
+                {
+                    roomscaleMovement = Vector3.zero;
+                }
+            }
+        }
         */
 
         // Fixes an issue on Pimax HMDs that causes rotation to be incorrect:
@@ -1082,9 +1081,14 @@ namespace StationeersVR.VRCore
             {
                 _vrik = VrikCreator.initialize(player.gameObject, leftHand.transform, rightHand.transform, cam.transform);
             }
-            else
+            //Making sure the right hand goes in the right spot
+            if (Human.LocalHuman.HandBones[0].name == "hand_l" || Human.LocalHuman.HandBones[0].name == "hand_L")
             {
                 _vrik = VrikCreator.initialize(player.gameObject, Human.LocalHuman.HandBones[0].transform, Human.LocalHuman.HandBones[1].transform, cam.transform);
+            }
+            if (Human.LocalHuman.HandBones[0].name == "hand_r" || Human.LocalHuman.HandBones[0].name == "hand_R")
+            {
+                _vrik = VrikCreator.initialize(player.gameObject, Human.LocalHuman.HandBones[1].transform, Human.LocalHuman.HandBones[0].transform, cam.transform);
             }
             /*var vrPlayerSync = player.gameObject.GetComponent<VRPlayerSync>();
             vrPlayerSync.camera = cam.gameObject;

@@ -87,10 +87,20 @@ namespace StationeersVR.Utilities
 
         public void ScaleVrCursor(float FixedSize)
         {
-            var distance = (Camera.current.transform.position - cursorInstance.transform.position).magnitude;
-            var size = distance * FixedSize * Camera.current.fieldOfView;
-            cursorInstance.transform.localScale = Vector3.one * size;
-            cursorInstance.transform.forward = cursorInstance.transform.position - Camera.current.transform.position;
+            if (Camera.current == null)
+            {
+                var distance = (Camera.main.transform.position - cursorInstance.transform.position).magnitude;
+                var size = distance * FixedSize * Camera.main.fieldOfView;
+                cursorInstance.transform.localScale = Vector3.one * size;
+                cursorInstance.transform.forward = cursorInstance.transform.position - Camera.main.transform.position;
+            }
+            else
+            {
+                var distance = (Camera.current.transform.position - cursorInstance.transform.position).magnitude;
+                var size = distance * FixedSize * Camera.current.fieldOfView;
+                cursorInstance.transform.localScale = Vector3.one * size;
+                cursorInstance.transform.forward = cursorInstance.transform.position - Camera.current.transform.position;
+            }
         }
 
         private void UpdateCursor()

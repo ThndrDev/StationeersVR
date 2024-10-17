@@ -79,7 +79,7 @@ namespace StationeersVR
                         {
                             t.GetComponentInChildren<Canvas>().renderMode = UnityEngine.RenderMode.WorldSpace;
                             t.transform.position = Camera.current.transform.position + Camera.current.transform.forward * InputMouse.MaxInteractDistance;
-                            VRPlayer.vrPlayerInstance.Scale(t.GetComponentInChildren<RectTransform>());
+                            VRPlayer.vrPlayerInstance.Scale(t.GetComponentInChildren<RectTransform>(), 0.7f);
                             t.transform.LookAt(Camera.current.transform);
                             t.transform.Rotate(0, 180, 0);
                             //ModLog.Error("SceneName: " + t.GetComponentInChildren<Canvas>().renderMode);

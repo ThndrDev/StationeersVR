@@ -16,6 +16,7 @@ namespace StationeersVR.Utilities
         private static ConfigEntry<bool> configUseVrControls;
         private static ConfigEntry<string> configDominantHand;
         private static ConfigEntry<bool> configUseSnapTurn;
+        private static ConfigEntry<bool> autoOpenKeyboardOnInteract;
 
         // Variables to access the configuration
         public static int LogLevel;
@@ -59,20 +60,25 @@ namespace StationeersVR.Utilities
                             new AcceptableValueRange<float>(0.05f, 0.5f)));
             nearClipPlane = configNearClipPlane.Value;
 
+            autoOpenKeyboardOnInteract = StVR.Config.Bind("UI",
+                            "AutoOpenKeyboardOnInteract",
+                            true,
+                            "Automatically open a keyboard when you interact with things that have text input (eg. Searchboxes, Programming Window), Only works with Vr Controls");
+
 
             configUseLookLocomotion = StVR.Config.Bind("2 - Controls",
-                                "UseLookLocomotion",
-                                true,
-                                "Setting this to true ties the direction you are looking to the walk direction while in first person mode. " +
-                                "Set this to false if you prefer to disconnect these so you can look by turning your head without affecting " +
-                                "movement direction.");
+                                    "UseLookLocomotion",
+                                    true,
+                                    "Setting this to true ties the direction you are looking to the walk direction while in first person mode. " +
+                                    "Set this to false if you prefer to disconnect these so you can look by turning your head without affecting " +
+                                    "movement direction.");
             UseLookLocomotion = configUseLookLocomotion.Value;
 
             configUseVrControls = StVR.Config.Bind("2 - Controls",
                 "UseVRControls",
                 false,
                 "This setting enables the use of the VR motion controllers as input (Only Oculus Touch and Valve Index supported)." +
-                "Set this to false to use the keyboard and mouse as input." + 
+                "Set this to false to use the keyboard and mouse as input." +
                 "VR native Controls are still a huge WIP and not completely playable, so for now only use it for testing purposes.");
             UseVrControls = configUseVrControls.Value;
 
@@ -96,6 +102,11 @@ namespace StationeersVR.Utilities
         public static string GetDominantHand()
         {
             return configDominantHand.Value == "Left" ? VRPlayer.LEFT_HAND : VRPlayer.RIGHT_HAND;
+        }
+
+        public static bool AutoOpenKeyboardOnInteract()
+        {
+            return autoOpenKeyboardOnInteract.Value;
         }
     }
 }
