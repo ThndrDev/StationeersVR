@@ -5,6 +5,7 @@ using StationeersVR.Utilities;
 using UnityEngine;
 using UnityStandardAssets.ImageEffects;
 using Assets.Scripts.Serialization;
+using System.Reflection;
 
 namespace StationeersVR.Patches
 {
@@ -23,7 +24,7 @@ namespace StationeersVR.Patches
                     {
                         ModLog.Debug("VR Camera not found while trying to add Antialiasing to it");
                         return;
-                    }                    
+                    }
                     string antialiasing = Settings.CurrentData.Antialiasing;
                     if (antialiasing == "none")
                     {
@@ -33,7 +34,7 @@ namespace StationeersVR.Patches
                             vrCam.gameObject.GetComponent<Antialiasing>().enabled = false;
                         }
                         return;
-                    }                    
+                    }
                     if (vrCam.gameObject.GetComponent<Antialiasing>() != null)
                     {
                         // update antialiasing options
@@ -56,11 +57,34 @@ namespace StationeersVR.Patches
                         vrAntialiasing.dlaaShader = component.dlaaShader;
                         vrAntialiasing.ssaaShader = component.ssaaShader;
                         vrAntialiasing.dlaaSharp = component.dlaaSharp;
-                        
+
                         vrAntialiasing.mode = component.mode; // Copy the original camera antialising mode
                         vrAntialiasing.enabled = true;
                     }
                 }
+            }
+        }
+        [HarmonyPatch(typeof(CameraController), nameof(CameraController.SetBloom))]
+        public static class CameraController_SetBloom_Patch
+        {
+            [UsedImplicitly]
+            [HarmonyPostfix]
+            static void Postfix()
+            {
+                Camera vrCam = CameraUtils.GetCamera(CameraUtils.VR_CAMERA);
+                Camera mainCam = CameraUtils.GetCamera(CameraUtils.MAIN_CAMERA);
+                if (vrCam == null || vrCam.gameObject.GetComponent<UltimateBloom>() != null)
+                {
+                    return;
+                }
+                var vrBloom = vrCam.gameObject.AddComponent<UltimateBloom>();
+                var mainBloom = mainCam.gameObject.GetComponent<UltimateBloom>();
+                foreach (var field in mainBloom.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+                {
+                    //ModLog.Debug("VRBloom: Copying field: " + field.Name + " With value: "+ field.GetValue(mainBloom));
+                    field.SetValue(vrBloom, field.GetValue(mainBloom));
+                }
+                vrBloom.enabled = true;
             }
         }
     }
