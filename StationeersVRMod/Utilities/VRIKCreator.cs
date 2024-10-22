@@ -70,9 +70,19 @@ namespace StationeersVR.Utilities
             head.localPosition = new Vector3(0, -0.165f, -0.00f);
             head.localRotation = Quaternion.Euler(180, 80, 90);
             vrik.solver.spine.maxRootAngle = 180;
+            //vrik.solver.spine.pelvisTarget.SetParent(Human.LocalHuman?.transform, false);
+
+            //Avoid akward movements
+            vrik.solver.spine.maintainPelvisPosition = 0f;
+            vrik.solver.spine.pelvisPositionWeight = 0f;
+            vrik.solver.spine.pelvisRotationWeight = 0f;
+            vrik.solver.spine.bodyPosStiffness = 0f;
+            vrik.solver.spine.bodyRotStiffness = 0f;
+            //Force head to allow more vertical headlook
+            vrik.solver.spine.headClampWeight = 0f;
+            vrik.solver.locomotion.weight = 0f;
             //float sizeF = (vrik.solver.spine.headTarget.position.y - vrik.references.root.position.y) / (vrik.references.head.position.y - vrik.references.root.position.y);
             //vrik.references.root.localScale *= sizeF;
-            vrik.solver.locomotion.weight = 0f;
         }
         public static Transform sourceTransform;
         public static Hand _sourceHand;
