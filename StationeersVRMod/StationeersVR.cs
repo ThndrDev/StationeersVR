@@ -36,6 +36,11 @@ namespace StationeersVR
             StationeersVR.Instance = this;
             ModLog.Info("Loading StationeersVR mod");
             ConfigFile.HandleConfig(this);     // read/create the configuration file parameters
+            if (!ConfigFile.VRToggle)
+            {
+                ModLog.Error("Stationeers VR is Disabled edit config to use VR in Stationeers\\BepInEx\\config\\StationeersVR.cfg");
+                return;
+            }
             var harmony = new Harmony("net.StationeersVR.patches");
             try
             {
@@ -52,13 +57,18 @@ namespace StationeersVR
 
         void Start()
         {
+            if (!ConfigFile.VRToggle)
+            {
+                ModLog.Error("Stationeers VR is Disabled edit config to use VR in Stationeers\\BepInEx\\config\\StationeersVR.cfg");
+                return;
+            }
             ModLog.Debug("Running StartStationeersVR()");  
             StartStationeersVR();
         }
 
         void Update()
         {
-            if (ConfigFile.NonVrPlayer)
+            if (ConfigFile.NonVrPlayer || !ConfigFile.VRToggle)
             {
                 return;
             }

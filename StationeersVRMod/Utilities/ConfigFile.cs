@@ -17,6 +17,7 @@ namespace StationeersVR.Utilities
         private static ConfigEntry<string> configDominantHand;
         private static ConfigEntry<bool> configUseSnapTurn;
         private static ConfigEntry<bool> autoOpenKeyboardOnInteract;
+        private static ConfigEntry<bool> toggleVr;
 
         // Variables to access the configuration
         public static int LogLevel;
@@ -26,6 +27,7 @@ namespace StationeersVR.Utilities
         public static bool UseLookLocomotion;
         public static bool UseVrControls;
         public static bool UseSnapTurn;
+        public static bool VRToggle;
         public static void HandleConfig(StationeersVR StVR) // Create and manage the configuration file parameters
         {
             //Log Section
@@ -39,6 +41,11 @@ namespace StationeersVR.Utilities
 
             LogLevel = Mathf.Clamp(configLogLevel.Value, 0, 2);
 
+            toggleVr = StVR.Config.Bind("0 - General configuration",
+                "VRToggle",
+                true,
+                "Enables and disables VR from loading");
+            VRToggle = toggleVr.Value;
 
             configNonVrPlayer = StVR.Config.Bind("0 - General configuration",
              "NonVrPlayer",
