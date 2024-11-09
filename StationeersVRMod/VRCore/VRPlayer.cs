@@ -31,6 +31,7 @@ using Assets.Scripts.GridSystem;
 using UnityEngine.EventSystems;
 using StationeersVR.VRCore.UI;
 using Assets.Scripts.Objects;
+using UnityStandardAssets.ImageEffects;
 
 
 
@@ -684,7 +685,7 @@ namespace StationeersVR.VRCore
             Camera vrCam = CameraUtils.GetCamera(CameraUtils.VR_CAMERA);
             vrCam.GetOrAddComponent<FlareReceiver>().enabled = true;
             CameraUtils.CopyCamera(mainCamera, vrCam);
-            //maybeCopyPostProcessingEffects(vrCam, mainCamera);
+            maybeCopyCameraComponents(vrCam, mainCamera);
             //maybeAddAmplifyOcclusion(vrCam);
             // Prevent visibility of the head
             vrCam.nearClipPlane = ConfigFile.nearClipPlane;
@@ -1213,76 +1214,77 @@ namespace StationeersVR.VRCore
                     return animator.GetBoneTransform(HumanBodyBones.Head);
                 }
         */
-        // This will, if it hasn't already done so, try and find the PostProcessingBehaviour
-        // script attached to the main camera and copy it over to the VR camera and then
-        // add the DepthOfField & CameraEffects components. This enables all the post
-        // processing effects to work. Bloom and anti-aliasing have strange artifacts
-        // and don't work well. Depth of Field doesn't seem to actually generate depth - others
-        // work okay and the world looks much nicer. SSAO is a significant boost in image
-        // quality, but it comes at a heavy performance cost.
-        /*       private void maybeCopyPostProcessingEffects(Camera vrCamera, Camera mainCamera)
-               {
-                   if (vrCamera == null || mainCamera == null)
-                   {
-                       return;
-                   }
-                   if (vrCamera.gameObject.GetComponent<PostProcessingBehaviour>() != null)
-                   {
-                       return;
-                   }
-                   PostProcessingBehaviour postProcessingBehavior = null;
-                   bool foundMainCameraPostProcesor = false;
-                   foreach (var ppb in GameObject.FindObjectsOfType<PostProcessingBehaviour>())
-                   {
-                       if (ppb.name == CameraUtils.MAIN_CAMERA)
-                       {
-                           foundMainCameraPostProcesor = true;
-                           postProcessingBehavior = vrCamera.gameObject.AddComponent<PostProcessingBehaviour>();
-                           ModLog.Debug("Copying Main Camera PostProcessingBehaviour");
-                           var profileClone = Instantiate(ppb.profile);
-                           //Need to copy only the profile and jitterFuncMatrix, everything else will be instanciated when enabled
-                           postProcessingBehavior.profile = profileClone;
-                           postProcessingBehavior.jitteredMatrixFunc = ppb.jitteredMatrixFunc;
-                           if(ppb.enabled) ppb.enabled = false;
-                       }
-                   }
-                   if (!foundMainCameraPostProcesor)
-                   {
-                       return;
-                   }
-                   var mainCamDepthOfField = mainCamera.gameObject.GetComponent<DepthOfField>();
-                   var vrCamDepthOfField =  vrCamera.gameObject.AddComponent<DepthOfField>();
-                   if (mainCamDepthOfField != null)
-                   {
-                       CopyClassFields(mainCamDepthOfField, ref vrCamDepthOfField);
-                   }
-                   var vrCamSunshaft = vrCamera.gameObject.AddComponent<SunShafts>();
-                   var mainCamSunshaft = mainCamera.gameObject.GetComponent<SunShafts>();
-                   if (mainCamSunshaft != null)
-                   {
-                       CopyClassFields(mainCamSunshaft, ref vrCamSunshaft);
-                   }
-                   var vrCamEffects = vrCamera.gameObject.AddComponent<CameraEffects>();
-                   var mainCamEffects = mainCamera.gameObject.GetComponent<CameraEffects>();
-                   if (mainCamEffects != null)
-                   {
-                       // Need to copy over only the DOF fields
-                       vrCamEffects.m_forceDof = mainCamEffects.m_forceDof;
-                       vrCamEffects.m_dofRayMask = mainCamEffects.m_dofRayMask;
-                       vrCamEffects.m_dofAutoFocus = mainCamEffects.m_dofAutoFocus;
-                       vrCamEffects.m_dofMinDistance = mainCamEffects.m_dofMinDistance;
-                       vrCamEffects.m_dofMaxDistance = mainCamEffects.m_dofMaxDistance;
-                   }
-               }
-        */
-        private void CopyClassFields<T>(T source, ref T dest)
+        // This will copy all components attached on the mainCamera to the VRCamera, excluding 
+        // the camera itself, antialiasing (which is added by an harmony patch) and others that
+        // cause problems like VolumetricLightRenderer or are not used in main camera.
+        // maybeCopyCameraComponents will also copy the components fields values.
+        // Camera component updates are done by harmony patches on CameraControllerPatches.
+        private static readonly HashSet<string> SkipComponentNames = new HashSet<string>
         {
-            FieldInfo[] fieldsToCopy = source.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
-            foreach (var field in fieldsToCopy)
+            "Camera", "TransformLock", "Antialiasing", "SSAOPro", "Bloom",
+            "VolumetricLightRenderer"
+        };
+
+        private void maybeCopyCameraComponents(Camera vrCamera, Camera mainCamera)
+        {
+            if (vrCamera == null || mainCamera == null)
             {
-                var value = field.GetValue(source);
-                field.SetValue(dest, value);
+                return;
             }
+            foreach (Component component in mainCamera.GetComponents<Component>())  // Copy all components from mainCamera to vrCamera
+            {
+                string componentName = component.GetType().Name;
+                // Skip components in the SkipComponentNames list or components that already exist
+                if (SkipComponentNames.Contains(componentName) || vrCamera.gameObject.GetComponent(component.GetType()) != null)
+                {
+                    ModLog.Debug("Skipping component: " + componentName);
+                    continue;
+                }
+                Component copiedComponent = vrCamera.gameObject.AddComponent(component.GetType());
+                if (component is Behaviour behaviourComponent)
+                {
+                    ((Behaviour)copiedComponent).enabled = behaviourComponent.enabled;
+                }
+                ModLog.Debug("Copied component: " + componentName);
+                // Copy fields and properties from the original component to the copied component
+                foreach (var field in component.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+                {
+                    if (field.FieldType == typeof(Shader) || field.FieldType == typeof(Material) || field.FieldType == typeof(RenderTexture))
+                    {
+                        var fieldValue = field.GetValue(component);
+
+                        if (fieldValue != null)
+                        {
+                            ModLog.Debug("Component: " + component.GetType().Name + " Copying shader/material field: " + field.Name);
+                            field.SetValue(copiedComponent, fieldValue);
+                        }
+                        else
+                        {
+                            ModLog.Debug("Skipping null or incompatible field: " + field.Name + " in component: " + component.GetType().Name);
+                        }
+                        continue;
+                    }
+
+                    // Proceed with regular copying for other fields
+                    ModLog.Debug("Component: " + component.GetType().Name + " Copying field: " + field.Name + " With value: " + field.GetValue(component));
+                    field.SetValue(copiedComponent, field.GetValue(component));
+                }
+                //copy the component state (on or off)
+                foreach (var property in component.GetType().GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance))
+                {
+                    if (property.CanWrite && property.GetSetMethod(true) != null)
+                    {
+                        property.SetValue(copiedComponent, property.GetValue(component));
+                    }
+                }
+            }
+            /*
+            ModLog.Debug("Listing all components attached to vrCamera:");
+            foreach (Component component in vrCamera.GetComponents<Component>())
+            {
+                ModLog.Debug("Attached component: " + component.GetType().Name);
+            }
+            */
         }
 
         private Human getPlayerCharacter()
